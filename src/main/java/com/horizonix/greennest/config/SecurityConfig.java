@@ -21,7 +21,7 @@ public class SecurityConfig {
 
                 // Authorize Requests
                 .authorizeHttpRequests(auth -> auth
-                        // Allow everyone to see these pages (Public)
+                        // Allow everyone to see these pages
                         .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
 
                         // Restrict Admin pages to ADMIN role only
