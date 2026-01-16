@@ -8,9 +8,10 @@ import java.util.List;
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
 
-    List<Property> findByCity(String city);
+    // Changed to: Containing (partial match) + IgnoreCase (A=a)
+    List<Property> findByCityContainingIgnoreCase(String city);
 
     List<Property> findByPriceLessThanEqual(Double price);
 
-    List<Property> findByCityAndPriceLessThanEqual(String city, Double price);
+    List<Property> findByCityContainingIgnoreCaseAndPriceLessThanEqual(String city, Double price);
 }

@@ -20,6 +20,10 @@
 
         <form class="signup-form" th:action="@{/register}" th:object="${user}" method="post">
 
+            <div th:if="${error}" class="alert alert-danger">
+                <p th:text="${error}"></p>
+            </div>
+
             <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
                 <p>Please correct the errors below.</p>
             </div>
@@ -29,39 +33,29 @@
 
                 <div class="role-grid">
                     <label class="role-card" for="roleStudent">
-                        <input type="radio" id="roleStudent" th:field="*{role}" value="STUDENT" checked>
+                        <input type="radio" id="roleStudent" th:field="*{role}" value="ROLE_STUDENT" checked>
                         <span class="role-details">
-                                <span class="role-title">I'm a Student</span>
-                                <span class="role-desc">I'm looking for a boarding place near NSBM.</span>
-                            </span>
+                            <span class="role-title">I'm a Student</span>
+                            <span class="role-desc">I'm looking for a boarding place near NSBM.</span>
+                        </span>
                     </label>
 
                     <label class="role-card" for="roleOwner">
-                        <input type="radio" id="roleOwner" th:field="*{role}" value="OWNER">
+                        <input type="radio" id="roleOwner" th:field="*{role}" value="ROLE_OWNER">
                         <span class="role-details">
-                                <span class="role-title">I'm a Property Owner</span>
-                                <span class="role-desc">I want to list my boarding place.</span>
-                            </span>
+                            <span class="role-title">I'm a Property Owner</span>
+                            <span class="role-desc">I want to list my boarding place.</span>
+                        </span>
                     </label>
                 </div>
             </fieldset>
 
-            <div class="row-group">
-                <div class="input-wrapper">
-                    <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" th:field="*{firstName}"
-                           placeholder="e.g. Sadewma"
-                           th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" required>
-                    <span class="error-msg" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
-                </div>
-
-                <div class="input-wrapper">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" th:field="*{lastName}"
-                           placeholder="e.g. Perera"
-                           th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'" required>
-                    <span class="error-msg" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
-                </div>
+            <div class="input-wrapper">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" th:field="*{fullName}"
+                       placeholder="e.g. Sadewma Perera"
+                       th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'" required>
+                <span class="error-msg" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
             </div>
 
             <div class="input-wrapper">
@@ -69,14 +63,14 @@
                 <input type="email" id="email" th:field="*{email}"
                        placeholder="name@student.nsbm.ac.lk"
                        aria-describedby="emailHint" required>
-                <span id="emailHint" class="hint-text">If you are a student, using your uni email helps us verify you faster.</span>
+                <span id="emailHint" class="hint-text">Using your university email helps us verify you faster.</span>
                 <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
             </div>
 
             <div class="input-wrapper">
                 <label for="password">Password</label>
                 <input type="password" id="password" th:field="*{password}"
-                       placeholder="Create a strong password" required>
+                       placeholder="Create a strong password (min 6 chars)" required>
                 <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
             </div>
 
