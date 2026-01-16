@@ -15,12 +15,12 @@ public class PropertyService {
     public List<Property> searchProperties(String city, Double price) {
         // Case 1: Search by BOTH City and Price
         if (city != null && !city.isEmpty() && price != null) {
-            // FIX: Updated to match the Repository's new method name
+
             return propertyRepository.findByCityContainingIgnoreCaseAndPriceLessThanEqual(city, price);
         }
         // Case 2: Search by City ONLY
         else if (city != null && !city.isEmpty()) {
-            // FIX: Updated to match the Repository's new method name
+
             return propertyRepository.findByCityContainingIgnoreCase(city);
         }
         // Case 3: Search by Price ONLY
