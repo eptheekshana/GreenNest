@@ -15,9 +15,11 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Method to register a new user
+
+    // Register a new user
+
     public void registerUser(User user) {
-        // Encrypt the plain text password (e.g., "123456" -> "$2a$10$...")
+        // Encrypt the plain text password
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
@@ -25,7 +27,16 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // Check if email already exists
+
+    // Find user by email (For verification checks)
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+
+    // Check if email exists (Used during registration
     public boolean emailExists(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
