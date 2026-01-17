@@ -14,9 +14,9 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ... other fields ...
+    // other fields
 
     @ManyToOne
     @JoinColumn(name = "property_id")
-    private Property property; // This now refers to YOUR Property entity
+    private Property property;
 }
