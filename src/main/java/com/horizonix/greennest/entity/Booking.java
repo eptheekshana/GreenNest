@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import com.horizonix.greennest.entity.Property;
 
 @Entity
 @Table(name = "booking") // Confirmed name from Jan 13
@@ -30,6 +29,5 @@ public class Booking {
     private Property property;
 
     @Column(nullable = false)
-    private String status = "PENDING"; // Default status as required
 
 }
