@@ -6,353 +6,146 @@
     <title>Join GreenNest - Create Account</title>
 
     <style>
-        /* =========================================
-           1. Variables & Reset
-           ========================================= */
         :root {
-            --primary-green: #27ae60;      /* GreenNest Brand Color */
-            --primary-hover: #219150;
-            --bg-color: #f4f7f6;           /* Light calming background */
+            --primary-green: #27ae60;
+            --bg-color: #f4f7f6;
             --text-dark: #2c3e50;
-            --text-muted: #7f8c8d;
-            --border-color: #e0e0e0;
             --error-red: #e74c3c;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
             --radius: 8px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-dark);
-            line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-
-        /* =========================================
-           2. Layout Wrappers
-           ========================================= */
-        .registration-wrapper {
-            flex: 1; /* Pushes footer down */
-            display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
         .onboarding-card {
             background: white;
             width: 100%;
-            max-width: 550px; /* Optimal reading width */
+            max-width: 500px;
             padding: 40px;
             border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
         }
 
-        /* =========================================
-           3. Header & Typography
-           ========================================= */
-        .card-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        .card-header { text-align: center; margin-bottom: 30px; }
+        .card-header h2 { color: var(--primary-green); margin-bottom: 5px; }
+        .sub-text { color: #7f8c8d; font-size: 0.9rem; text-align: center; margin-bottom: 20px; }
 
-        .card-header h2 {
-            color: var(--text-dark);
-            font-size: 1.75rem;
-            margin-bottom: 8px;
-        }
-
-        .sub-text {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        /* =========================================
-           4. Role Selection (The Radio Cards)
-           ========================================= */
-        .role-selection-group {
-            border: none;
-            margin-bottom: 25px;
-        }
-
-        .section-label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--text-dark);
-        }
-
-        .role-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Two equal columns */
-            gap: 15px;
-        }
-
-        .role-card {
-            display: flex;
-            align-items: flex-start;
-            padding: 15px;
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        /* Style the radio button itself */
-        .role-card input[type="radio"] {
-            margin-top: 4px;
-            margin-right: 10px;
-            accent-color: var(--primary-green); /* Modern browser support */
-            transform: scale(1.2);
-        }
-
-        .role-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .role-title {
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: var(--text-dark);
-        }
-
-        .role-desc {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            line-height: 1.3;
-            margin-top: 2px;
-        }
-
-        /* Interaction: Hover and Checked states */
-        .role-card:hover {
-            border-color: var(--primary-green);
-            background-color: #f9fdfa;
-        }
-
-        /* Modern CSS :has() selector - Highlights the whole card when selected */
-        .role-card:has(input:checked) {
-            border-color: var(--primary-green);
-            background-color: #f0fcf5;
-            box-shadow: 0 0 0 1px var(--primary-green); /* Thicker border effect */
-        }
-
-        /* =========================================
-           5. Form Inputs & Groups
-           ========================================= */
-        .row-group {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .input-wrapper {
-            margin-bottom: 20px;
-            width: 100%;
-            position: relative;
-        }
-
-        .input-wrapper label {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: var(--text-dark);
-        }
-
-        .input-wrapper input {
+        /* Inputs */
+        .input-wrapper { margin-bottom: 20px; }
+        .input-wrapper label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem; }
+        .input-wrapper input, .input-wrapper select {
             width: 100%;
             padding: 12px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #ddd;
             border-radius: var(--radius);
             font-size: 1rem;
-            transition: border-color 0.2s;
+            background-color: white; /* For select dropdown */
         }
 
-        .input-wrapper input:focus {
+        .input-wrapper input:focus, .input-wrapper select:focus {
             outline: none;
             border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
         }
 
-        /* Hint Text */
-        .hint-text {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-
-        /* =========================================
-           6. Validation & Errors
-           ========================================= */
-        .input-wrapper input.is-invalid {
-            border-color: var(--error-red);
-            /* Optional: Add error icon background here if needed */
-        }
-
-        .error-msg, .alert-danger {
-            color: var(--error-red);
-            font-size: 0.85rem;
-            margin-top: 5px;
-            display: block;
-        }
+        /* Error States */
+        .is-invalid { border-color: var(--error-red) !important; }
+        .error-msg { color: var(--error-red); font-size: 0.85rem; margin-top: 5px; display: block; }
 
         .alert-danger {
             background: #fdeaea;
+            border: 1px solid #fadbd8;
+            color: var(--error-red);
             padding: 10px;
             border-radius: var(--radius);
             margin-bottom: 20px;
-            border: 1px solid #fadbd8;
+            font-size: 0.9rem;
         }
 
-        /* =========================================
-           7. Buttons & Links
-           ========================================= */
+        /* Buttons */
         .btn-primary {
             background-color: var(--primary-green);
             color: white;
             border: none;
             padding: 14px;
+            width: 100%;
             font-size: 1rem;
             font-weight: 600;
             border-radius: var(--radius);
             cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
+            transition: 0.2s;
         }
+        .btn-primary:hover { background-color: #219150; }
 
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .form-footer {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 0.9rem;
-        }
-
-        .link-highlight {
-            color: var(--primary-green);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .link-highlight:hover {
-            text-decoration: underline;
-        }
-
-        /* =========================================
-           8. Mobile Responsiveness
-           ========================================= */
-        @media (max-width: 480px) {
-            .onboarding-card {
-                padding: 25px;
-            }
-
-            /* Stack the Names on mobile */
-            .row-group {
-                flex-direction: column;
-                gap: 0;
-            }
-
-            /* Stack the Role cards on mobile */
-            .role-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        .form-footer { margin-top: 20px; text-align: center; font-size: 0.9rem; }
+        .link-highlight { color: var(--primary-green); text-decoration: none; font-weight: 600; }
     </style>
 </head>
 <body>
 
-<header th:replace="~{fragments/header :: header}"></header>
+<div class="onboarding-card">
+    <div class="card-header">
+        <h2>GreenNest 🌱</h2>
+        <p class="sub-text">Create your account to get started</p>
+    </div>
 
-<main class="registration-wrapper">
-    <div class="onboarding-card">
+    <form th:action="@{/register}" th:object="${user}" method="post">
 
-        <div class="card-header">
-            <h2>Welcome to GreenNest! 🌱</h2>
-            <p class="sub-text">Let's get you set up so you can start your journey.</p>
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
         </div>
 
-        <form class="signup-form" th:action="@{/register}" th:object="${user}" method="post">
+        <div class="input-wrapper">
+            <label for="role">I am a:</label>
+            <select id="role" th:field="*{role}" required>
+                <option value="STUDENT">Student (Looking for a place)</option>
+                <option value="OWNER">Property Owner (Listing a place)</option>
+            </select>
+        </div>
 
-            <div th:if="${error}" class="alert alert-danger">
-                <p th:text="${error}"></p>
-            </div>
+        <div class="input-wrapper">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" th:field="*{fullName}"
+                   th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'"
+                   placeholder="e.g. Sadewma Perera"
+                   maxlength="255" required>
+            <span class="error-msg" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+        </div>
 
-            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
-                <p>Please correct the errors below.</p>
-            </div>
+        <div class="input-wrapper">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" th:field="*{email}"
+                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                   placeholder="name@student.nsbm.ac.lk"
+                   maxlength="255" required>
+            <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
 
-            <fieldset class="role-selection-group">
-                <legend class="section-label">First, tell us what brings you here:</legend>
+        <div class="input-wrapper">
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}"
+                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                   placeholder="Min 6 characters" required>
+            <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
 
-                <div class="role-grid">
-                    <label class="role-card" for="roleStudent">
-                        <input type="radio" id="roleStudent" th:field="*{role}" value="ROLE_STUDENT" checked>
-                        <span class="role-details">
-                            <span class="role-title">I'm a Student</span>
-                            <span class="role-desc">I'm looking for a boarding place near NSBM.</span>
-                        </span>
-                    </label>
+        <button type="submit" class="btn-primary">Create Account</button>
 
-                    <label class="role-card" for="roleOwner">
-                        <input type="radio" id="roleOwner" th:field="*{role}" value="ROLE_OWNER">
-                        <span class="role-details">
-                            <span class="role-title">I'm a Property Owner</span>
-                            <span class="role-desc">I want to list my boarding place.</span>
-                        </span>
-                    </label>
-                </div>
-            </fieldset>
+        <div class="form-footer">
+            <p>Already have an account? <a th:href="@{/login}" class="link-highlight">Log in</a></p>
+        </div>
+    </form>
+</div>
 
-            <div class="input-wrapper">
-                <label for="fullName">Full Name</label>
-                <input type="text" id="fullName" th:field="*{fullName}"
-                       placeholder="e.g. Sadewma Perera"
-                       th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'" required>
-                <span class="error-msg" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
-            </div>
-
-            <div class="input-wrapper">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" th:field="*{email}"
-                       placeholder="name@student.nsbm.ac.lk"
-                       aria-describedby="emailHint" required>
-                <span id="emailHint" class="hint-text">Using your university email helps us verify you faster.</span>
-                <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-            </div>
-
-            <div class="input-wrapper">
-                <label for="password">Password</label>
-                <input type="password" id="password" th:field="*{password}"
-                       placeholder="Create a strong password (min 6 chars)" required>
-                <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-            </div>
-
-            <div class="action-area">
-                <button type="submit" class="btn btn-primary btn-block">Create My Account</button>
-            </div>
-
-            <div class="form-footer">
-                <p>Already have an account? <a th:href="@{/login}" class="link-highlight">Log in here</a></p>
-            </div>
-        </form>
-    </div>
-</main>
-
-<footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
 </html>

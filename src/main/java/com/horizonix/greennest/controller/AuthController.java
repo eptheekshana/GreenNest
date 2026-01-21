@@ -5,6 +5,7 @@ import com.horizonix.greennest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,34 +16,40 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    // Show the Login Page
-    @GetMapping("/login")
-    public String showLoginPage() {
-        return "login"; // Looks for login.html in templates folder
-    }
-
-    // Show the Registration Page
+    // 1. Show the Registration Form
     @GetMapping("/register")
-    public String showRegisterPage(Model model) {
-        // We pass an empty User object to the form so Thymeleaf can bind data to it
+    public String showRegistrationForm(Model model) {
+        // We pass an empty User object so Thymeleaf can bind the form fields to it
         model.addAttribute("user", new User());
-        return "register"; // Looks for register.html
+        return "register"; // This looks for register.html
     }
 
-    // Handle the Registration Form Submission
+    // 2. Handle the Form Submission
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user, Model model) {
+    public String registerUser(@ModelAttribute("user") User user,
+                               BindingResult result,
+                               Model model) {
 
         // Check if email already exists
         if (userService.emailExists(user.getEmail())) {
-            model.addAttribute("error", "There is already an account registered with that email");
-            return "register"; // Return to form with error
+            result.rejectValue("email", "error.user", "There is already an account registered with this email");
         }
 
-        // Save the user
+        // If there are errors (like duplicate email), reload the form
+        if (result.hasErrors()) {
+            return "register";
+        }
+
+        // Save the user (The logic we wrote earlier handles password hashing)
         userService.registerUser(user);
 
-        // Redirect to login page with a success message
+        // Redirect to login with a success message
         return "redirect:/login?success";
+    }
+
+    // 3. Show Login Page (You'll need a login.html later)
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login";
     }
 }
