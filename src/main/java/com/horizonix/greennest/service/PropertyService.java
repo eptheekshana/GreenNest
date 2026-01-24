@@ -4,7 +4,15 @@ import com.horizonix.greennest.entity.Property;
 import com.horizonix.greennest.repository.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PropertyService {
@@ -12,23 +20,41 @@ public class PropertyService {
     @Autowired
     private PropertyRepository propertyRepository;
 
-    public List<Property> searchProperties(String city, Double price) {
-        // Case 1: Search by BOTH City and Price
-        if (city != null && !city.isEmpty() && price != null) {
+    // Define where images will be saved
+    // This saves to: YourProject/src/main/resources/static/uploads/
+    private final String UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
 
-            return propertyRepository.findByCityContainingIgnoreCaseAndPriceLessThanEqual(city, price);
-        }
-        // Case 2: Search by City ONLY
-        else if (city != null && !city.isEmpty()) {
-
-            return propertyRepository.findByCityContainingIgnoreCase(city);
-        }
-        // Case 3: Search by Price ONLY
-        else if (price != null) {
-            return propertyRepository.findByPriceLessThanEqual(price);
-        }
-
-        // Case 4: No filters, return ALL
+    public List<Property> getAllProperties() {
         return propertyRepository.findAll();
+    }
+
+    public void saveProperty(Property property, MultipartFile imageFile) throws IOException {
+
+        // 1. Handle the Image Upload
+        if (imageFile != null && !imageFile.isEmpty()) {
+
+            // Create the directory if it doesn't exist
+            Path uploadPath = Paths.get(UPLOAD_DIR);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // Generate a unique filename (to prevent overwriting)
+            String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
+
+            // Save the file to the folder
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Save ONLY the filename to the database
+            property.setImageName(fileName);
+        }
+
+        // 2. Save the Property Data to Database
+        propertyRepository.save(property);
+    }
+
+    public Property getPropertyById(Long id) {
+        return propertyRepository.findById(id).orElse(null);
     }
 }
