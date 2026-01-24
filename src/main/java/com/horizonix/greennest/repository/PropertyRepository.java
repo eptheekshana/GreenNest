@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PropertyRepository extends JpaRepository<Property, Long> {
 
-    // Find all properties created by a specific owner (for "My Listings" page)
+    // Find all properties created by a specific owner
     List<Property> findByOwner(User owner);
 
     // Search properties by location (for Student Search)
