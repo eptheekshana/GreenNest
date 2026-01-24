@@ -21,9 +21,9 @@ public class Property {
     private Double price;
 
     @Column(nullable = false)
-    private String location;    // e.g., "Homagama"
+    private String location;
 
-    private String imageName;   // e.g., "house123.jpg"
+    private String imageName;
 
     // Automatic timestamp when created
     private LocalDateTime createdAt;
