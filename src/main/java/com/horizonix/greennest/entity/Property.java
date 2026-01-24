@@ -18,7 +18,7 @@ public class Property {
     private String description; // e.g., "AC, Wifi included..."
 
     @Column(nullable = false)
-    private Double price;       // Monthly Rent
+    private Double price;
 
     @Column(nullable = false)
     private String location;    // e.g., "Homagama"
