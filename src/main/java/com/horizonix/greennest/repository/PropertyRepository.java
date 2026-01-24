@@ -1,17 +1,15 @@
 package com.horizonix.greennest.repository;
 
 import com.horizonix.greennest.entity.Property;
+import com.horizonix.greennest.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import java.util.List;
 
-@Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
 
-    // Changed to: Containing (partial match) + IgnoreCase (A=a)
-    List<Property> findByCityContainingIgnoreCase(String city);
+    // Find all properties created by a specific owner (for "My Listings" page)
+    List<Property> findByOwner(User owner);
 
-    List<Property> findByPriceLessThanEqual(Double price);
-
-    List<Property> findByCityContainingIgnoreCaseAndPriceLessThanEqual(String city, Double price);
+    // Search properties by location (for Student Search)
+    List<Property> findByLocationContainingIgnoreCase(String location);
 }
