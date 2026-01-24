@@ -1,59 +1,65 @@
 package com.horizonix.greennest.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "properties")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Property {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Title is required")
-    private String title;
+    @Column(nullable = false)
+    private String title;       // e.g., "Luxury Room near NSBM"
 
-    @Column(columnDefinition = "TEXT") // Allows long descriptions
-    private String description;
+    @Column(columnDefinition = "TEXT")
+    private String description; // e.g., "AC, Wifi included..."
 
-    @NotNull(message = "Rent price is required")
-    @Min(value = 1000, message = "Price must be at least 1000")
-    private Double price;
+    @Column(nullable = false)
+    private Double price;       // Monthly Rent
 
-    @NotBlank(message = "City is required")
-    private String city;
+    @Column(nullable = false)
+    private String location;    // e.g., "Homagama"
 
-    private String address; // Full address for the map
+    private String imageName;   // e.g., "house123.jpg"
 
-    @Column(name = "distance_km")
-    private Double distanceToUni;
+    // Automatic timestamp when created
+    private LocalDateTime createdAt;
 
-    @Column(name = "has_ac")
-    private boolean hasAc;
-
-    @Column(name = "image_url")
-    private String imageUrl; // Stores the filename
-
-    // RELATIONSHIP: Many properties belong to One Owner
+    // Relationship: A property belongs to one Owner
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    protected void onCreate() {
+    // --- Constructors ---
+    public Property() {
         this.createdAt = LocalDateTime.now();
     }
+
+    // --- Getters and Setters ---
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+
+    public String getImageName() { return imageName; }
+    public void setImageName(String imageName) { this.imageName = imageName; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public User getOwner() { return owner; }
+    public void setOwner(User owner) { this.owner = owner; }
 }

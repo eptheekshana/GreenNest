@@ -44,7 +44,8 @@ public class AuthController {
         userService.registerUser(user);
 
         // Redirect to login with a success message
-        return "redirect:/login?success";
+        // Show the dedicated success page
+        return "register-success";
     }
 
     // 3. Show Login Page (You'll need a login.html later)
