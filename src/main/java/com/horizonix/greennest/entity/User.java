@@ -1,58 +1,88 @@
 package com.horizonix.greennest.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.Collections; //Using Collections.singletonList for safer single-role return
+
+@Setter
 @Entity
 @Table(name = "users")
-@Data // Generates Getters, Setters, ToString
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters")
     @Column(nullable = false)
     private String password;
 
-    @NotBlank(message = "Full name is required")
-    @Column(name = "full_name", nullable = false)
+    @Column(nullable = false)
     private String fullName;
 
-    // Roles: ROLE_STUDENT, ROLE_OWNER, ROLE_ADMIN
     @Column(nullable = false)
-    private String role;
-
-    // Admin Verification Logic: Owners start as false, Students start as true
-    @Column(name = "is_verified", nullable = false)
     private boolean isVerified = false;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        // Auto-verify students, but require approval for owners
-        if ("ROLE_STUDENT".equals(this.role)) {
-            this.isVerified = true;
-        } else {
-            this.isVerified = false;
-        }
+    public User() {}
+
+    public User(String email, String password, String fullName, Role role) {
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.role = role;
     }
+
+    // Getters & Setters
+    public Long getId() { return id; }
+
+    public String getEmail() { return email; }
+
+    public String getFullName() { return fullName; }
+
+    public Role getRole() { return role; }
+
+    public boolean isVerified() { return isVerified; }
+
+    // UserDetails Implementation (The fix for your error)
+
+    // Returns a Collection of GrantedAuthority
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (role == null) {
+            return Collections.emptyList();
+        }
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email; // We use email as the username
+    }
+
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+
+    @Override
+    public boolean isEnabled() { return true; }
 }
