@@ -11,6 +11,6 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     // Find all properties created by a specific owner
     List<Property> findByOwner(User owner);
 
-    // Search properties by location (for Student Search)
+    // Search properties by location
     List<Property> findByLocationContainingIgnoreCase(String location);
 }

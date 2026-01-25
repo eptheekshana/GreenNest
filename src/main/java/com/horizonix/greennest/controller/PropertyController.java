@@ -61,7 +61,7 @@ public class PropertyController {
         }
     }
 
-    // 3. Show All Properties (Student View)
+    // 3. Show All Properties
     @GetMapping("/properties")
     public String listProperties(Model model) {
         model.addAttribute("properties", propertyService.getAllProperties());
