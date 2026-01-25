@@ -1,7 +1,7 @@
 package com.horizonix.greennest.service;
 
-import com.horizonix.greennest.entity.Property;
 import com.horizonix.greennest.repository.PropertyRepository;
+import org.hibernate.mapping.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
