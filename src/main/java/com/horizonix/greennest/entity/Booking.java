@@ -1,35 +1,62 @@
 package com.horizonix.greennest.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import org.hibernate.mapping.Property;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "booking") // Confirmed name from Jan 13
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "bookings")
 public class Booking {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Better for MySQL auto-increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ✅ ADD THIS FIELD IF MISSING
+    private LocalDateTime requestDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private User student;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
 
-    @Column(nullable = false)
-    private String status = "PENDING"; // Default status as required [cite: 35]
+    // Status: PENDING, APPROVED, REJECTED
+    private String status;
 
+    // --- Constructors ---
+    public Booking() {
+        this.requestDate = LocalDateTime.now(); // Default to now
+        this.status = "PENDING";
+    }
+
+    public Booking(User student, Property property) {
+        this.student = student;
+        this.property = property;
+        this.requestDate = LocalDateTime.now();
+        this.status = "PENDING";
+    }
+
+    // --- Getters & Setters ---
+
+    public void setRequestDate(LocalDateTime requestDate) {
+        this.requestDate = requestDate;
+    }
+
+    public LocalDateTime getRequestDate() {
+        return requestDate;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public User getStudent() { return student; }
+    public void setStudent(User student) { this.student = student; }
+
+    public Property getProperty() { return property; }
+    public void setProperty(Property property) { this.property = property; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }
