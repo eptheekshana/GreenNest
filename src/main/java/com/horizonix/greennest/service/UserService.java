@@ -5,58 +5,65 @@ import com.horizonix.greennest.entity.User;
 import com.horizonix.greennest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService; // ✅ Import this
-import org.springframework.security.core.userdetails.UsernameNotFoundException; // ✅ Import this
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
-public class UserService implements UserDetailsService { // ✅ Implement the interface
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // This tells Spring how to find a user for login
+    // --- Authentication Logic ---
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }
+        return user;
     }
 
-    // ... The rest of your existing methods ...
-
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
-    }
-
-    public boolean emailExists(String email) {
-        return userRepository.findByEmail(email).isPresent();
-    }
-
-    public void registerUser(User user) {
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+    // --- Registration Logic ---
+    public void save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Admins and Students are auto-verified. Owners must wait for approval.
+        if (user.getRole() == Role.OWNER) {
+            user.setVerified(false);
+        } else {
+            user.setVerified(true);
+        }
         userRepository.save(user);
     }
 
-    public void verifyUser(Long userId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    // --- Admin Verification Logic (Jan 19 Task) ---
+
+    // 1. Find all owners who are NOT yet verified
+    public List<User> getPendingOwners() {
+        return userRepository.findByRoleAndIsVerifiedFalse(Role.OWNER);
+    }
+
+    // 2. Approve an owner
+    public void approveOwner(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
             user.setVerified(true);
             userRepository.save(user);
         }
     }
 
+    // --- Security Check Logic (Jan 17 Task) ---
     public boolean canUploadProperty(User user) {
-        if (user == null) return false;
-        if (!user.getRole().equals(Role.OWNER)) return false;
-        if (!user.isVerified()) return false;
-        return true;
+        return user.getRole() == Role.OWNER && user.isVerified();
     }
 }
