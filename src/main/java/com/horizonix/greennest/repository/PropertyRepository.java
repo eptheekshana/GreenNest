@@ -2,7 +2,7 @@ package com.horizonix.greennest.repository;
 
 import com.horizonix.greennest.entity.Property;
 import com.horizonix.greennest.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;98888*547.
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
