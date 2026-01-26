@@ -17,40 +17,27 @@
             --text-muted: #7f8c8d;
             --border-color: #e0e0e0;
             --error-red: #e74c3c;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
             --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
             --radius: 8px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-dark);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: center; /* Centered vertically */
+            align-items: center;     /* Centered horizontally */
         }
 
         /* =========================================
            2. Layout Wrappers
            ========================================= */
-        /* Combined wrapper styles for both pages */
-        .registration-wrapper,
-        .login-wrapper {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-        }
-
         .onboarding-card {
             background: white;
             width: 100%;
@@ -63,51 +50,21 @@
         /* =========================================
            3. Header & Typography
            ========================================= */
-        .card-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .card-header h2 {
-            color: var(--text-dark);
-            font-size: 1.75rem;
-            margin-bottom: 8px;
-        }
-
-        .sub-text {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
+        .card-header { text-align: center; margin-bottom: 30px; }
+        .card-header h2 { color: var(--text-dark); font-size: 1.75rem; margin-bottom: 8px; }
+        .sub-text { color: var(--text-muted); font-size: 0.95rem; }
 
         /* =========================================
            4. Form Inputs
            ========================================= */
-        .input-wrapper {
-            margin-bottom: 20px;
-            width: 100%;
-            position: relative;
-        }
-
-        .input-wrapper label {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: var(--text-dark);
-        }
-
+        .input-wrapper { margin-bottom: 20px; width: 100%; }
+        .input-wrapper label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 6px; color: var(--text-dark); }
         .input-wrapper input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            font-size: 1rem;
-            transition: border-color 0.2s;
+            width: 100%; padding: 12px; border: 1px solid var(--border-color);
+            border-radius: var(--radius); font-size: 1rem; transition: border-color 0.2s;
         }
-
         .input-wrapper input:focus {
-            outline: none;
-            border-color: var(--primary-green);
+            outline: none; border-color: var(--primary-green);
             box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
         }
 
@@ -116,91 +73,23 @@
            ========================================= */
         .btn-primary {
             background-color: var(--primary-green);
-            color: white;
-            border: none;
-            padding: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: var(--radius);
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
+            color: white; border: none; padding: 14px;
+            font-size: 1rem; font-weight: 600; border-radius: var(--radius);
+            cursor: pointer; width: 100%; transition: background-color 0.2s;
         }
+        .btn-primary:hover { background-color: var(--primary-hover); }
 
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-        }
+        .form-footer { text-align: center; margin-top: 25px; font-size: 0.9rem; }
+        .link-highlight { color: var(--primary-green); text-decoration: none; font-weight: 600; }
+        .link-highlight:hover { text-decoration: underline; }
 
-        .form-footer {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 0.9rem;
-        }
-
-        .link-highlight {
-            color: var(--primary-green);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .link-highlight:hover {
-            text-decoration: underline;
-        }
-
-        /* =========================================
-           6. Login Specifics (Alerts & Checkbox)
-           ========================================= */
-        .form-check-group {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .custom-checkbox {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: var(--text-dark);
-        }
-
-        .custom-checkbox input {
-            margin-right: 8px;
-            width: 16px;
-            height: 16px;
-            accent-color: var(--primary-green);
-        }
-
-        .alert-success {
-            background: #e8f8f5;
-            color: #27ae60;
-            padding: 12px;
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-            border: 1px solid #d1f2eb;
-            font-size: 0.9rem;
-        }
-
-        .alert-danger {
-            background: #fdeaea;
-            color: var(--error-red);
-            padding: 12px;
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-            border: 1px solid #fadbd8;
-            font-size: 0.9rem;
-        }
-
-        /* Mobile */
-        @media (max-width: 480px) {
-            .onboarding-card { padding: 25px; }
-        }
+        /* Alerts */
+        .alert-success { background: #e8f8f5; color: #27ae60; padding: 12px; border-radius: var(--radius); margin-bottom: 20px; border: 1px solid #d1f2eb; }
+        .alert-danger { background: #fdeaea; color: var(--error-red); padding: 12px; border-radius: var(--radius); margin-bottom: 20px; border: 1px solid #fadbd8; }
     </style>
 </head>
 
 <body>
-
-<header th:replace="~{fragments/header :: header}"></header>
 
 <main class="login-wrapper">
     <div class="onboarding-card">
@@ -213,18 +102,19 @@
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             <strong>Access Denied.</strong> Invalid email or password.
         </div>
-
         <div th:if="${param.logout}" class="alert alert-success" role="alert">
             <strong>Logged Out.</strong> See you soon!
         </div>
+        <div th:if="${param.success == 'ownerWait'}" class="alert alert-success">
+            <strong>Account Created!</strong> Please wait for Admin approval.
+        </div>
 
-        <form th:action="@{/login}" method="post">
+        <form th:action="@{/authenticateTheUser}" method="post">
 
             <div class="input-wrapper">
                 <label for="username">Email Address</label>
                 <input type="email" id="username" name="username"
                        placeholder="name@student.nsbm.ac.lk"
-                       autocomplete="username"
                        required autofocus>
             </div>
 
@@ -232,15 +122,7 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password"
                        placeholder="Enter your password"
-                       autocomplete="current-password"
                        required>
-            </div>
-
-            <div class="form-check-group">
-                <label class="custom-checkbox" for="remember-me">
-                    <input type="checkbox" id="remember-me" name="remember-me">
-                    <span class="checkbox-label">Remember me</span>
-                </label>
             </div>
 
             <div class="action-area">
@@ -253,8 +135,6 @@
         </form>
     </div>
 </main>
-
-<footer th:replace="~{fragments/footer :: footer}"></footer>
 
 </body>
 </html>
