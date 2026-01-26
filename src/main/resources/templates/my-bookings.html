@@ -212,9 +212,9 @@
                      th:classappend="'status-' + ${booking.status}"
                      th:switch="${booking.status.toString()}">
 
-                    <span th:case="'PENDING'">⏳ Waiting for Review</span>
-                    <span th:case="'ACCEPTED'">✅ Request Accepted</span>
-                    <span th:case="'REJECTED'">❌ Not Available</span>
+                    <span th:case="'PENDING'">Waiting for Review</span>
+                    <span th:case="'ACCEPTED'">Request Accepted</span>
+                    <span th:case="'REJECTED'">Not Available</span>
                 </div>
 
                 <div class="meta-info">
@@ -228,7 +228,7 @@
     <div class="empty-state-box" th:if="${#lists.isEmpty(bookings)}">
         <h2 style="font-size: 1.5rem; color: var(--text-dark);">No requests found</h2>
         <p style="color: var(--text-muted); margin-top:10px;">You haven't reached out to any property owners yet.</p>
-        <a th:href="@{/listings}" class="btn-action">Browse Boarding Places</a>
+        <a th:href="@{/listings.html}" class="btn-action">Browse Boarding Places</a>
     </div>
 
 </main>
