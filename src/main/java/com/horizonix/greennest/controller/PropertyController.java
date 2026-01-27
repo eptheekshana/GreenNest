@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class PropertyController {
@@ -41,16 +42,16 @@ public class PropertyController {
             User user = userService.findByEmail(email);
             property.setOwner(user);
             propertyService.saveProperty(property, image);
-            return "redirect:/properties?success";
+            return "redirect:/listings?success";
         } catch (IOException e) {
             return "redirect:/owner/add-property?error=upload-failed";
         }
     }
 
-    @GetMapping("/properties")
+    @GetMapping("/listings")
     public String listProperties(Model model) {
         model.addAttribute("properties", propertyService.getAllProperties());
-        return "property-list";
+        return "listings";
     }
 
     @GetMapping("/search")
@@ -58,6 +59,8 @@ public class PropertyController {
                                    @RequestParam(required = false) Double price,
                                    Model model) {
         model.addAttribute("properties", propertyService.searchProperties(location, price));
-        return "property-list";
+        model.addAttribute("location", location);
+        model.addAttribute("price", price);
+        return "listings";
     }
 }
