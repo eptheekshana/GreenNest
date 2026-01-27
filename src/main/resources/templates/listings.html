@@ -6,20 +6,15 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; }
         .container { display: flex; max-width: 1200px; margin: 0 auto; padding: 20px; }
-
         .sidebar { width: 280px; background: white; padding: 25px; border-radius: 10px; height: fit-content; margin-right: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .sidebar h2 { margin-top: 0; font-size: 1.4rem; color: #2c3e50; border-bottom: 2px solid #2ecc71; padding-bottom: 10px; }
-
         .filter-group { margin-bottom: 20px; }
         .filter-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
-        .filter-group input, .filter-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-
+        .filter-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
         .search-btn { width: 100%; padding: 12px; background: #2ecc71; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
         .search-btn:hover { background: #27ae60; }
-
         .main-content { flex: 1; }
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
-
         .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s; }
         .card:hover { transform: translateY(-5px); }
         .card img { width: 100%; height: 180px; object-fit: cover; }
@@ -27,13 +22,9 @@
         .card-body h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: #333; }
         .location { color: #7f8c8d; font-size: 0.9rem; margin-bottom: 10px; }
         .price { color: #2ecc71; font-weight: bold; font-size: 1.2rem; margin: 10px 0; }
-
         .btn-view { display: block; text-align: center; background: #34495e; color: white; padding: 10px; text-decoration: none; border-radius: 5px; font-size: 0.9rem; }
-        .btn-view:hover { background: #2c3e50; }
-
         .pagination { margin-top: 40px; text-align: center; }
         .pagination button { padding: 10px 20px; margin: 0 5px; border: 1px solid #ddd; background: white; border-radius: 5px; cursor: pointer; }
-        .pagination button.active { background: #2ecc71; color: white; border-color: #2ecc71; }
     </style>
 </head>
 <body>
@@ -41,22 +32,14 @@
 <div class="container">
     <aside class="sidebar">
         <h2>Filters</h2>
-        <form>
+        <form th:action="@{/search}" method="get">
             <div class="filter-group">
                 <label>Location</label>
-                <input type="text" placeholder="Search by city...">
+                <input type="text" name="location" placeholder="Search by city..." th:value="${param.location}">
             </div>
             <div class="filter-group">
                 <label>Budget (Max Price)</label>
-                <input type="number" placeholder="E.g. 10000">
-            </div>
-            <div class="filter-group">
-                <label>Category</label>
-                <select>
-                    <option value="all">All Rooms</option>
-                    <option value="ac">AC</option>
-                    <option value="non-ac">Non-AC</option>
-                </select>
+                <input type="number" name="price" placeholder="E.g. 10000" th:value="${param.price}">
             </div>
             <button type="submit" class="search-btn">Apply Filters</button>
         </form>
@@ -64,43 +47,25 @@
 
     <main class="main-content">
         <div class="grid-container">
-            <div class="card">
-                <img src="https://via.placeholder.com/300x180" alt="Property">
+            <div class="card" th:each="property : ${properties}">
+                <img th:src="@{'/uploads/' + ${property.imageName}}" alt="Property Image" onerror="this.src='https://via.placeholder.com/300x180'">
                 <div class="card-body">
-                    <h3>Premium Annex</h3>
-                    <p class="location">Location: Malabe</p>
-                    <p class="price">Rs. 15,000 /mo</p>
-                    <a href="#" class="btn-view">Details</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <img src="https://via.placeholder.com/300x180" alt="Property">
-                <div class="card-body">
-                    <h3>Single Room</h3>
-                    <p class="location">Location: Nugegoda</p>
-                    <p class="price">Rs. 8,500 /mo</p>
-                    <a href="#" class="btn-view">Details</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <img src="https://via.placeholder.com/300x180" alt="Property">
-                <div class="card-body">
-                    <h3>Shared Room</h3>
-                    <p class="location">Location: Colombo 07</p>
-                    <p class="price">Rs. 12,000 /mo</p>
-                    <a href="#" class="btn-view">Details</a>
+                    <h3 th:text="${property.title}">Property Title</h3>
+                    <p class="location" th:text="'Location: ' + ${property.location}">Location</p>
+                    <p class="price" th:text="'Rs. ' + ${property.price} + ' /mo'">Price</p>
+                    <a th:href="@{'/property/' + ${property.id}}" class="btn-view">Details</a>
                 </div>
             </div>
         </div>
 
-        <div class="pagination">
-            <button disabled>Previous</button>
+        <div class="pagination" th:if="${properties.size() > 0}">
+            <button>Previous</button>
             <button class="active">1</button>
-            <button>2</button>
-            <button>3</button>
             <button>Next</button>
+        </div>
+
+        <div th:if="${properties.empty}" style="text-align: center; padding: 50px;">
+            <h3>No properties found for your search.</h3>
         </div>
     </main>
 </div>
