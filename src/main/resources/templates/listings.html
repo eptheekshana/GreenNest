@@ -22,10 +22,14 @@
         .btn-search { background: var(--primary-green); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; }
         .property-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
         .property-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--card-shadow); transition: transform 0.2s; display: flex; flex-direction: column; }
-        .card-img { width: 100%; height: 200px; object-fit: cover; }
-        .card-body { padding: 20px; flex: 1; }
-        .price-tag { color: var(--primary-green); font-weight: 700; font-size: 1.2rem; }
-        .btn-view { display: block; text-align: center; background-color: var(--text-dark); color: white; padding: 10px; border-radius: 8px; text-decoration: none; margin-top: 15px; }
+        .property-card:hover { transform: translateY(-5px); }
+        .card-img { width: 100%; height: 200px; object-fit: cover; background-color: #eee; }
+        .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+        .price-tag { color: var(--primary-green); font-weight: 700; font-size: 1.2rem; margin-bottom: 5px; }
+        .location-tag { color: #7f8c8d; font-size: 0.9rem; margin-bottom: 15px; }
+        .btn-view { margin-top: auto; display: block; text-align: center; background-color: var(--text-dark); color: white; padding: 10px; border-radius: 8px; text-decoration: none; }
+        .pagination-container { display: flex; justify-content: center; gap: 10px; margin: 40px 0; }
+        .no-data { text-align: center; grid-column: 1 / -1; padding: 50px; color: #7f8c8d; }
     </style>
 </head>
 <body>
@@ -34,14 +38,14 @@
     <a href="/" class="brand">GreenNest 🌱</a>
     <div class="nav-links">
         <a href="/">Home</a>
-        <a th:href="@{/listings}">All Boardings</a>
+        <a th:href="@{/search}">Explore</a>
     </div>
 </nav>
 
 <div class="container">
     <div class="search-container">
         <form th:action="@{/search}" method="get" class="search-form">
-            <input type="text" name="location" placeholder="City (e.g. Galle)" th:value="${location}">
+            <input type="text" name="location" placeholder="City (e.g. Pitipana)" th:value="${location}">
             <input type="number" name="price" placeholder="Max Price (LKR)" th:value="${price}">
             <button type="submit" class="btn-search">Find Now</button>
         </form>
@@ -51,14 +55,35 @@
 
     <div class="property-grid">
         <div th:each="property : ${properties}" class="property-card">
-            <img th:src="@{'/uploads/' + ${property.imageName}}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200'">
+            <img th:src="@{'/uploads/' + ${property.imageName}}" alt="Property Image" class="card-img" onerror="this.src='https://via.placeholder.com/300x200'">
             <div class="card-body">
                 <div class="price-tag" th:text="'LKR ' + ${property.price} + '/mo'"></div>
                 <h3 th:text="${property.title}"></h3>
-                <p>📍 <span th:text="${property.location}"></span></p>
+                <div class="location-tag">📍 <span th:text="${property.location}"></span></div>
                 <a href="#" class="btn-view">View Details</a>
             </div>
         </div>
+
+        <div th:if="${#lists.isEmpty(properties)}" class="no-data">
+            <h3>No boarding places found.</h3>
+            <p>Try changing your search filters.</p>
+        </div>
+    </div>
+
+    <div th:if="${totalPages > 1}" class="pagination-container">
+        <a th:if="${currentPage > 0}"
+           th:href="@{/search(location=${location}, price=${price}, page=${currentPage - 1})}"
+           class="btn-view" style="padding: 10px 20px; background-color: var(--primary-green);">Previous</a>
+
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/search(location=${location}, price=${price}, page=${i})}"
+               th:text="${i + 1}"
+               th:style="${currentPage == i} ? 'background: var(--primary-green); color: white; padding: 10px 15px; border-radius: 8px; text-decoration: none;' : 'background: white; color: var(--text-dark); padding: 10px 15px; border-radius: 8px; text-decoration: none; border: 1px solid #ddd;'"></a>
+        </span>
+
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/search(location=${location}, price=${price}, page=${currentPage + 1})}"
+           class="btn-view" style="padding: 10px 20px; background-color: var(--primary-green);">Next</a>
     </div>
 </div>
 
