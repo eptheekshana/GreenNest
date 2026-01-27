@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.security.Principal;
 
@@ -22,49 +21,44 @@ public class PropertyController {
     @Autowired
     private UserService userService;
 
-    // 1. Show the "Add Property" Page
     @GetMapping("/owner/add-property")
     public String showAddPropertyForm(Model model, Principal principal) {
-
-        // Get the logged-in user
         String email = principal.getName();
         User user = userService.findByEmail(email);
-
-        // SECURITY CHECK: Is this user allowed to upload?
         if (!userService.canUploadProperty(user)) {
-            return "redirect:/?error=not-verified"; // Redirect if not verified
+            return "redirect:/?error=not-verified";
         }
-
         model.addAttribute("property", new Property());
-        return "owner/add-property"; // Matches the HTML file name
+        return "owner/add-property";
     }
 
-    // 2. Handle the Form Submission
     @PostMapping("/owner/add-property")
     public String saveProperty(@ModelAttribute Property property,
                                @RequestParam("image") MultipartFile image,
                                Principal principal) {
         try {
-            // Set the owner of the property
             String email = principal.getName();
             User user = userService.findByEmail(email);
             property.setOwner(user);
-
-            // Save via Service
             propertyService.saveProperty(property, image);
-
-            return "redirect:/properties?success"; // Go to list page on success
-
+            return "redirect:/properties?success";
         } catch (IOException e) {
             e.printStackTrace();
             return "redirect:/owner/add-property?error=upload-failed";
         }
     }
 
-    // 3. Show All Properties
     @GetMapping("/properties")
     public String listProperties(Model model) {
         model.addAttribute("properties", propertyService.getAllProperties());
+        return "property-list";
+    }
+
+    @GetMapping("/search")
+    public String searchProperties(@RequestParam(required = false) String location,
+                                   @RequestParam(required = false) Double price,
+                                   Model model) {
+        model.addAttribute("properties", propertyService.searchProperties(location, price));
         return "property-list";
     }
 }
