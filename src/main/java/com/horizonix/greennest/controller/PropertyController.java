@@ -43,7 +43,6 @@ public class PropertyController {
             propertyService.saveProperty(property, image);
             return "redirect:/properties?success";
         } catch (IOException e) {
-            e.printStackTrace();
             return "redirect:/owner/add-property?error=upload-failed";
         }
     }
