@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,6 +21,10 @@ public class PropertyService {
     private PropertyRepository propertyRepository;
 
     private final String uploadDir = "src/main/resources/static/uploads/";
+
+    public List<Property> getAllProperties() {
+        return propertyRepository.findAll();
+    }
 
     public void saveProperty(Property property, MultipartFile image) throws IOException {
         if (!image.isEmpty()) {
@@ -35,5 +40,9 @@ public class PropertyService {
         if (location == null) location = "";
         if (price == null) price = 1000000.0;
         return propertyRepository.findByLocationContainingIgnoreCaseAndPriceLessThanEqual(location, price, pageable);
+    }
+
+    public Property getPropertyById(Long id) {
+        return propertyRepository.findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
     }
 }
