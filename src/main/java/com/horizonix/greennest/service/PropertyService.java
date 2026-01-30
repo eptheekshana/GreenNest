@@ -36,9 +36,10 @@ public class PropertyService {
     }
 
     public void saveProperty(Property property, MultipartFile image) throws IOException {
-        if (!image.isEmpty()) {
+        if (image != null && !image.isEmpty()) {
             String fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
             Path path = Paths.get(uploadDir + fileName);
+            Files.createDirectories(path.getParent());
             Files.copy(image.getInputStream(), path);
             property.setImageName(fileName);
         }
@@ -49,5 +50,9 @@ public class PropertyService {
         if (location == null) location = "";
         if (price == null) price = 1000000.0;
         return propertyRepository.findByLocationContainingIgnoreCaseAndPriceLessThanEqual(location, price, pageable);
+    }
+
+    public void deleteProperty(Long id) {
+        propertyRepository.deleteById(id);
     }
 }

@@ -23,12 +23,6 @@ public class PropertyController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/listings")
-    public String listProperties(Model model) {
-        model.addAttribute("properties", propertyService.getAllProperties());
-        return "listings";
-    }
-
     @GetMapping("/search")
     public String searchProperties(@RequestParam(required = false) String location,
                                    @RequestParam(required = false) Double price,
@@ -51,11 +45,33 @@ public class PropertyController {
         return "property-details";
     }
 
-    @GetMapping("/owner/my-properties")
-    public String showOwnerProperties(Model model, Principal principal) {
+    @GetMapping("/owner/dashboard")
+    public String showDashboard(Model model, Principal principal) {
         String email = principal.getName();
         User user = userService.findByEmail(email);
         model.addAttribute("properties", propertyService.getPropertiesByOwner(user));
-        return "owner/my-properties";
+        return "dashboard";
+    }
+
+    @GetMapping("/property/add")
+    public String showAddForm(Model model) {
+        model.addAttribute("property", new Property());
+        return "add-property";
+    }
+
+    @PostMapping("/property/save")
+    public String saveProperty(@ModelAttribute Property property,
+                               @RequestParam("image") MultipartFile image,
+                               Principal principal) throws IOException {
+        User user = userService.findByEmail(principal.getName());
+        property.setOwner(user);
+        propertyService.saveProperty(property, image);
+        return "redirect:/owner/dashboard?success";
+    }
+
+    @GetMapping("/property/delete/{id}")
+    public String deleteProperty(@PathVariable Long id) {
+        propertyService.deleteProperty(id);
+        return "redirect:/owner/dashboard?deleted";
     }
 }

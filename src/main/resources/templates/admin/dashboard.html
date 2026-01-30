@@ -4,354 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Owner Dashboard - GreenNest</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-
     <style>
-        /* ============================
-           1. DASHBOARD VARIABLES
-           ============================ */
         :root {
             --primary-green: #27ae60;
-            --primary-light: #e8f8f5; /* Light green for backgrounds */
-            --text-dark: #2c3e50;
-            --text-muted: #64748b;
-            --bg-body: #f1f5f9;       /* Slate grey for dashboard bg */
+            --bg-body: #f1f5f9;
             --white: #ffffff;
             --border: #e2e8f0;
             --radius: 12px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-
-            /* Status Colors */
-            --status-pending-bg: #fff7ed;
-            --status-pending-text: #c2410c;
-            --status-success-bg: #ecfdf5;
-            --status-success-text: #15803d;
-            --status-danger-bg: #fef2f2;
-            --status-danger-text: #b91c1c;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-        }
-
-        /* ============================
-           2. LAYOUT (Grid System)
-           ============================ */
-        .dashboard-wrapper {
-            display: grid;
-            grid-template-columns: 260px 1fr; /* Fixed sidebar, flexible content */
-            min-height: calc(100vh - 70px);   /* Adjust based on your header height */
-        }
-
-        /* ============================
-           3. SIDEBAR NAVIGATION
-           ============================ */
-        .sidebar {
-            background: var(--white);
-            border-right: 1px solid var(--border);
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            position: sticky;
-            top: 0;
-            height: 100%;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            color: var(--text-muted);
-            text-decoration: none;
-            border-radius: var(--radius);
-            font-weight: 500;
-            transition: all 0.2s ease;
-            font-size: 0.95rem;
-        }
-
-        .nav-link span { margin-right: 12px; font-size: 1.2rem; }
-
-        .nav-link:hover {
-            background-color: var(--bg-body);
-            color: var(--primary-green);
-        }
-
-        /* Active State logic */
-        .nav-link.active {
-            background-color: var(--primary-light);
-            color: var(--primary-green);
-            font-weight: 600;
-        }
-
-        /* Notification Badge in Sidebar */
-        .nav-badge {
-            margin-left: auto;
-            background: var(--status-pending-text);
-            color: white;
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 10px;
-        }
-
-        /* ============================
-           4. MAIN AREA & STATS
-           ============================ */
-        .main-content {
-            padding: 30px 40px;
-            overflow-y: auto;
-        }
-
-        .welcome-header { margin-bottom: 35px; }
-        .welcome-header h1 { font-size: 1.8rem; color: var(--text-dark); }
-        .welcome-header p { color: var(--text-muted); margin-top: 5px; }
-
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .kpi-card {
-            background: var(--white);
-            padding: 25px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            transition: transform 0.2s;
-        }
-
-        .kpi-card:hover { transform: translateY(-2px); }
-
-        .kpi-value {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--primary-green);
-            line-height: 1;
-            margin-bottom: 8px;
-        }
-
-        .kpi-label { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
-
-        /* ============================
-           5. DATA TABLES
-           ============================ */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .table-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            overflow: hidden; /* Rounds corners of the table */
-        }
-
-        .styled-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-
-        .styled-table th {
-            background-color: #f8fafc;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-align: left;
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-        }
-
-        .styled-table td {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-dark);
-            vertical-align: middle;
-        }
-
-        .styled-table tr:last-child td { border-bottom: none; }
-        .styled-table tr:hover { background-color: #fcfcfc; }
-
-        /* Status Pills */
-        .status-pill {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-        .status-pending { background: var(--status-pending-bg); color: var(--status-pending-text); }
-        .status-verified, .status-APPROVED { background: var(--status-success-bg); color: var(--status-success-text); }
-        .status-rejected { background: var(--status-danger-bg); color: var(--status-danger-text); }
-
-        /* Buttons */
-        .btn-action {
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-right: 6px;
-            transition: opacity 0.2s;
-        }
-
-        .btn-action:hover { opacity: 0.8; }
-        .btn-green { background-color: var(--primary-light); color: var(--primary-green); }
-        .btn-red { background-color: var(--status-danger-bg); color: var(--status-danger-text); }
-        .btn-add {
-            background-color: var(--primary-green);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive Fix */
-        @media (max-width: 768px) {
-            .dashboard-wrapper { grid-template-columns: 1fr; }
-            .sidebar { display: none; /* In a real app, you'd add a toggle */ }
-            .main-content { padding: 20px; }
-        }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-body); margin: 0; padding: 20px; }
+        .main-content { max-width: 1100px; margin: auto; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-add { background: var(--primary-green); color: white; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; }
+        .table-card { background: var(--white); border-radius: var(--radius); box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px 20px; border-bottom: 1px solid var(--border); text-align: left; }
+        th { background: #f8fafc; }
+        .btn-red { color: #ef4444; text-decoration: none; font-weight: 500; }
     </style>
 </head>
 <body>
 
-<header th:replace="~{fragments/header :: header}"></header>
+<div class="main-content">
+    <div class="section-header">
+        <h2>Owner Dashboard</h2>
+        <a th:href="@{/property/add}" class="btn-add">+ Add Property</a>
+    </div>
 
-<div class="dashboard-wrapper">
-
-    <aside class="sidebar">
-        <nav>
-            <a href="#" class="nav-link active">
-                <span>📊</span> Dashboard
-            </a>
-            <a href="#" class="nav-link">
-                <span>🏠</span> My Properties
-            </a>
-            <a href="#" class="nav-link">
-                <span>📩</span> Requests
-                <span class="nav-badge" th:if="${pendingRequests > 0}" th:text="${pendingRequests}">2</span>
-            </a>
-            <a href="#" class="nav-link">
-                <span>⚙️</span> Settings
-            </a>
-        </nav>
-    </aside>
-
-    <main class="main-content">
-
-        <div class="welcome-header">
-            <h1>Dashboard</h1>
-            <p>Welcome back, <span th:text="${user.firstName}">Owner</span>! Here's what's happening today.</p>
-        </div>
-
-        <div class="kpi-grid">
-            <div class="kpi-card">
-                <div class="kpi-value" th:text="${totalProperties}">0</div>
-                <div class="kpi-label">Listed Properties</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-value" th:text="${pendingRequests}">0</div>
-                <div class="kpi-label">Pending Requests</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-value" style="font-size: 1.1rem; padding-top: 8px;">
-                    <span th:if="${user.verified}" class="status-pill status-verified">Verified</span>
-                    <span th:unless="${user.verified}" class="status-pill status-pending">Pending</span>
-                </div>
-                <div class="kpi-label">Account Status</div>
-            </div>
-        </div>
-
-        <div class="section-header">
-            <h3>Recent Booking Requests</h3>
-        </div>
-
-        <div class="table-card">
-            <table class="styled-table">
-                <thead>
-                <tr>
-                    <th>Student</th>
-                    <th>Property</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="booking : ${bookings}">
-                    <td style="font-weight: 500;" th:text="${booking.student.firstName}">Sadewma</td>
-                    <td th:text="${booking.property.title}">Green Villa</td>
-                    <td th:text="${booking.requestDate}">Jan 24</td>
-                    <td>
-                                <span class="status-pill"
-                                      th:classappend="'status-' + ${booking.status}"
-                                      th:text="${booking.status}">PENDING</span>
-                    </td>
-                    <td>
-                        <a th:href="@{/booking/accept/{id}(id=${booking.id})}" class="btn-action btn-green">Accept</a>
-                        <a th:href="@{/booking/reject/{id}(id=${booking.id})}" class="btn-action btn-red">Reject</a>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(bookings)}">
-                    <td colspan="5" style="text-align:center; padding: 40px; color: var(--text-muted);">
-                        No pending requests at the moment.
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <br><br>
-
-        <div class="section-header">
-            <h3>My Listed Properties</h3>
-            <a th:href="@{/property/add}" class="btn-add">+ Add New Property</a>
-        </div>
-
-        <div class="table-card">
-            <table class="styled-table">
-                <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Rent (LKR)</th>
-                    <th>Location</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="prop : ${properties}">
-                    <td style="font-weight: 500;" th:text="${prop.title}">Sunny Lodge</td>
-                    <td th:text="${prop.rentPrice}">15,000</td>
-                    <td th:text="${prop.city}">Pitipana</td>
-                    <td>
-                        <a th:href="@{/property/edit/{id}(id=${prop.id})}" class="btn-action" style="background:#f1f5f9; color:#475569;">Edit</a>
-                        <a th:href="@{/property/delete/{id}(id=${prop.id})}" class="btn-action btn-red">Delete</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </main>
+    <div class="table-card">
+        <table>
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Price (LKR)</th>
+                <th>Location</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="prop : ${properties}">
+                <td th:text="${prop.title}"></td>
+                <td th:text="${prop.price}"></td>
+                <td th:text="${prop.location}"></td>
+                <td>
+                    <a th:href="@{/property/delete/{id}(id=${prop.id})}" class="btn-red" onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(properties)}">
+                <td colspan="4" style="text-align: center;">No properties found.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<footer th:replace="~{fragments/footer :: footer}"></footer>
 
 </body>
 </html>
