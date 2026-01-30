@@ -23,6 +23,12 @@ public class PropertyController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/listings")
+    public String listProperties(Model model) {
+        model.addAttribute("properties", propertyService.getAllProperties());
+        return "listings";
+    }
+
     @GetMapping("/search")
     public String searchProperties(@RequestParam(required = false) String location,
                                    @RequestParam(required = false) Double price,
@@ -30,12 +36,26 @@ public class PropertyController {
                                    Model model) {
         PageRequest pageable = PageRequest.of(page, 6);
         Page<Property> propertyPage = propertyService.searchProperties(location, price, pageable);
-
         model.addAttribute("properties", propertyPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", propertyPage.getTotalPages());
         model.addAttribute("location", location);
         model.addAttribute("price", price);
         return "listings";
+    }
+
+    @GetMapping("/property/{id}")
+    public String showPropertyDetails(@PathVariable Long id, Model model) {
+        Property property = propertyService.getPropertyById(id);
+        model.addAttribute("property", property);
+        return "property-details";
+    }
+
+    @GetMapping("/owner/my-properties")
+    public String showOwnerProperties(Model model, Principal principal) {
+        String email = principal.getName();
+        User user = userService.findByEmail(email);
+        model.addAttribute("properties", propertyService.getPropertiesByOwner(user));
+        return "owner/my-properties";
     }
 }

@@ -1,6 +1,7 @@
 package com.horizonix.greennest.service;
 
 import com.horizonix.greennest.entity.Property;
+import com.horizonix.greennest.entity.User;
 import com.horizonix.greennest.repository.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,14 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
+    public Property getPropertyById(Long id) {
+        return propertyRepository.findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
+    }
+
+    public List<Property> getPropertiesByOwner(User owner) {
+        return propertyRepository.findByOwner(owner);
+    }
+
     public void saveProperty(Property property, MultipartFile image) throws IOException {
         if (!image.isEmpty()) {
             String fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
@@ -40,9 +49,5 @@ public class PropertyService {
         if (location == null) location = "";
         if (price == null) price = 1000000.0;
         return propertyRepository.findByLocationContainingIgnoreCaseAndPriceLessThanEqual(location, price, pageable);
-    }
-
-    public Property getPropertyById(Long id) {
-        return propertyRepository.findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
     }
 }
