@@ -23,8 +23,7 @@ public class PropertyService {
 
     private final String uploadDir = "src/main/resources/static/uploads/";
 
-    // --- 1. PUBLIC: GET ALL (Verified Only & Sorted Newest First) ---
-    // ⚠️ CRITICAL: Do not use findAll() here!
+    // --- 1. PUBLIC: GET ALL (Verified Only & Sorted4 Newest First) ---
     public List<Property> getAllProperties() {
         return propertyRepository.findByOwner_IsVerifiedTrueOrderByCreatedAtDesc();
     }
