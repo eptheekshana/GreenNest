@@ -17,12 +17,25 @@ import java.security.Principal;
 @Controller
 public class PropertyController {
 
-    @Autowired
-    private PropertyService propertyService;
+    @Autowired private PropertyService propertyService;
+    @Autowired private UserService userService;
 
-    @Autowired
-    private UserService userService;
+    // --- 1. PUBLIC: LIST ALL PROPERTIES ---
+    @GetMapping("/properties")
+    public String listProperties(Model model) {
+        model.addAttribute("properties", propertyService.getAllProperties());
+        return "listings"; // Reusing your listings.html
+    }
 
+    // --- 2. PUBLIC: PROPERTY DETAILS ---
+    @GetMapping("/property/{id}")
+    public String showPropertyDetails(@PathVariable Long id, Model model) {
+        Property property = propertyService.getPropertyById(id);
+        model.addAttribute("property", property);
+        return "property-details"; // You need to create this HTML file
+    }
+
+    // --- 3. PUBLIC: SEARCH ---
     @GetMapping("/search")
     public String searchProperties(@RequestParam(required = false) String location,
                                    @RequestParam(required = false) Double price,
@@ -30,6 +43,7 @@ public class PropertyController {
                                    Model model) {
         PageRequest pageable = PageRequest.of(page, 6);
         Page<Property> propertyPage = propertyService.searchProperties(location, price, pageable);
+
         model.addAttribute("properties", propertyPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", propertyPage.getTotalPages());
@@ -38,39 +52,49 @@ public class PropertyController {
         return "listings";
     }
 
-    @GetMapping("/property/{id}")
-    public String showPropertyDetails(@PathVariable Long id, Model model) {
-        Property property = propertyService.getPropertyById(id);
-        model.addAttribute("property", property);
-        return "property-details";
-    }
-
+    // --- 4. OWNER: DASHBOARD ---
     @GetMapping("/owner/dashboard")
-    public String showDashboard(Model model, Principal principal) {
-        String email = principal.getName();
-        User user = userService.findByEmail(email);
-        model.addAttribute("properties", propertyService.getPropertiesByOwner(user));
-        return "dashboard";
+    public String showOwnerDashboard(Model model, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        model.addAttribute("myProperties", propertyService.getPropertiesByOwner(user));
+        model.addAttribute("ownerName", user.getFullName());
+        return "owner/dashboard";
     }
 
-    @GetMapping("/property/add")
-    public String showAddForm(Model model) {
+    // --- 5. OWNER: SHOW ADD FORM ---
+    @GetMapping("/owner/add-property")
+    public String showAddPropertyForm(Model model, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+
+        // Check if Owner is Verified
+        if (!user.isVerified()) {
+            return "redirect:/owner/dashboard?error=not-verified";
+        }
+
         model.addAttribute("property", new Property());
-        return "add-property";
+        return "owner/add-property";
     }
 
-    @PostMapping("/property/save")
+    // --- 6. OWNER: SAVE PROPERTY ---
+    @PostMapping("/owner/add-property")
     public String saveProperty(@ModelAttribute Property property,
                                @RequestParam("image") MultipartFile image,
-                               Principal principal) throws IOException {
-        User user = userService.findByEmail(principal.getName());
-        property.setOwner(user);
-        propertyService.saveProperty(property, image);
-        return "redirect:/owner/dashboard?success";
+                               Principal principal) {
+        try {
+            User user = userService.findByEmail(principal.getName());
+            property.setOwner(user);
+            propertyService.saveProperty(property, image);
+            return "redirect:/owner/dashboard?success";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "redirect:/owner/add-property?error=upload-failed";
+        }
     }
 
-    @GetMapping("/property/delete/{id}")
-    public String deleteProperty(@PathVariable Long id) {
+    // --- 7. OWNER: DELETE PROPERTY ---
+    @GetMapping("/owner/delete/{id}")
+    public String deleteProperty(@PathVariable Long id, Principal principal) {
+        // Optional: Add check to ensure only the owner can delete their own property
         propertyService.deleteProperty(id);
         return "redirect:/owner/dashboard?deleted";
     }
