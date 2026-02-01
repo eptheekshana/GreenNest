@@ -1,6 +1,5 @@
 package com.horizonix.greennest.config;
 
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,43 +15,59 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // CSRF Protection
-                // For this assignment, we will keep it disabled to make Postman testing easier initially.
+                // CSRF Protection (Disabled for development ease)
                 .csrf(csrf -> csrf.disable())
 
-                // Authorize Requests
+                // --- 1. DEFINE WHO CAN SEE WHAT ---
                 .authorizeHttpRequests(auth -> auth
+                        // Public Pages (Home, Login, Register, Search, Verification)
+                        .requestMatchers("/", "/register", "/login", "/verify-otp", "/properties", "/search", "/property/**").permitAll()
 
-                        .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                        // Static Resources (CSS, Images)
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
 
-                        // Restrict Admin pages to ADMIN role only
+                        // Restrict Admin pages
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // Restrict Owner pages to OWNER role only
+                        // Restrict Owner pages
                         .requestMatchers("/owner/**").hasRole("OWNER")
 
-                        // All other pages require a logged-in user
+                        // Everything else requires login
                         .anyRequest().authenticated()
                 )
 
-                // Form Login Configuration
+                // --- 2. LOGIN CONFIGURATION ---
                 .formLogin(form -> form
-                        .loginPage("/login") // Logic: If unauthenticated, redirect here
-                        .defaultSuccessUrl("/", true) // Redirect here after successful login
+                        .loginPage("/login")
+                        .loginProcessingUrl("/authenticateTheUser") // Ensure your login form uses th:action="@{/authenticateTheUser}" or just "/login" (POST)
+
+                        // ✅ CUSTOM SUCCESS HANDLER (The Logic You Needed)
+                        .successHandler((request, response, authentication) -> {
+                            var roles = authentication.getAuthorities().stream()
+                                    .map(r -> r.getAuthority()).toList();
+
+                            if (roles.contains("ROLE_ADMIN")) {
+                                response.sendRedirect("/admin/dashboard");
+                            } else if (roles.contains("ROLE_OWNER")) {
+                                response.sendRedirect("/owner/dashboard");
+                            } else {
+                                // Students go here!
+                                response.sendRedirect("/properties");
+                            }
+                        })
                         .permitAll()
                 )
 
-                // Logout Configuration
+                // --- 3. LOGOUT CONFIGURATION ---
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout") // Redirect here after logout
+                        .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
 
         return http.build();
     }
 
-    // This Bean handles password encryption
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
