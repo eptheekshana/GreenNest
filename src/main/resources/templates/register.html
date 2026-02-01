@@ -132,6 +132,16 @@
         </div>
 
         <div class="input-wrapper">
+            <label for="contactNumber">Contact Number</label>
+            <input type="tel" id="contactNumber" th:field="*{contactNumber}"
+                   th:classappend="${#fields.hasErrors('contactNumber')} ? 'is-invalid'"
+                   placeholder="07x xxxxxxx"
+                   pattern="[0-9]{10}"
+                   title="Please enter a valid 10-digit mobile number" required>
+            <span class="error-msg" th:if="${#fields.hasErrors('contactNumber')}" th:errors="*{contactNumber}"></span>
+        </div>
+
+        <div class="input-wrapper">
             <label for="password">Password</label>
             <input type="password" id="password" th:field="*{password}"
                    th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
