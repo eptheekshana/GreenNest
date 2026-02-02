@@ -15,34 +15,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // CSRF Protection (Disabled for development ease)
+                // Disable CSRF for easier development (enable in production)
                 .csrf(csrf -> csrf.disable())
 
-                // --- 1. DEFINE WHO CAN SEE WHAT ---
+                // --- AUTHORIZATION RULES ---
                 .authorizeHttpRequests(auth -> auth
-                        // Public Pages (Home, Login, Register, Search, Verification)
-                        .requestMatchers("/", "/register", "/login", "/verify-otp", "/properties", "/search", "/property/**").permitAll()
+                        // 1. PUBLIC PAGES (No Login Required)
+                        // Added "/register", "/verify-otp", and "/super-secret-admin-create"
+                        .requestMatchers("/", "/login", "/register", "/verify-otp", "/super-secret-admin-create").permitAll()
 
-                        // Static Resources (CSS, Images)
+                        // Allow static resources (CSS, Images, Uploads)
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
 
-                        // Restrict Admin pages
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Allow searching and viewing properties without login
+                        .requestMatchers("/properties", "/search", "/property/**").permitAll()
 
-                        // Restrict Owner pages
+                        // 2. PROTECTED PAGES
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/owner/**").hasRole("OWNER")
 
-                        // Everything else requires login
+                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
 
-                // --- 2. LOGIN CONFIGURATION ---
+                // --- LOGIN CONFIGURATION ---
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/authenticateTheUser") // Ensure your login form uses th:action="@{/authenticateTheUser}" or just "/login" (POST)
-
-                        // ✅ CUSTOM SUCCESS HANDLER (The Logic You Needed)
+                        .loginPage("/login") // Custom Login HTML
+                        .loginProcessingUrl("/login") // Where the form POSTs to
                         .successHandler((request, response, authentication) -> {
+                            // Custom Redirect based on Role
                             var roles = authentication.getAuthorities().stream()
                                     .map(r -> r.getAuthority()).toList();
 
@@ -51,14 +52,13 @@ public class SecurityConfig {
                             } else if (roles.contains("ROLE_OWNER")) {
                                 response.sendRedirect("/owner/dashboard");
                             } else {
-                                // Students go here!
-                                response.sendRedirect("/properties");
+                                response.sendRedirect("/properties"); // Students go here
                             }
                         })
                         .permitAll()
                 )
 
-                // --- 3. LOGOUT CONFIGURATION ---
+                // --- LOGOUT CONFIGURATION ---
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
