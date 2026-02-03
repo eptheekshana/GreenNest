@@ -12,24 +12,14 @@
            1. CONFIGURATION & RESET
            ============================ */
         :root {
-            /* Brand Colors matched to login/register pages */
             --primary-green: #27ae60;
             --primary-hover: #219150;
             --text-light: #f8f9fa;
-            /* Slightly lowered opacity from 0.85 to 0.75 so the image shows through better */
-            --overlay-dark: rgba(14, 46, 26, 0.75);
+            --bg-solid: #0e2e1a; /* Dark Green Background */
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            overflow-x: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; overflow-x: hidden; }
 
         /* ============================
            2. HERO SECTION LAYOUT
@@ -43,57 +33,27 @@
             justify-content: center;
             text-align: center;
             color: white;
-
-            /* IMAGE */
-            background-image:url("static/images/boarding-room.JPEG");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        /* The dark overlay that makes text readable */
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--overlay-dark), rgba(0, 0, 0, 0.5));
-            z-index: 1;
+            background-color: var(--bg-solid); /* Solid Color */
         }
 
         /* ============================
            3. TYPOGRAPHY & CONTENT
            ============================ */
         .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 850px;
-            padding: 24px;
+            position: relative; z-index: 2; max-width: 850px; padding: 24px;
         }
 
         .main-heading {
-            font-size: 3.5rem;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            opacity: 0;
+            font-size: 3.5rem; font-weight: 700; line-height: 1.1;
+            margin-bottom: 20px; opacity: 0;
             animation: slideUpFade 0.8s ease-out forwards;
         }
 
-        .brand-highlight {
-            color: #4ade80;
-            position: relative;
-            display: inline-block;
-        }
+        .brand-highlight { color: #4ade80; position: relative; display: inline-block; }
 
         .sub-heading {
-            font-size: 1.25rem;
-            color: #e2e8f0;
-            font-weight: 300;
-            margin-bottom: 40px;
-            line-height: 1.6;
-            opacity: 0;
+            font-size: 1.25rem; color: #e2e8f0; font-weight: 300;
+            margin-bottom: 40px; line-height: 1.6; opacity: 0;
             animation: slideUpFade 0.8s ease-out 0.2s forwards;
         }
 
@@ -101,58 +61,39 @@
            4. ACTION BUTTONS
            ============================ */
         .button-group {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            opacity: 0;
-            animation: slideUpFade 0.8s ease-out 0.4s forwards;
+            display: flex; gap: 20px; justify-content: center;
+            opacity: 0; animation: slideUpFade 0.8s ease-out 0.4s forwards;
         }
 
         .btn {
-            text-decoration: none;
-            padding: 14px 40px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            letter-spacing: 0.5px;
+            text-decoration: none; padding: 14px 40px; border-radius: 50px;
+            font-weight: 600; font-size: 1rem; transition: all 0.3s ease; letter-spacing: 0.5px;
         }
 
         .btn-fill {
-            background-color: var(--primary-green);
-            color: white;
+            background-color: var(--primary-green); color: white;
             border: 2px solid var(--primary-green);
             box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
         }
-
         .btn-fill:hover {
-            background-color: var(--primary-hover);
-            border-color: var(--primary-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.6);
+            background-color: var(--primary-hover); border-color: var(--primary-hover);
+            transform: translateY(-3px); box-shadow: 0 6px 20px rgba(39, 174, 96, 0.6);
         }
 
         .btn-outline {
-            background-color: transparent;
-            color: white;
+            background-color: transparent; color: white;
             border: 2px solid rgba(255, 255, 255, 0.7);
         }
-
         .btn-outline:hover {
-            background-color: white;
-            color: #0b3d20;
-            border-color: white;
-            transform: translateY(-3px);
+            background-color: white; color: #0b3d20;
+            border-color: white; transform: translateY(-3px);
         }
 
-        /* ============================
-           5. ANIMATIONS & MEDIA QUERIES
-           ============================ */
+        /* Animation & Mobile */
         @keyframes slideUpFade {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         @media (max-width: 768px) {
             .main-heading { font-size: 2.5rem; }
             .sub-heading { font-size: 1rem; }
@@ -163,28 +104,26 @@
 </head>
 <body>
 
-<header th:replace="~{fragments/header :: header}"></header>
-
 <main>
     <section class="hero-container">
-        <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1 class="main-heading">
-                Welcome to <span class="brand-highlight">GreenNest</span>
+                Find Your Perfect <br>
+                <span class="brand-highlight">GreenNest</span> Near NSBM
             </h1>
+
             <p class="sub-heading">
-                Connecting NSBM students with the perfect boarding places. <br>
-                Safe, verified, and close to campus.
+                The safest and easiest way for students to discover <br>
+                verified boarding places, rooms, and annexes.
             </p>
+
             <div class="button-group">
-                <a href="login.html" class="btn btn-outline">Log In</a>
-                <a href="register.html" class="btn btn-fill">Get Started</a>
+                <a href="/register" class="btn btn-fill">Get Started</a>
+                <a href="/login" class="btn btn-outline">Log In</a>
             </div>
         </div>
     </section>
 </main>
-
-<footer th:replace="~{fragments/footer :: footer}"></footer>
 
 </body>
 </html>
