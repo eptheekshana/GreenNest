@@ -1,7 +1,7 @@
 package com.horizonix.greennest.service;
 
 import com.horizonix.greennest.entity.Role;
-import com.horizonix.greennest.entity.User; // ✅ Check this import!
+import com.horizonix.greennest.entity.User;
 import com.horizonix.greennest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    // ✅ Method must be named 'saveUser'
+    // Ensure this method is named 'saveUser' exactly
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(true); // Enable login immediately
@@ -37,10 +37,10 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    // Ensure helper methods exist
     public User findByEmail(String email) { return userRepository.findByEmail(email); }
     public boolean isEmailTaken(String email) { return userRepository.findByEmail(email) != null; }
 
-    // Admin stuff
     public List<User> getPendingOwners() { return userRepository.findByRoleAndIsVerifiedFalse(Role.OWNER); }
     public void approveOwner(Long id) {
         User user = userRepository.findById(id).orElse(null);

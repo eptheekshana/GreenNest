@@ -20,11 +20,11 @@ public class User implements UserDetails {
     @Column(nullable = false) private String password;
     @Column(nullable = false) private String fullName;
 
-    // Add this field so the HTML form doesn't crash
+    // Add this field (Matches your HTML form)
     @Column(name = "contact_number")
     private String contactNumber;
 
-    // Add logic fields
+    // ✅ FIX 2: Add logic fields
     private boolean enabled = true;
     private boolean isVerified = false;
 
@@ -44,7 +44,7 @@ public class User implements UserDetails {
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
 
-    // Add Getters/Setters for Contact Number
+    // ✅ FIX 3: Add Getters/Setters for Contact Number
     public String getContactNumber() { return contactNumber; }
     public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
 
@@ -55,7 +55,7 @@ public class User implements UserDetails {
     public List<Property> getProperties() { return properties; }
     public void setProperties(List<Property> properties) { this.properties = properties; }
 
-    // Add setEnabled (Fixes the "cannot find symbol" error)
+    // Add setEnabled (Fixes "cannot find symbol setEnabled")
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
 
     // --- UserDetails Logic ---

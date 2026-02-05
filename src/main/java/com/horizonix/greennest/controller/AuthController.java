@@ -17,46 +17,29 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    // --- 1. LOGIN PAGE ---
     @GetMapping("/login")
-    public String showLoginPage() {
-        return "login";
-    }
+    public String showLoginPage() { return "login"; }
 
-    // --- 2. REGISTRATION PAGE ---
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
         model.addAttribute("user", new User());
         return "register";
     }
 
-    // --- 3. HANDLE REGISTRATION ---
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") User user,
                                BindingResult result,
                                Model model) {
+        if (result.hasErrors()) { return "register"; }
 
-        // A. Validation Check
-        if (result.hasErrors()) {
+        if (userService.isEmailTaken(user.getEmail())) {
+            result.rejectValue("email", null, "Email is already registered.");
             return "register";
         }
 
-        // B. Duplicate Email Check
-        // (Ensure userService has this method. If not, use userRepository directly or add the helper)
-        User existing = userService.findByEmail(user.getEmail());
-        if (existing != null) {
-            result.rejectValue("email", null, "There is already an account registered with that email");
-            return "register";
-        }
-
-        // C. Save the User
-        // Changed 'save' to 'saveUser' to match your Service
+        // Calls 'saveUser' (Matches Service)
         userService.saveUser(user);
 
-        // D. Redirect Logic
-        if (user.getRole().name().equals("OWNER")) {
-            return "redirect:/login?success=ownerWait";
-        }
         return "redirect:/login?success";
     }
 }
