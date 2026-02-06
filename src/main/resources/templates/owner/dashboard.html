@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Owner Dashboard - GreenNest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --primary: #059669;       /* Deep Emerald */
+            --primary-soft: #d1fae5;  /* Soft Green Background */
+            --bg: #f8fafc;            /* Clean Off-White */
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --danger: #ef4444;
+            --radius: 16px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.03); /* Very subtle shadow */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+
+        /* --- 1. MINIMAL SIDEBAR --- */
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            border-right: 1px solid #e2e8f0;
+            display: flex; flex-direction: column;
+            padding: 2rem 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.4rem; font-weight: 700; color: var(--primary);
+            display: flex; align-items: center; gap: 8px; margin-bottom: 3rem;
+        }
+
+        .nav { list-style: none; flex-grow: 1; }
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px; border-radius: 12px;
+            color: var(--text-gray); font-weight: 500;
+        }
+        .nav-link.active {
+            background: var(--primary-soft); color: var(--primary); font-weight: 600;
+        }
+        .nav-link:hover:not(.active) { background: #f1f5f9; color: var(--text-dark); }
+
+        .profile {
+            border-top: 1px solid #e2e8f0; padding-top: 1.5rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .avatar {
+            width: 36px; height: 36px; background: var(--primary); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; font-weight: 600;
+        }
+
+        /* --- 2. CLEAN MAIN AREA --- */
+        .main {
+            flex-grow: 1; padding: 3rem; overflow-y: auto;
+        }
+
+        .header { margin-bottom: 2.5rem; }
+        h1 { font-size: 1.8rem; font-weight: 600; margin-bottom: 5px; }
+        .subtitle { color: var(--text-gray); font-size: 0.95rem; }
+
+        /* Stats Row - Clean Cards */
+        .stats-row {
+            display: flex; gap: 20px; margin-bottom: 3rem;
+        }
+        .stat-box {
+            background: var(--white); padding: 20px; border-radius: var(--radius);
+            min-width: 180px; border: 1px solid #f1f5f9;
+            box-shadow: var(--shadow);
+            display: flex; flex-direction: column; gap: 5px;
+        }
+        .stat-label { font-size: 0.85rem; color: var(--text-gray); font-weight: 500; }
+        .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
+
+        /* --- 3. PROPERTY GRID --- */
+        .grid-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; }
+
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;
+        }
+
+        /* Creative "Add New" Card */
+        .add-card {
+            border: 2px dashed #cbd5e1; border-radius: var(--radius);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 280px; cursor: pointer; color: var(--text-gray);
+            background: transparent;
+        }
+        .add-card:hover {
+            border-color: var(--primary); background: var(--primary-soft); color: var(--primary);
+        }
+        .plus-icon { font-size: 2rem; margin-bottom: 10px; }
+
+        /* Property Card */
+        .prop-card {
+            background: var(--white); border-radius: var(--radius); overflow: hidden;
+            border: 1px solid #f1f5f9; box-shadow: var(--shadow);
+            transition: transform 0.2s; position: relative;
+        }
+        .prop-card:hover { transform: translateY(-4px); }
+
+        .img-wrap { height: 160px; position: relative; }
+        .prop-img { width: 100%; height: 100%; object-fit: cover; }
+
+        .status-pill {
+            position: absolute; top: 10px; left: 10px;
+            background: rgba(255,255,255,0.9); padding: 4px 10px; border-radius: 20px;
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+        }
+        .status-pill.live { color: var(--primary); }
+        .status-pill.pending { color: #f59e0b; }
+
+        .content { padding: 15px; }
+        .price { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+        .title { font-size: 0.95rem; color: var(--text-gray); margin-bottom: 15px; }
+
+        .footer {
+            display: flex; justify-content: space-between; align-items: center;
+            border-top: 1px solid #f1f5f9; padding-top: 12px;
+        }
+        .loc { font-size: 0.85rem; color: var(--text-gray); display: flex; align-items: center; gap: 4px; }
+
+        .btn-del {
+            color: var(--text-gray); font-size: 1.1rem; padding: 5px;
+        }
+        .btn-del:hover { color: var(--danger); }
+
+        /* Warning Alert */
+        .alert {
+            background: #fff7ed; border: 1px solid #ffedd5; color: #c2410c;
+            padding: 12px 20px; border-radius: 12px; margin-bottom: 2rem;
+            display: flex; align-items: center; gap: 10px; font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="logo">
+        <i class="ph-fill ph-plant"></i> GreenNest
+    </div>
+    <ul class="nav">
+        <li><a href="#" class="nav-link active"><i class="ph-bold ph-squares-four"></i> Dashboard</a></li>
+        <li><a href="#" class="nav-link"><i class="ph-bold ph-chart-bar"></i> Analytics</a></li>
+        <li><a href="#" class="nav-link"><i class="ph-bold ph-gear"></i> Settings</a></li>
+    </ul>
+    <div class="profile">
+        <div class="avatar" th:text="${#strings.substring(ownerName,0,1)}">U</div>
+        <div style="flex-grow:1;">
+            <div style="font-weight:600; font-size:0.9rem;" th:text="${ownerName}">Name</div>
+            <div style="font-size:0.75rem; color: #94a3b8;">Owner</div>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" style="border:none; background:none; cursor:pointer; color:#94a3b8;">
+                <i class="ph-bold ph-sign-out" style="font-size:1.1rem;"></i>
+            </button>
+        </form>
+    </div>
+</aside>
+
+<main class="main">
+
+    <div class="header">
+        <h1>Overview</h1>
+        <p class="subtitle">Welcome back to your simple dashboard.</p>
+    </div>
+
+    <div th:unless="${isVerified}" class="alert">
+        <i class="ph-fill ph-warning-circle"></i>
+        <span><strong>Pending:</strong> Your account is under review. Properties are currently hidden.</span>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-box">
+            <span class="stat-label">Properties</span>
+            <span class="stat-number" th:text="${myProperties.size()}">0</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-label">Total Views</span>
+            <span class="stat-number">1,204</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-label">Account Status</span>
+            <span class="stat-number" style="font-size: 1.2rem; margin-top: auto;"
+                  th:text="${isVerified ? 'Active ✅' : 'Pending ⏳'}">Status</span>
+        </div>
+    </div>
+
+    <div class="grid-title">Your Listings</div>
+    <div class="grid">
+
+        <a th:href="@{/owner/add-property}" class="add-card">
+            <i class="ph-bold ph-plus plus-icon"></i>
+            <span style="font-weight: 600;">Add New Property</span>
+        </a>
+
+        <div th:each="prop : ${myProperties}" class="prop-card">
+            <div class="img-wrap">
+                <img th:src="@{'/uploads/' + ${prop.imageName}}" class="prop-img" onerror="this.src='https://placehold.co/600x400/eeeeee/cccccc?text=No+Image'">
+                <span class="status-pill" th:classappend="${isVerified ? 'live' : 'pending'}"
+                      th:text="${isVerified ? 'LIVE' : 'WAITING'}"></span>
+            </div>
+            <div class="content">
+                <div class="price" th:text="'LKR ' + ${prop.price}"></div>
+                <div class="title" th:text="${prop.title}">Title</div>
+                <div class="footer">
+                    <div class="loc"><i class="ph-fill ph-map-pin"></i> <span th:text="${prop.location}"></span></div>
+                    <a th:href="@{/owner/delete/{id}(id=${prop.id})}" class="btn-del" onclick="return confirm('Delete this?');">
+                        <i class="ph-bold ph-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>
