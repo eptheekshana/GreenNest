@@ -17,9 +17,18 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    // --- Standard User Login ---
     @GetMapping("/login")
     public String showLoginPage() { return "login"; }
 
+    // ---  HIDDEN ADMIN LOGIN ---
+    // Access this by typing: http://localhost:8080/secret-admin-entry
+    @GetMapping("/secret-admin-entry")
+    public String showHiddenAdminLogin() {
+        return "admin/admin-login"; // Looks for templates/admin/admin-login.html
+    }
+
+    // --- Registration Logic ---
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
         model.addAttribute("user", new User());
@@ -37,7 +46,6 @@ public class AuthController {
             return "register";
         }
 
-        // Calls 'saveUser' (Matches Service)
         userService.saveUser(user);
 
         return "redirect:/login?success";
