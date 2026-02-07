@@ -19,17 +19,18 @@ public class SecurityConfig {
 
                 // --- 1. PERMISSIONS ---
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/register", "/properties", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                        // "/secret-admin-entry" HERE SO EVERYONE CAN ACCESS IT
+                        .requestMatchers("/", "/login", "/register", "/secret-admin-entry", "/properties", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+
                         .requestMatchers("/owner/**").hasRole("OWNER") // Lock owner pages
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Lock admin pages
                         .anyRequest().authenticated()
                 )
 
-                // --- 2. LOGIN LOGIC (UPDATED) ---
+                // --- 2. LOGIN LOGIC ---
                 .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll()
-                        // CUSTOM REDIRECT LOGIC STARTS HERE
                         .successHandler((request, response, authentication) -> {
 
                             var roles = authentication.getAuthorities();
