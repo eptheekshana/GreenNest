@@ -12,10 +12,10 @@ public class Property {
     private Long id;
 
     @Column(nullable = false)
-    private String title;       // e.g., "Luxury Room near NSBM"
+    private String title;
 
     @Column(columnDefinition = "TEXT")
-    private String description; // e.g., "AC, Wifi included..."
+    private String description;
 
     @Column(nullable = false)
     private Double price;
@@ -25,7 +25,11 @@ public class Property {
 
     private String imageName;
 
-    // Automatic timestamp when created
+    // Status field (PENDING, APPROVED, REJECTED)
+    // Default is "PENDING" so it's hidden until Admin approves
+    @Column(nullable = false)
+    private String status = "PENDING";
+
     private LocalDateTime createdAt;
 
     // Relationship: A property belongs to one Owner
@@ -36,6 +40,7 @@ public class Property {
     // --- Constructors ---
     public Property() {
         this.createdAt = LocalDateTime.now();
+        this.status = "PENDING"; // Ensure new properties are always pending
     }
 
     // --- Getters and Setters ---
@@ -56,6 +61,10 @@ public class Property {
 
     public String getImageName() { return imageName; }
     public void setImageName(String imageName) { this.imageName = imageName; }
+
+    // Getter and Setter for Status
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

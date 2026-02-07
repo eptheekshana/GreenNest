@@ -1,6 +1,8 @@
 package com.horizonix.greennest.controller;
 
+import com.horizonix.greennest.entity.Property;
 import com.horizonix.greennest.entity.User;
+import com.horizonix.greennest.service.PropertyService;
 import com.horizonix.greennest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,19 +18,36 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
-    // 1. Dashboard: Show list of Pending Owners
+    // Inject PropertyService to handle property logic
+    @Autowired
+    private PropertyService propertyService;
+
+    // --- 1. ADMIN DASHBOARD (Shows Pending Owners AND Properties) ---
     @GetMapping("/dashboard")
     public String showAdminDashboard(Model model) {
-        // You must have this method in UserService: return userRepository.findByRoleAndIsVerifiedFalse(Role.OWNER);
+        // Fetch Pending Owners
         List<User> pendingOwners = userService.getPendingOwners();
         model.addAttribute("pendingOwners", pendingOwners);
+
+        // Fetch Pending Properties
+        // (Make sure you added 'getPendingProperties()' to PropertyService in the previous step)
+        List<Property> pendingProperties = propertyService.getPendingProperties();
+        model.addAttribute("pendingProperties", pendingProperties);
+
         return "admin/dashboard";
     }
 
-    // 2. Action: Approve Owner
+    // --- 2. ACTION: APPROVE OWNER ---
     @PostMapping("/approve/{id}")
     public String approveOwner(@PathVariable Long id) {
         userService.approveOwner(id);
-        return "redirect:/admin/dashboard?success";
+        return "redirect:/admin/dashboard?ownerSuccess";
+    }
+
+    // --- 3. APPROVE PROPERTY ---
+    @PostMapping("/approve-property/{id}")
+    public String approveProperty(@PathVariable Long id) {
+        propertyService.approveProperty(id);
+        return "redirect:/admin/dashboard?propSuccess";
     }
 }

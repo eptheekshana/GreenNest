@@ -1,63 +1,255 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Owner Dashboard - GreenNest</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Admin Dashboard - GreenNest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
     <style>
         :root {
-            --primary-green: #27ae60;
-            --bg-body: #f1f5f9;
+            --primary: #27ae60;
+            --dark: #1e293b;
+            --bg: #f8fafc;
             --white: #ffffff;
             --border: #e2e8f0;
-            --radius: 12px;
+            --danger: #ef4444;
+            --blue: #3b82f6;
         }
-        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-body); margin: 0; padding: 20px; }
-        .main-content { max-width: 1100px; margin: auto; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-add { background: var(--primary-green); color: white; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; }
-        .table-card { background: var(--white); border-radius: var(--radius); box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid var(--border); }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            display: flex; flex-direction: column;
+            position: fixed; height: 100%;
+        }
+
+        .logo {
+            font-size: 1.5rem; font-weight: 700; color: var(--primary);
+            display: flex; align-items: center; gap: 8px; margin-bottom: 3rem;
+        }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px; border-radius: 8px;
+            color: #64748b; font-weight: 500; text-decoration: none;
+            margin-bottom: 5px; transition: 0.2s;
+        }
+        .nav-item.active { background: #dcfce7; color: var(--primary); }
+        .nav-item:hover:not(.active) { background: #f1f5f9; }
+
+        .admin-profile {
+            margin-top: auto; border-top: 1px solid var(--border); padding-top: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .avatar {
+            width: 40px; height: 40px; background: var(--dark); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main {
+            margin-left: 260px; flex-grow: 1; padding: 3rem;
+        }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
+        h1 { font-size: 2rem; font-weight: 700; }
+        .subtitle { color: #64748b; }
+
+        /* --- SECTIONS --- */
+        .section-title {
+            font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .badge-count {
+            background: var(--danger); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem;
+        }
+
+        /* --- CARDS & TABLES --- */
+        .card {
+            background: var(--white); border-radius: 16px; border: 1px solid var(--border);
+            overflow: hidden; margin-bottom: 3rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 15px 20px; border-bottom: 1px solid var(--border); text-align: left; }
-        th { background: #f8fafc; }
-        .btn-red { color: #ef4444; text-decoration: none; font-weight: 500; }
+        th { background: #f8fafc; text-align: left; padding: 15px 20px; font-size: 0.85rem; color: #64748b; text-transform: uppercase; font-weight: 600; border-bottom: 1px solid var(--border); }
+        td { padding: 15px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+
+        /* Action Buttons */
+        .btn-approve {
+            background: var(--primary); color: white; border: none;
+            padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;
+            transition: 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-approve:hover { background: #219150; transform: translateY(-1px); }
+
+        .btn-reject {
+            background: white; border: 1px solid var(--border); color: var(--danger);
+            padding: 7px 14px; border-radius: 6px; cursor: pointer; margin-right: 5px;
+        }
+        .btn-reject:hover { background: #fef2f2; border-color: var(--danger); }
+
+        /* Property Image Thumb */
+        .prop-thumb {
+            width: 60px; height: 40px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border);
+        }
+
+        /* Empty State */
+        .empty-state { text-align: center; padding: 40px; color: #94a3b8; font-style: italic; }
+
+        /* Success Message */
+        .alert-success {
+            background: #dcfce7; border: 1px solid #bbf7d0; color: #166534;
+            padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+        }
     </style>
 </head>
 <body>
 
-<div class="main-content">
-    <div class="section-header">
-        <h2>Owner Dashboard</h2>
-        <a th:href="@{/property/add}" class="btn-add">+ Add Property</a>
+<aside class="sidebar">
+    <div class="logo">
+        <i class="ph-fill ph-shield-check"></i> AdminPanel
+    </div>
+    <nav>
+        <a href="#" class="nav-item active"><i class="ph-bold ph-squares-four"></i> Dashboard</a>
+        <a href="#" class="nav-item"><i class="ph-bold ph-users"></i> All Users</a>
+        <a href="#" class="nav-item"><i class="ph-bold ph-house"></i> All Listings</a>
+    </nav>
+
+    <div class="admin-profile">
+        <div class="avatar">A</div>
+        <div>
+            <div style="font-weight: 600; font-size: 0.9rem;">Administrator</div>
+            <div style="font-size: 0.75rem; color: #64748b;">Super User</div>
+        </div>
+        <form th:action="@{/logout}" method="post" style="margin-left: auto;">
+            <button type="submit" style="background:none; border:none; cursor:pointer; color: #94a3b8;">
+                <i class="ph-bold ph-sign-out" style="font-size: 1.2rem;"></i>
+            </button>
+        </form>
+    </div>
+</aside>
+
+<main class="main">
+
+    <div class="header">
+        <div>
+            <h1>Overview</h1>
+            <p class="subtitle">Manage approvals for users and listings.</p>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-size: 1.5rem; font-weight: 700;" th:text="${pendingOwners.size() + pendingProperties.size()}">0</div>
+            <div style="font-size: 0.85rem; color: #64748b;">Total Pending Items</div>
+        </div>
     </div>
 
-    <div class="table-card">
+    <div th:if="${param.ownerSuccess}" class="alert-success">
+        <i class="ph-fill ph-check-circle"></i> Owner verified successfully!
+    </div>
+    <div th:if="${param.propSuccess}" class="alert-success">
+        <i class="ph-fill ph-check-circle"></i> Property listing approved and is now live!
+    </div>
+
+
+    <div class="section-title">
+        <i class="ph-fill ph-user-circle"></i> Pending Owner Verifications
+        <span class="badge-count" th:if="${!pendingOwners.isEmpty()}" th:text="${pendingOwners.size()}">0</span>
+    </div>
+
+    <div class="card">
         <table>
             <thead>
             <tr>
-                <th>Title</th>
-                <th>Price (LKR)</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${pendingOwners}">
+                <td th:text="'#' + ${user.id}">#1</td>
+                <td style="font-weight: 600;" th:text="${user.fullName}">Name</td>
+                <td th:text="${user.email}">email@example.com</td>
+                <td><span style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">OWNER</span></td>
+                <td>
+                    <form th:action="@{/admin/approve/{id}(id=${user.id})}" method="post">
+                        <button type="submit" class="btn-approve">
+                            <i class="ph-bold ph-check"></i> Verify User
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${pendingOwners.isEmpty()}">
+                <td colspan="5" class="empty-state">No pending owner verifications.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="section-title">
+        <i class="ph-fill ph-house-line"></i> Pending Property Listings
+        <span class="badge-count" th:if="${!pendingProperties.isEmpty()}" th:text="${pendingProperties.size()}">0</span>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+            <tr>
+                <th>Image</th>
+                <th>Property Title</th>
+                <th>Owner</th>
+                <th>Price</th>
                 <th>Location</th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="prop : ${properties}">
-                <td th:text="${prop.title}"></td>
-                <td th:text="${prop.price}"></td>
-                <td th:text="${prop.location}"></td>
+            <tr th:each="prop : ${pendingProperties}">
                 <td>
-                    <a th:href="@{/property/delete/{id}(id=${prop.id})}" class="btn-red" onclick="return confirm('Are you sure?')">Delete</a>
+                    <img th:src="@{'/uploads/' + ${prop.imageName}}" class="prop-thumb"
+                         onerror="this.src='https://placehold.co/60x40?text=No+Img'">
+                </td>
+                <td>
+                    <div style="font-weight: 600;" th:text="${prop.title}">Title</div>
+                    <div style="font-size: 0.8rem; color: #94a3b8;">Submitted today</div>
+                </td>
+                <td>
+                    <div th:text="${prop.owner.fullName}">Owner Name</div>
+                    <div style="font-size: 0.75rem; color: #64748b;" th:text="${prop.owner.email}">email</div>
+                </td>
+                <td style="font-weight: 600; color: var(--primary);" th:text="'LKR ' + ${prop.price}">15000</td>
+                <td th:text="${prop.location}">Location</td>
+                <td>
+                    <form th:action="@{/admin/approve-property/{id}(id=${prop.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="btn-approve">
+                            <i class="ph-bold ph-check"></i> Approve
+                        </button>
+                    </form>
                 </td>
             </tr>
-            <tr th:if="${#lists.isEmpty(properties)}">
-                <td colspan="4" style="text-align: center;">No properties found.</td>
+            <tr th:if="${pendingProperties.isEmpty()}">
+                <td colspan="6" class="empty-state">No pending property listings.</td>
             </tr>
             </tbody>
         </table>
     </div>
-</div>
+
+</main>
 
 </body>
 </html>

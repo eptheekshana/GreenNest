@@ -9,16 +9,23 @@ import java.util.List;
 
 public interface PropertyRepository extends JpaRepository<Property, Long> {
 
-    // 1. For the Public Page (Only Verified Owners)
-    List<Property> findByOwner_IsVerifiedTrueOrderByCreatedAtDesc();
+    // --- 1. PUBLIC PAGE: Get "APPROVED" properties only ---
+    // (Replaces the old 'findByOwner_IsVerifiedTrue' method)
+    List<Property> findByStatusOrderByCreatedAtDesc(String status);
 
-    // 2. For the Owner Dashboard (All their properties)
+    // --- 2. ADMIN DASHBOARD: Get "PENDING" properties ---
+    // (You can use the method above, or this specific one)
+    List<Property> findByStatus(String status);
+
+    // --- 3. OWNER DASHBOARD: Get all properties for the logged-in owner ---
     List<Property> findByOwner(User owner);
 
-    // 3. For Search functionality (Location + Price)
-    Page<Property> findByLocationContainingIgnoreCaseAndPriceLessThanEqual(
+    // --- 4. SEARCH: Must also filter by "APPROVED" status ---
+    // We added 'AndStatus' to the end so unapproved items don't appear in search
+    Page<Property> findByLocationContainingIgnoreCaseAndPriceLessThanEqualAndStatus(
             String location,
             Double price,
+            String status, // You will pass "APPROVED" here
             Pageable pageable
     );
 }
