@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Login - GreenNest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #16a34a; /* Green */
+            --primary-dark: #15803d;
+            --bg-color: #f0fdf4; /* Very Light Green Background */
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+
+        h2 { font-size: 1.2rem; font-weight: 500; color: #64748b; margin-bottom: 30px; }
+
+        .form-group { text-align: left; margin-bottom: 20px; }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: 0.2s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover { background: var(--primary-dark); }
+
+        /* Messages */
+        .alert {
+            font-size: 0.9rem;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .alert-error { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+        .alert-success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+
+        .footer-text { margin-top: 25px; font-size: 0.85rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.58 2 4 5.58 4 10v12h16V10c0-4.42-3.58-8-8-8zm0 2c3.31 0 6 2.69 6 6v2H6v-2c0-3.31 2.69-6 6-6zm-1 10h2v4h-2v-4z"/></svg>
+        GreenNest
+    </div>
+    <h2>Admin Portal</h2>
+
+    <form th:action="@{/login}" method="post">
+
+        <div th:if="${param.error}" class="alert alert-error">
+            Invalid admin credentials. Please try again.
+        </div>
+
+        <div th:if="${param.logout}" class="alert alert-success">
+            You have been logged out securely.
+        </div>
+
+        <div class="form-group">
+            <label>Admin Email</label>
+            <input type="text" name="username" placeholder="admin@greennest.com" required autofocus>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn-login">Sign In</button>
+    </form>
+
+    <div class="footer-text">
+        Protected Area. Authorized Personnel Only.
+    </div>
+</div>
+
+</body>
+</html>
