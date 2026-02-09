@@ -100,6 +100,124 @@
             .button-group { flex-direction: column; width: 100%; gap: 15px; }
             .btn { width: 100%; display: block; }
         }
+
+        /* ============================
+           5. PROPERTIES SECTION
+           ============================ */
+        .properties-section {
+            background-color: #f8f9fa;
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .properties-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0e2e1a;
+            margin-bottom: 50px;
+        }
+
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .property-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: left;
+        }
+
+        .property-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .property-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #e0e0e0;
+        }
+
+        .property-content {
+            padding: 20px;
+        }
+
+        .property-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0e2e1a;
+            margin-bottom: 8px;
+        }
+
+        .property-location {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .property-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            max-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .property-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+
+        .property-link {
+            display: inline-block;
+            background-color: var(--primary-green);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .property-link:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .no-properties {
+            color: #666;
+            font-size: 1.1rem;
+            padding: 40px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .properties-section {
+                padding: 60px 20px;
+            }
+
+            .properties-title {
+                font-size: 2rem;
+            }
+
+            .properties-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -121,6 +239,29 @@
                 <a href="/register" class="btn btn-fill">Get Started</a>
                 <a href="/login" class="btn btn-outline">Log In</a>
             </div>
+        </div>
+    </section>
+
+    <!-- PROPERTIES SECTION -->
+    <section class="properties-section">
+        <h2 class="properties-title">Featured Properties</h2>
+
+        <div class="properties-grid" th:if="${not #lists.isEmpty(properties)}">
+            <div class="property-card" th:each="property : ${properties}">
+                <img th:src="${property.imageName != null} ? @{'/uploads/' + ${property.imageName}} : @{'/images/boarding-room.JPEG'}"
+                     alt="Property Image" class="property-image">
+                <div class="property-content">
+                    <h3 class="property-title" th:text="${property.title}">Property Title</h3>
+                    <p class="property-location" th:text="${property.location}">Location</p>
+                    <p class="property-description" th:text="${property.description}">Description</p>
+                    <div class="property-price" th:text="'Rs. ' + ${property.price}">Rs. 0</div>
+                    <a th:href="@{/property-details/{id}(id=${property.id})}" class="property-link">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="no-properties" th:if="${#lists.isEmpty(properties)}">
+            <p>No properties available at the moment. Check back soon!</p>
         </div>
     </section>
 </main>
