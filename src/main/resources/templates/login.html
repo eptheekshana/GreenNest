@@ -5,88 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - GreenNest</title>
 
-    <style>
-        /* =========================================
-           1. Variables & Reset
-           ========================================= */
-        :root {
-            --primary-green: #27ae60;
-            --primary-hover: #219150;
-            --bg-color: #f4f7f6;
-            --text-dark: #2c3e50;
-            --text-muted: #7f8c8d;
-            --border-color: #e0e0e0;
-            --error-red: #e74c3c;
-            --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
-            --radius: 8px;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Centered vertically */
-            align-items: center;     /* Centered horizontally */
-        }
-
-        /* =========================================
-           2. Layout Wrappers
-           ========================================= */
-        .onboarding-card {
-            background: white;
-            width: 100%;
-            max-width: 550px;
-            padding: 40px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* =========================================
-           3. Header & Typography
-           ========================================= */
-        .card-header { text-align: center; margin-bottom: 30px; }
-        .card-header h2 { color: var(--text-dark); font-size: 1.75rem; margin-bottom: 8px; }
-        .sub-text { color: var(--text-muted); font-size: 0.95rem; }
-
-        /* =========================================
-           4. Form Inputs
-           ========================================= */
-        .input-wrapper { margin-bottom: 20px; width: 100%; }
-        .input-wrapper label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 6px; color: var(--text-dark); }
-        .input-wrapper input {
-            width: 100%; padding: 12px; border: 1px solid var(--border-color);
-            border-radius: var(--radius); font-size: 1rem; transition: border-color 0.2s;
-        }
-        .input-wrapper input:focus {
-            outline: none; border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
-        }
-
-        /* =========================================
-           5. Buttons & Links
-           ========================================= */
-        .btn-primary {
-            background-color: var(--primary-green);
-            color: white; border: none; padding: 14px;
-            font-size: 1rem; font-weight: 600; border-radius: var(--radius);
-            cursor: pointer; width: 100%; transition: background-color 0.2s;
-        }
-        .btn-primary:hover { background-color: var(--primary-hover); }
-
-        .form-footer { text-align: center; margin-top: 25px; font-size: 0.9rem; }
-        .link-highlight { color: var(--primary-green); text-decoration: none; font-weight: 600; }
-        .link-highlight:hover { text-decoration: underline; }
-
-        /* Alerts */
-        .alert-success { background: #e8f8f5; color: #27ae60; padding: 12px; border-radius: var(--radius); margin-bottom: 20px; border: 1px solid #d1f2eb; }
-        .alert-danger { background: #fdeaea; color: var(--error-red); padding: 12px; border-radius: var(--radius); margin-bottom: 20px; border: 1px solid #fadbd8; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 
 <body>
@@ -95,7 +14,7 @@
     <div class="onboarding-card">
 
         <div class="card-header">
-            <h2>Welcome Back! 👋</h2>
+            <h2>Welcome Back! </h2>
             <p class="sub-text">Login to manage your boarding place or find your next home.</p>
         </div>
 
@@ -136,5 +55,6 @@
     </div>
 </main>
 
+<script th:src="@{/js/login.js}"></script>
 </body>
 </html>
