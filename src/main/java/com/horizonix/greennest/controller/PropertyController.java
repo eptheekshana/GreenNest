@@ -27,8 +27,15 @@ public class PropertyController {
         return "listings"; // Reusing your listings.html
     }
 
+    // --- 1B. STUDENT/BUYER: LIST ALL PROPERTIES (After Login) ---
+    @GetMapping("/user/listings")
+    public String studentListings(Model model) {
+        model.addAttribute("properties", propertyService.getAllProperties());
+        return "user/listings"; // User-specific listings page
+    }
+
     // --- 2. PUBLIC: PROPERTY DETAILS ---
-    @GetMapping("/property/{id}")
+    @GetMapping({"/property/{id}", "/property-details/{id}"})
     public String showPropertyDetails(@PathVariable Long id, Model model) {
         Property property = propertyService.getPropertyById(id);
         model.addAttribute("property", property);

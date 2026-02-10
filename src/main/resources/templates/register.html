@@ -108,7 +108,8 @@
         <div class="input-wrapper">
             <label for="role">I am a:</label>
             <select id="role" th:field="*{role}" required>
-                <option value="STUDENT">Student (Looking for a place)</option>
+                <option value="">-- Select your role --</option>
+                <option value="STUDENT" selected>Student (Looking for a place)</option>
                 <option value="OWNER">Property Owner (Listing a place)</option>
             </select>
         </div>

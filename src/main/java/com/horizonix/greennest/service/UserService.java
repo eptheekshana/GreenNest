@@ -26,13 +26,18 @@ public class UserService implements UserDetailsService {
 
     // Ensure this method is named 'saveUser' exactly
     public void saveUser(User user) {
+        // Set default role if not specified
+        if (user.getRole() == null) {
+            user.setRole(Role.STUDENT);
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(true); // Enable login immediately
 
         if (user.getRole() == Role.OWNER) {
-            user.setVerified(false);
+            user.setVerified(false); // Owners need admin approval
         } else {
-            user.setVerified(true);
+            user.setVerified(true); // Students are immediately verified
         }
         userRepository.save(user);
     }

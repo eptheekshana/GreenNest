@@ -19,7 +19,8 @@ public class SecurityConfig {
 
                 // --- 1. PERMISSIONS ---
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/register", "/properties", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                        .requestMatchers("/", "/login", "/register", "/properties", "/property/**", "/property-details/**", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                        .requestMatchers("/user/**").hasRole("STUDENT") // Student/Buyer pages
                         .requestMatchers("/owner/**").hasRole("OWNER") // Lock owner pages
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Lock admin pages
                         .anyRequest().authenticated()
@@ -28,14 +29,15 @@ public class SecurityConfig {
                 // --- 2. LOGIN LOGIC (UPDATED) ---
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .loginProcessingUrl("/authenticateTheUser")
                         .permitAll()
                         // CUSTOM REDIRECT LOGIC STARTS HERE
                         .successHandler((request, response, authentication) -> {
 
                             var roles = authentication.getAuthorities();
-                            String redirectUrl = "/"; // Default for Students
+                            String redirectUrl = "/user/listings"; // Default for STUDENT/BUYER
 
-                            // Check if user is an OWNER
+                            // Check if user is an OWNER (Property Owner)
                             if (roles.stream().anyMatch(a -> a.getAuthority().equals("ROLE_OWNER"))) {
                                 redirectUrl = "/owner/dashboard";
                             }

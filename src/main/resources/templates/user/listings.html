@@ -238,7 +238,7 @@
                 <div class="price-tag" th:text="'LKR ' + ${property.price} + '/mo'"></div>
                 <h3 th:text="${property.title}">Luxury Room</h3>
                 <div class="location-tag">📍 <span th:text="${property.location}">Homagama</span></div>
-                <a th:href="@{/book/{id}(id=${property.id})}" class="btn-view">View Details</a>
+                <a th:href="@{/property-details/{id}(id=${property.id})}" class="btn-view">View Details</a>
             </div>
         </div>
 
