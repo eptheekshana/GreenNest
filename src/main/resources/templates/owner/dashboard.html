@@ -15,7 +15,7 @@
             --text-gray: #64748b;
             --danger: #ef4444;
             --radius: 16px;
-            --shadow: 0 4px 20px rgba(0,0,0,0.03); /* Very subtle shadow */
+            --shadow: 0 4px 20px rgba(0,0,0,0.03);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,7 +31,7 @@
 
         a { text-decoration: none; color: inherit; transition: 0.2s; }
 
-        /* --- 1. MINIMAL SIDEBAR --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             width: 250px;
             background: var(--white);
@@ -66,7 +66,7 @@
             font-size: 0.9rem; font-weight: 600;
         }
 
-        /* --- 2. CLEAN MAIN AREA --- */
+        /* --- MAIN AREA --- */
         .main {
             flex-grow: 1; padding: 3rem; overflow-y: auto;
         }
@@ -75,7 +75,7 @@
         h1 { font-size: 1.8rem; font-weight: 600; margin-bottom: 5px; }
         .subtitle { color: var(--text-gray); font-size: 0.95rem; }
 
-        /* Stats Row - Clean Cards */
+        /* Stats Row */
         .stats-row {
             display: flex; gap: 20px; margin-bottom: 3rem;
         }
@@ -88,14 +88,14 @@
         .stat-label { font-size: 0.85rem; color: var(--text-gray); font-weight: 500; }
         .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
 
-        /* --- 3. PROPERTY GRID --- */
+        /* --- PROPERTY GRID --- */
         .grid-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; }
 
         .grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;
         }
 
-        /* Creative "Add New" Card */
+        /* Add New Card */
         .add-card {
             border: 2px dashed #cbd5e1; border-radius: var(--radius);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -178,10 +178,10 @@
 
     <div class="header">
         <h1>Overview</h1>
-        <p class="subtitle">Welcome back to your simple dashboard.</p>
+        <p class="subtitle">Welcome back to your dashboard.</p>
     </div>
 
-    <div th:unless="${isVerified}" class="alert">
+    <div th:unless="${isVerified == true}" class="alert">
         <i class="ph-fill ph-warning-circle"></i>
         <span><strong>Pending:</strong> Your account is under review. Properties are currently hidden.</span>
     </div>
@@ -192,13 +192,9 @@
             <span class="stat-number" th:text="${myProperties.size()}">0</span>
         </div>
         <div class="stat-box">
-            <span class="stat-label">Total Views</span>
-            <span class="stat-number">1,204</span>
-        </div>
-        <div class="stat-box">
             <span class="stat-label">Account Status</span>
             <span class="stat-number" style="font-size: 1.2rem; margin-top: auto;"
-                  th:text="${isVerified ? 'Active ✅' : 'Pending ⏳'}">Status</span>
+                  th:text="${isVerified == true ? 'Active ' : 'Pending ⏳'}">Status</span>
         </div>
     </div>
 
@@ -212,9 +208,11 @@
 
         <div th:each="prop : ${myProperties}" class="prop-card">
             <div class="img-wrap">
-                <img th:src="@{'/uploads/' + ${prop.imageName}}" class="prop-img" onerror="this.src='https://placehold.co/600x400/eeeeee/cccccc?text=No+Image'">
-                <span class="status-pill" th:classappend="${isVerified ? 'live' : 'pending'}"
-                      th:text="${isVerified ? 'LIVE' : 'WAITING'}"></span>
+                <img th:src="@{'/uploads/' + ${prop.imageName}}" class="prop-img"
+                     onerror="this.src='https://placehold.co/600x400/eeeeee/cccccc?text=No+Image'">
+
+                <span class="status-pill" th:classappend="${isVerified == true ? 'live' : 'pending'}"
+                      th:text="${isVerified == true ? 'LIVE' : 'WAITING'}"></span>
             </div>
             <div class="content">
                 <div class="price" th:text="'LKR ' + ${prop.price}"></div>
