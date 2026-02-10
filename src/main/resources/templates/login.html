@@ -25,7 +25,10 @@
             <strong>Logged Out.</strong> See you soon!
         </div>
         <div th:if="${param.success == 'ownerWait'}" class="alert alert-success">
-            <strong>Account Created!</strong> Please wait for Admin approval.
+            <strong>Account Created!</strong> Please wait for Admin approval. You'll be notified once verified.
+        </div>
+        <div th:if="${param.success}" class="alert alert-success">
+            <strong>Registration Successful!</strong> Your account has been created. Please login now.
         </div>
 
         <form th:action="@{/authenticateTheUser}" method="post">

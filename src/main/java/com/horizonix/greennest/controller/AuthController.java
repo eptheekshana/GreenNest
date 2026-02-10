@@ -37,17 +37,21 @@ public class AuthController {
 
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") User user,
-                               BindingResult result,
-                               Model model) {
+                               BindingResult result) {
         if (result.hasErrors()) { return "register"; }
 
         if (userService.isEmailTaken(user.getEmail())) {
-            result.rejectValue("email", null, "Email is already registered.");
+            result.rejectValue("email", "error.email", "Email is already registered.");
             return "register";
         }
 
         userService.saveUser(user);
 
-        return "redirect:/login?success";
+        // Redirect with role-specific message
+        if (user.getRole().toString().equals("OWNER")) {
+            return "redirect:/login?success=ownerWait";
+        } else {
+            return "redirect:/login?success";
+        }
     }
 }
