@@ -37,6 +37,16 @@ public class Property {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @PrePersist
+    private void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        if (status == null || status.isBlank()) {
+            status = "PENDING";
+        }
+    }
+
     // --- Constructors ---
     public Property() {
         this.createdAt = LocalDateTime.now();

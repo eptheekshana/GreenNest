@@ -31,8 +31,8 @@ public class PropertyService {
 
     // --- 2. ADMIN: GET PENDING (For Admin Dashboard) ---
     public List<Property> getPendingProperties() {
-        // Fetch items waiting for approval
-        return propertyRepository.findByStatus("PENDING");
+        // Fetch items waiting for approval (newest first)
+        return propertyRepository.findByStatusOrderByCreatedAtDesc("PENDING");
     }
 
     // --- 3. ADMIN: APPROVE PROPERTY ---
