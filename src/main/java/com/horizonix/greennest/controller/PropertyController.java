@@ -65,6 +65,7 @@ public class PropertyController {
         User user = userService.findByEmail(principal.getName());
         model.addAttribute("myProperties", propertyService.getPropertiesByOwner(user));
         model.addAttribute("ownerName", user.getFullName());
+        model.addAttribute("isVerified", user.isVerified());
         return "owner/dashboard";
     }
 
@@ -91,7 +92,7 @@ public class PropertyController {
             User user = userService.findByEmail(principal.getName());
             property.setOwner(user);
             propertyService.saveProperty(property, image);
-            return "redirect:/owner/dashboard?success";
+            return "redirect:/owner/property-submitted";
         } catch (IOException e) {
             e.printStackTrace();
             return "redirect:/owner/add-property?error=upload-failed";
@@ -104,5 +105,11 @@ public class PropertyController {
         // Optional: Add check to ensure only the owner can delete their own property
         propertyService.deleteProperty(id);
         return "redirect:/owner/dashboard?deleted";
+    }
+
+    // --- OWNER: PROPERTY SUBMITTED CONFIRMATION ---
+    @GetMapping("/owner/property-submitted")
+    public String showPropertySubmitted() {
+        return "owner/property-submitted";
     }
 }

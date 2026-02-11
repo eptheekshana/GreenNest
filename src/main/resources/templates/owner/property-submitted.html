@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Property Submitted - GreenNest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" th:href="@{/css/property-submitted.css}">
+</head>
+<body>
+
+<div class="page">
+    <div class="card">
+        <div class="icon">
+            <i class="ph-fill ph-shield-check"></i>
+        </div>
+        <h1>Property Sent for Verification</h1>
+        <p>Your listing has been submitted to the admin for review. Once approved, it will appear on the public listings page.</p>
+        <div class="actions">
+            <a class="btn" th:href="@{/owner/dashboard}">
+                <i class="ph-bold ph-squares-four"></i>
+                Back to Dashboard
+            </a>
+            <a class="btn secondary" th:href="@{/owner/add-property}">
+                <i class="ph-bold ph-plus-circle"></i>
+                Add Another Property
+            </a>
+        </div>
+        <div class="note">
+            <i class="ph-bold ph-info"></i>
+            Approval can take a few minutes.
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/property-submitted.js}"></script>
+</body>
+</html>

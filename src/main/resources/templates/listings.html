@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>All Listings - GreenNest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #27ae60;
+            --dark: #0e2e1a;
+            --light: #f8f9fa;
+        }
+        body { font-family: 'Outfit', sans-serif; background: var(--light); margin: 0; padding: 0; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 2.5rem; color: var(--dark); margin-bottom: 10px; }
+        .header p { color: #666; }
+
+        .search-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+        .search-bar button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card:hover { transform: translateY(-5px); }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .card-body { padding: 20px; }
+        .price { color: var(--primary); font-weight: 700; font-size: 1.2rem; margin-bottom: 5px; }
+        .title { font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; color: var(--dark); }
+        .location { color: #666; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Find Your Perfect Stay</h1>
+        <p>Browse verified boarding places near NSBM Green University</p>
+    </div>
+
+    <form action="/search" method="get" class="search-bar">
+        <input type="text" name="location" placeholder="Location (e.g. Homagama)" th:value="${location}">
+        <input type="number" name="price" placeholder="Max Price (LKR)" th:value="${price}">
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="grid" th:if="${!properties.isEmpty()}">
+        <a th:each="prop : ${properties}" th:href="@{/property/{id}(id=${prop.id})}" class="card">
+            <img th:src="@{'/uploads/' + ${prop.imageName}}" class="card-img"
+                 onerror="this.src='https://placehold.co/600x400?text=No+Image'">
+            <div class="card-body">
+                <div class="price" th:text="'LKR ' + ${prop.price}">LKR 15,000</div>
+                <div class="title" th:text="${prop.title}">Property Title</div>
+                <div class="location">
+                    <i class="ph-fill ph-map-pin"></i>
+                    <span th:text="${prop.location}">Location</span>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="empty-state" th:if="${properties.isEmpty()}">
+        <i class="ph-duotone ph-house" style="font-size: 3rem; margin-bottom: 15px; color: #ccc;"></i>
+        <h3>No properties found</h3>
+        <p>Try adjusting your search filters.</p>
+    </div>
+</div>
+
+</body>
+</html>

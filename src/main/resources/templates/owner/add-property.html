@@ -1,184 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>List New Property - GreenNest</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
-    <style>
-        :root {
-            --primary: #10b981;
-            --primary-dark: #059669;
-            --bg-body: #f3f4f6;
-            --bg-card: #ffffff;
-            --text-main: #111827;
-            --text-muted: #6b7280;
-            --border-color: #e5e7eb;
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        /* --- Main Layout --- */
-        .wrapper {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            max-width: 1000px;
-            width: 100%;
-            background: var(--bg-card);
-            border-radius: 24px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            overflow: hidden;
-            border: 1px solid white;
-        }
-
-        /* --- Left Side (Form) --- */
-        .form-section {
-            padding: 3rem;
-        }
-
-        .header { margin-bottom: 2rem; }
-        .back-link {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            display: inline-flex; align-items: center; gap: 5px;
-            margin-bottom: 1rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .back-link:hover { color: var(--primary); }
-
-        h2 { font-family: 'Outfit', sans-serif; font-size: 1.8rem; margin-bottom: 0.5rem; }
-        p.subtitle { color: var(--text-muted); font-size: 0.95rem; }
-
-        .form-grid {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-main);
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            transition: all 0.2s;
-            background: #f9fafb;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-        }
-
-        textarea.input-field { resize: vertical; min-height: 100px; }
-
-        /* --- Custom File Upload --- */
-        .file-upload-wrapper {
-            position: relative;
-            border: 2px dashed var(--border-color);
-            border-radius: var(--radius);
-            padding: 2rem;
-            text-align: center;
-            background: #f9fafb;
-            transition: 0.2s;
-            cursor: pointer;
-        }
-        .file-upload-wrapper:hover { border-color: var(--primary); background: #ecfdf5; }
-
-        .file-upload-wrapper input[type="file"] {
-            position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;
-        }
-
-        .upload-icon { font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem; }
-        .upload-text { font-size: 0.9rem; color: var(--text-muted); }
-        .upload-text b { color: var(--primary); }
-
-        #preview-container {
-            margin-top: 1rem;
-            display: none; /* Hidden by default */
-            align-items: center;
-            gap: 10px;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-        #preview-img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; }
-        #file-name { font-size: 0.85rem; color: var(--text-main); }
-
-        /* --- Buttons --- */
-        .btn-submit {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            width: 100%;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 1rem;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-        }
-        .btn-submit:hover { background: var(--primary-dark); transform: translateY(-1px); }
-
-        /* --- Right Side (Visual) --- */
-        .visual-section {
-            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 3rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .visual-content { position: relative; z-index: 2; }
-        .visual-content h3 { font-family: 'Outfit', sans-serif; font-size: 2rem; margin-bottom: 1rem; }
-        .visual-content p { opacity: 0.9; line-height: 1.6; }
-
-        /* Abstract circles for decoration */
-        .circle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-        }
-        .c1 { width: 300px; height: 300px; top: -50px; right: -50px; }
-        .c2 { width: 150px; height: 150px; bottom: 50px; left: -30px; }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .wrapper { grid-template-columns: 1fr; max-width: 500px; }
-            .visual-section { display: none; } /* Hide visual on mobile */
-            .form-section { padding: 2rem; }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/add-property.css}">
 </head>
 <body>
 
@@ -197,28 +23,28 @@
 
             <div class="form-grid">
                 <div class="input-group">
-                    <label>Property Title</label>
-                    <input type="text" th:field="*{title}" class="input-field" placeholder="e.g. Spacious Room near NSBM" required>
+                    <label for="title">Property Title</label>
+                    <input type="text" id="title" th:field="*{title}" class="input-field" placeholder="e.g. Spacious Room near NSBM" required>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div class="input-group">
-                        <label>Location</label>
-                        <input type="text" th:field="*{location}" class="input-field" placeholder="e.g. Homagama" required>
+                        <label for="location">Location</label>
+                        <input type="text" id="location" th:field="*{location}" class="input-field" placeholder="e.g. Homagama" required>
                     </div>
                     <div class="input-group">
-                        <label>Monthly Price (LKR)</label>
-                        <input type="number" th:field="*{price}" class="input-field" placeholder="15000" required>
+                        <label for="price">Monthly Price (LKR)</label>
+                        <input type="number" id="price" th:field="*{price}" class="input-field" placeholder="15000" required>
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>Description</label>
-                    <textarea th:field="*{description}" class="input-field" placeholder="Describe the amenities (WiFi, A/C, etc.) and house rules..."></textarea>
+                    <label for="description">Description</label>
+                    <textarea id="description" th:field="*{description}" class="input-field" placeholder="Describe the amenities (WiFi, A/C, etc.) and house rules..."></textarea>
                 </div>
 
                 <div class="input-group">
-                    <label>Property Image</label>
+                    <label for="fileInput">Property Image</label>
                     <div class="file-upload-wrapper">
                         <input type="file" name="image" id="fileInput" accept="image/*" required onchange="showPreview(this)">
                         <div class="upload-icon"><i class="ph-duotone ph-image"></i></div>
@@ -256,19 +82,7 @@
 
 </div>
 
-<script>
-    function showPreview(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('preview-img').src = e.target.result;
-                document.getElementById('file-name').textContent = input.files[0].name;
-                document.getElementById('preview-container').style.display = 'flex';
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-</script>
+<script th:src="@{/js/add-property.js}"></script>
 
 </body>
 </html>

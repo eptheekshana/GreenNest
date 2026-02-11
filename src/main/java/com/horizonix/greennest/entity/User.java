@@ -1,6 +1,8 @@
 package com.horizonix.greennest.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +12,8 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "users")
 public class User implements UserDetails {
 
@@ -34,29 +38,6 @@ public class User implements UserDetails {
     private List<Property> properties = new ArrayList<>();
 
     public User() {}
-
-    // --- Getters & Setters ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public void setPassword(String password) { this.password = password; }
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
-
-    // ✅ FIX 3: Add Getters/Setters for Contact Number
-    public String getContactNumber() { return contactNumber; }
-    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
-
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
-    public boolean isVerified() { return isVerified; }
-    public void setVerified(boolean verified) { isVerified = verified; }
-    public List<Property> getProperties() { return properties; }
-    public void setProperties(List<Property> properties) { this.properties = properties; }
-
-    // Add setEnabled (Fixes "cannot find symbol setEnabled")
-    public void setEnabled(boolean enabled) { this.enabled = enabled; }
 
     // --- UserDetails Logic ---
     @Override public Collection<? extends GrantedAuthority> getAuthorities() {
