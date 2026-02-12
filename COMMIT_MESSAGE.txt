@@ -1,0 +1,37 @@
+refactor: Rebrand GreenNest to Nboard and fix Heroku build error
+
+BREAKING CHANGES:
+- Project renamed from GreenNest to Nboard
+- Package structure changed: com.horizonix.greennest → com.horizonix.nboard
+- Main application class: GreennestApplication → NboardApplication
+
+Fixes:
+- Resolved Maven compiler error causing Heroku deployment failures
+  (java.lang.ExceptionInInitializerError: com.sun.tools.javac.code.TypeTag :: UNKNOWN)
+- Updated maven-compiler-plugin to version 3.13.0
+- Downgraded Lombok to 1.18.30 for Java 17 compatibility
+- Added explicit compiler configuration with release target
+
+Features:
+- Configured DigitalOcean Spaces integration for cloud image storage
+- Set up bucket: nboard (sgp1 region)
+- Added access credentials for DO Spaces
+
+Refactoring:
+- Updated artifact ID in pom.xml from greennest to nboard
+- Renamed all Java packages across 24+ source files
+- Updated all HTML templates with new Nboard branding
+- Renamed application and test classes
+
+Technical Details:
+- Maven Compiler Plugin: 3.13.0
+- Lombok: 1.18.30
+- Java Version: 17
+- Spring Boot: 3.2.2
+- Build Status: SUCCESS ✅
+
+Deployment Ready: Yes
+- Heroku build compatibility: Fixed
+- DigitalOcean Spaces: Configured
+- Package compilation: Verified
+
