@@ -61,8 +61,16 @@
             <label for="password">Password</label>
             <input type="password" id="password" th:field="*{password}"
                    th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
-                   placeholder="Min 6 characters" required>
+                   placeholder="Min 6 characters" minlength="6" required>
             <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
+
+        <div class="input-wrapper">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" th:field="*{confirmPassword}"
+                   th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
+                   placeholder="Re-enter your password" minlength="6" required>
+            <span class="error-msg" id="confirmPasswordError" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
         </div>
 
         <button type="submit" class="btn-primary">Create Account</button>
