@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
             String[] possiblePaths = {
                 "src/main/resources/static/uploads/",
                 "target/classes/static/uploads/",
-                Paths.get(System.getProperty("java.io.tmpdir"), "greennest", "uploads").toString()
+                Paths.get(System.getProperty("java.io.tmpdir"), "nboard", "uploads").toString()
             };
 
             for (String pathStr : possiblePaths) {
@@ -48,7 +48,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations(
                     "file:src/main/resources/static/uploads/",
                     "file:target/classes/static/uploads/",
-                    "file:" + Paths.get(System.getProperty("java.io.tmpdir"), "greennest", "uploads").toString() + "/"
+                    "file:" + Paths.get(System.getProperty("java.io.tmpdir"), "nboard", "uploads").toString() + "/"
                 )
                 .setCachePeriod(3600);
 

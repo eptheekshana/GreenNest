@@ -41,17 +41,17 @@ public class DataInitializer implements CommandLineRunner {
     private void initializeSampleData() {
 
         // --- 1. CREATE ADMIN USER (This is what you need) ---
-        if (userRepository.findByEmail("admin@greennest.com") == null) {
+        if (userRepository.findByEmail("admin@nboard.com") == null) {
             User admin = new User();
             admin.setFullName("Super Admin");
-            admin.setEmail("admin@greennest.com");
+            admin.setEmail("admin@nboard.com");
             admin.setPassword(passwordEncoder.encode("admin123")); // 🔒 Password: admin123
             admin.setRole(Role.ADMIN); // Ensure Role.ADMIN exists in your enum/string
             admin.setVerified(true);
             admin.setEnabled(true);
 
             userRepository.save(admin);
-            logger.info("Admin account created: admin@greennest.com / admin123");
+            logger.info("Admin account created: admin@nboard.com / admin123");
         } else {
             logger.info("Admin account already exists.");
         }

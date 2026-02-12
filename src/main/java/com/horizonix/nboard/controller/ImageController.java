@@ -24,7 +24,7 @@ public class ImageController {
             String[] possiblePaths = {
                 "src/main/resources/static/uploads/" + filename,
                 "target/classes/static/uploads/" + filename,
-                Paths.get(System.getProperty("java.io.tmpdir"), "greennest", "uploads", filename).toString()
+                Paths.get(System.getProperty("java.io.tmpdir"), "nboard", "uploads", filename).toString()
             };
 
             for (String pathStr : possiblePaths) {
