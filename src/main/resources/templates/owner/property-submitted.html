@@ -9,12 +9,33 @@
 <body>
 
 <div class="page">
-    <div class="card">
+    <!-- Show error if submission failed -->
+    <div th:if="${!submitSuccess}" class="card" style="background: #fee2e2; border: 2px solid #ef4444;">
+        <div class="icon" style="color: #ef4444;">
+            <i class="ph-fill ph-warning-circle"></i>
+        </div>
+        <h1 style="color: #991b1b;">Submission Failed</h1>
+        <p style="color: #7f1d1d;">Something went wrong. Please try adding your property again.</p>
+        <div class="actions">
+            <a class="btn" th:href="@{/owner/add-property}">
+                <i class="ph-bold ph-arrow-left"></i>
+                Back to Add Property
+            </a>
+            <a class="btn secondary" th:href="@{/owner/dashboard}">
+                <i class="ph-bold ph-squares-four"></i>
+                Go to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Show success message -->
+    <div th:if="${submitSuccess}" class="card">
         <div class="icon">
             <i class="ph-fill ph-shield-check"></i>
         </div>
         <h1>Property Sent for Verification</h1>
-        <p>Your listing has been submitted to the admin for review. Once approved, it will appear on the public listings page.</p>
+        <p th:if="${propertyTitle}">Your listing "<strong th:text="${propertyTitle}">Property</strong>" has been submitted to the admin for review. Once approved, it will appear on the public listings page.</p>
+        <p th:unless="${propertyTitle}">Your listing has been submitted to the admin for review. Once approved, it will appear on the public listings page.</p>
         <div class="actions">
             <a class="btn" th:href="@{/owner/dashboard}">
                 <i class="ph-bold ph-squares-four"></i>

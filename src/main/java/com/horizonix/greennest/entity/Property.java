@@ -27,7 +27,9 @@ public class Property {
     @Column(nullable = false)
     private String location;
 
-    private String imageName;
+    // Store the full URL from DigitalOcean Spaces
+    @Column(length = 500)
+    private String imageUrl;
 
     // Status field (PENDING, APPROVED, REJECTED)
     // Default is "PENDING" so it's hidden until Admin approves

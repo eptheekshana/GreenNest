@@ -83,6 +83,13 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- AWS SDK for S3 (DigitalOcean Spaces compatible) -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.12.529</version>
+		</dependency>
 	</dependencies>
 
 	<build>

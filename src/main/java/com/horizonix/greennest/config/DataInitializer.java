@@ -100,7 +100,8 @@ public class DataInitializer implements CommandLineRunner {
             property.setLocation(location);
             property.setDescription(description);
             property.setPrice(price);
-            property.setImageName(imageName);
+            // For sample data, use local path - in production, this would be Spaces URL
+            property.setImageUrl("/images/" + imageName);
             property.setOwner(owner);
             property.setStatus("APPROVED");
             property.setCreatedAt(LocalDateTime.now());

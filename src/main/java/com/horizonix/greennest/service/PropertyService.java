@@ -4,6 +4,7 @@ import com.horizonix.greennest.entity.Property;
 import com.horizonix.greennest.entity.User;
 import com.horizonix.greennest.repository.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class PropertyService {
@@ -25,12 +22,17 @@ public class PropertyService {
     @Autowired
     private PropertyRepository propertyRepository;
 
-    // Try uploads in multiple locations (for development and production)
-    private final String[] uploadDirs = {
-        "src/main/resources/static/uploads/",
-        "target/classes/static/uploads/",
-        System.getProperty("java.io.tmpdir") + "/greennest/uploads/"
-    };
+    @Autowired
+    private DigitalOceanSpacesService spacesService;
+
+    @Autowired
+    private LocalFileStorageService localFileStorageService;
+
+    @Value("${do.spaces.key:YOUR_SPACES_ACCESS_KEY}")
+    private String spacesAccessKey;
+
+    @Value("${file.storage.mode:auto}")
+    private String storageMode;
 
     // --- 1. PUBLIC: GET ALL (Only "APPROVED" listings show up) ---
     public List<Property> getAllProperties() {
@@ -64,38 +66,40 @@ public class PropertyService {
 
     // --- 6. OWNER: SAVE/UPDATE PROPERTY ---
     public void saveProperty(Property property, MultipartFile image) throws IOException {
-        Path uploadPath = null;
-
-        // Try to find or create an upload directory
-        for (String dir : uploadDirs) {
-            Path path = Paths.get(dir).toAbsolutePath();
-            try {
-                if (!Files.exists(path)) {
-                    Files.createDirectories(path);
-                }
-                uploadPath = path;
-                logger.info("✅ Using upload directory: {}", path);
-                break;
-            } catch (IOException e) {
-                logger.warn("⚠️ Could not create directory: {}", dir);
-                continue;
-            }
-        }
-
-        if (uploadPath == null) {
-            throw new IOException("Could not create any upload directories");
-        }
-
         // Handle Image Upload
         if (image != null && !image.isEmpty()) {
-            String fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(image.getInputStream(), filePath);
-            property.setImageName(fileName);
+            try {
+                String imageUrl;
 
-            logger.info("✅ Image uploaded successfully: {}", filePath.toAbsolutePath());
+                // Check if DigitalOcean Spaces is configured
+                boolean spacesConfigured = spacesAccessKey != null
+                        && !spacesAccessKey.equals("YOUR_SPACES_ACCESS_KEY")
+                        && !spacesAccessKey.isEmpty();
+
+                // Decide storage method
+                boolean useLocalStorage = storageMode.equals("local")
+                        || (!spacesConfigured && storageMode.equals("auto"));
+
+                if (useLocalStorage) {
+                    // Use local file storage
+                    logger.info("Using local file storage for image upload");
+                    imageUrl = localFileStorageService.uploadImageLocally(image);
+                    logger.info("Image uploaded successfully to local storage: {}", imageUrl);
+                } else {
+                    // Use DigitalOcean Spaces
+                    logger.info("Using DigitalOcean Spaces for image upload");
+                    imageUrl = spacesService.uploadImage(image);
+                    logger.info("Image uploaded successfully to Spaces: {}", imageUrl);
+                }
+
+                property.setImageUrl(imageUrl);
+
+            } catch (IOException e) {
+                logger.error("Failed to upload image: {}", e.getMessage());
+                throw e;
+            }
         } else {
-            logger.warn("⚠️ No image provided for property: {}", property.getTitle());
+            logger.warn("No image provided for property: {}", property.getTitle());
         }
 
         // Always set to PENDING when saving/updating
@@ -116,6 +120,17 @@ public class PropertyService {
 
     // --- 8. OWNER: DELETE ---
     public void deleteProperty(Long id) {
+        Property property = propertyRepository.findById(id).orElse(null);
+        if (property != null && property.getImageUrl() != null) {
+            // Delete image from storage (local or cloud)
+            if (property.getImageUrl().startsWith("/uploads/")) {
+                // Local storage
+                localFileStorageService.deleteImageLocally(property.getImageUrl());
+            } else {
+                // DigitalOcean Spaces
+                spacesService.deleteImage(property.getImageUrl());
+            }
+        }
         propertyRepository.deleteById(id);
     }
 }

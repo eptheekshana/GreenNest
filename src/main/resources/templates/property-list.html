@@ -158,7 +158,7 @@
 
         <div th:each="property : ${properties}" class="property-card">
 
-            <img th:src="@{'/uploads/' + ${property.imageName}}" alt="Property Image" class="card-img">
+            <img th:src="${property.imageUrl}" alt="Property Image" class="card-img">
 
             <div class="card-body">
                 <div class="price-tag" th:text="'LKR ' + ${property.price} + '/mo'">LKR 15,000/mo</div>

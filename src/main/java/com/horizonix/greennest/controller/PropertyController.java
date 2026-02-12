@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.io.IOException;
 import java.security.Principal;
 
@@ -86,16 +88,37 @@ public class PropertyController {
     // --- 6. OWNER: SAVE PROPERTY ---
     @PostMapping("/owner/add-property")
     public String saveProperty(@ModelAttribute Property property,
-                               @RequestParam("image") MultipartFile image,
-                               Principal principal) {
+                               @RequestParam(value = "image", required = false) MultipartFile image,
+                               Principal principal,
+                               RedirectAttributes redirectAttributes) {
         try {
             User user = userService.findByEmail(principal.getName());
+
+            // Double-check verification status before saving
+            if (!user.isVerified()) {
+                redirectAttributes.addFlashAttribute("error", "You must be verified by admin before adding properties.");
+                return "redirect:/owner/dashboard?error=not-verified";
+            }
+
+            // Validate image
+            if (image == null || image.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Please upload a property image.");
+                return "redirect:/owner/add-property?error=no-image";
+            }
+
             property.setOwner(user);
             propertyService.saveProperty(property, image);
+            redirectAttributes.addFlashAttribute("submitSuccess", true);
+            redirectAttributes.addFlashAttribute("propertyTitle", property.getTitle());
             return "redirect:/owner/property-submitted";
         } catch (IOException e) {
             e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Failed to upload image: " + e.getMessage());
             return "redirect:/owner/add-property?error=upload-failed";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "An error occurred: " + e.getMessage());
+            return "redirect:/owner/add-property?error=unknown";
         }
     }
 

@@ -19,8 +19,22 @@
             <p class="subtitle">Fill in the details below to list your rental space.</p>
         </div>
 
-        <form th:action="@{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data">
+        <!-- Display Error Message if Upload Failed -->
+        <div th:if="${param.error != null}" style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ph-bold ph-warning-circle"></i>
+            <span th:if="${param.error[0] == 'upload-failed'}">Failed to upload image. Please try again.</span>
+            <span th:if="${param.error[0] == 'not-verified'}">You must be verified by admin before adding properties.</span>
+            <span th:if="${param.error[0] == 'no-image'}">Please upload a property image.</span>
+            <span th:if="${param.error[0] == 'unknown'}">An error occurred. Please try again.</span>
+        </div>
 
+        <!-- Display Error from Flash Attributes -->
+        <div th:if="${error}" style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ph-bold ph-warning-circle"></i>
+            <span th:text="${error}">Error message</span>
+        </div>
+
+        <form th:action="@{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data" id="propertyForm">
             <div class="form-grid">
                 <div class="input-group">
                     <label for="title">Property Title</label>

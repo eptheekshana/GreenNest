@@ -276,7 +276,7 @@
     <!-- Left Column: Property Details -->
     <div class="card">
         <div class="image-container">
-            <img th:src="${property.imageName != null} ? @{'/uploads/' + ${property.imageName}} : @{'/images/boarding-room.JPEG'}"
+            <img th:src="${property.imageUrl != null} ? ${property.imageUrl} : @{'/images/boarding-room.JPEG'}"
                  alt="Property Image" class="main-image" onerror="this.src='https://via.placeholder.com/800x400'">
         </div>
 

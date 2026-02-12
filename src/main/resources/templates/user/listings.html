@@ -231,8 +231,8 @@
 
     <div class="property-grid">
         <div th:each="property : ${properties}" class="property-card">
-            <img th:if="${property.imageName}" th:src="@{'/uploads/' + ${property.imageName}}" class="card-img" alt="Boarding Image">
-            <div th:unless="${property.imageName}" class="card-img" style="display:flex;align-items:center;justify-content:center;color:#aaa;">No Image</div>
+            <img th:if="${property.imageUrl}" th:src="${property.imageUrl}" class="card-img" alt="Boarding Image">
+            <div th:unless="${property.imageUrl}" class="card-img" style="display:flex;align-items:center;justify-content:center;color:#aaa;">No Image</div>
 
             <div class="card-body">
                 <div class="price-tag" th:text="'LKR ' + ${property.price} + '/mo'"></div>
