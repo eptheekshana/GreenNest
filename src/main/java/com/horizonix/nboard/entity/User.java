@@ -1,6 +1,7 @@
 package com.horizonix.nboard.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,11 +25,15 @@ public class User implements UserDetails {
     @Column(nullable = false) private String password;
     @Column(nullable = false) private String fullName;
 
-    // Add this field (Matches your HTML form)
+    // Transient field for password confirmation
+    @Transient
+    private String confirmPassword;
+
+    // Add this field
     @Column(name = "contact_number")
     private String contactNumber;
 
-    // ✅ FIX 2: Add logic fields
+    // Add logic fields
     private boolean enabled = true;
     private boolean isVerified = false;
 
@@ -38,6 +43,16 @@ public class User implements UserDetails {
     private List<Property> properties = new ArrayList<>();
 
     public User() {}
+
+    // Validation: Ensure passwords match
+    @AssertTrue(message = "Passwords do not match")
+    public boolean isPasswordMatching() {
+        // Skip validation if confirmPassword is null (e.g., during login or password updates)
+        if (confirmPassword == null || confirmPassword.isEmpty()) {
+            return true;
+        }
+        return password != null && password.equals(confirmPassword);
+    }
 
     // --- UserDetails Logic ---
     @Override public Collection<? extends GrantedAuthority> getAuthorities() {
