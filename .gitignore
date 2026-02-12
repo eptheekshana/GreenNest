@@ -32,6 +32,13 @@ build/
 ### VS Code ###
 .vscode/
 
-### Environment Variables ###
+### Environment Variables & Secrets ###
 .env
+.env.local
+.env.*.local
+ENV_SETUP.md
+
+### Uploaded Files ###
+/uploads/
+/src/main/resources/static/uploads/
 

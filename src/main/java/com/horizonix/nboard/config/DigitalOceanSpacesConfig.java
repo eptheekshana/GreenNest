@@ -16,29 +16,33 @@ public class DigitalOceanSpacesConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DigitalOceanSpacesConfig.class);
 
-    @Value("${do.spaces.key}")
+    @Value("${do.spaces.key:}")
     private String accessKey;
 
-    @Value("${do.spaces.secret}")
+    @Value("${do.spaces.secret:}")
     private String secretKey;
 
-    @Value("${do.spaces.endpoint}")
+    @Value("${do.spaces.endpoint:sgp1.digitaloceanspaces.com}")
     private String endpoint;
 
-    @Value("${do.spaces.region}")
+    @Value("${do.spaces.region:sgp1}")
     private String region;
 
     @Bean
     public AmazonS3 digitalOceanSpacesClient() {
         // Check if credentials are configured
-        if (accessKey == null || accessKey.equals("YOUR_SPACES_ACCESS_KEY") ||
-            secretKey == null || secretKey.equals("YOUR_SPACES_SECRET_KEY")) {
-            logger.error("DigitalOcean Spaces credentials are not configured!");
-            logger.error("Please update application.properties with valid credentials.");
-            logger.error("Image uploads will fail until credentials are set.");
+        if (accessKey == null || accessKey.isEmpty() || accessKey.equals("YOUR_SPACES_ACCESS_KEY") ||
+            secretKey == null || secretKey.isEmpty() || secretKey.equals("YOUR_SPACES_SECRET_KEY")) {
+            logger.warn("DigitalOcean Spaces credentials are not configured!");
+            logger.warn("Using placeholder credentials - image uploads will fail until credentials are set.");
+            logger.info("To configure, set DO_SPACES_KEY and DO_SPACES_SECRET environment variables.");
         }
 
-        BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+        // Use placeholder credentials if not configured to prevent startup failure
+        String key = (accessKey != null && !accessKey.isEmpty()) ? accessKey : "placeholder_key";
+        String secret = (secretKey != null && !secretKey.isEmpty()) ? secretKey : "placeholder_secret";
+
+        BasicAWSCredentials credentials = new BasicAWSCredentials(key, secret);
 
         return AmazonS3ClientBuilder
                 .standard()
