@@ -5,19 +5,27 @@ import com.horizonix.greennest.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
-@Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
 
-    // 1. Search Logic: Find by Location (partial match) and Price (less than or equal)
-    Page<Property> findByLocationContainingIgnoreCaseAndPriceLessThanEqual(String location, Double price, Pageable pageable);
+    // --- 1. PUBLIC PAGE: Get "APPROVED" properties only ---
+    // (Replaces the old 'findByOwner_IsVerifiedTrue' method)
+    List<Property> findByStatusOrderByCreatedAtDesc(String status);
 
-    // 2. Owner Dashboard: Find all properties belonging to a specific Owner
+    // --- 2. ADMIN DASHBOARD: Get "PENDING" properties ---
+    // (You can use the method above, or this specific one)
+    List<Property> findByStatus(String status);
+
+    // --- 3. OWNER DASHBOARD: Get all properties for the logged-in owner ---
     List<Property> findByOwner(User owner);
 
-    // 3. Public Feed: Find ONLY properties where the Owner is Verified
-    List<Property> findByOwner_IsVerifiedTrueOrderByCreatedAtDesc();
+    // --- 4. SEARCH: Must also filter by "APPROVED" status ---
+    // We added 'AndStatus' to the end so unapproved items don't appear in search
+    Page<Property> findByLocationContainingIgnoreCaseAndPriceLessThanEqualAndStatus(
+            String location,
+            Double price,
+            String status, // You will pass "APPROVED" here
+            Pageable pageable
+    );
 }

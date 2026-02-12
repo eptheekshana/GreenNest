@@ -15,50 +15,42 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // CSRF Protection (Disabled for development ease)
                 .csrf(csrf -> csrf.disable())
 
-                // --- 1. DEFINE WHO CAN SEE WHAT ---
+                // --- 1. PERMISSIONS ---
                 .authorizeHttpRequests(auth -> auth
-                        // Public Pages (Home, Login, Register, Search, Verification)
-                        .requestMatchers("/", "/register", "/login", "/verify-otp", "/properties", "/search", "/property/**").permitAll()
-
-                        // Static Resources (CSS, Images)
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
-
-                        // Restrict Admin pages
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-
-                        // Restrict Owner pages
-                        .requestMatchers("/owner/**").hasRole("OWNER")
-
-                        // Everything else requires login
+                        .requestMatchers("/", "/login", "/register", "/properties", "/property/**", "/property-details/**", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                        .requestMatchers("/user/**").hasRole("STUDENT") // Student/Buyer pages
+                        .requestMatchers("/owner/**").hasRole("OWNER") // Lock owner pages
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Lock admin pages
                         .anyRequest().authenticated()
                 )
 
-                // --- 2. LOGIN CONFIGURATION ---
+                // --- 2. LOGIN LOGIC (UPDATED) ---
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/authenticateTheUser") // Ensure your login form uses th:action="@{/authenticateTheUser}" or just "/login" (POST)
-
-                        // ✅ CUSTOM SUCCESS HANDLER (The Logic You Needed)
-                        .successHandler((request, response, authentication) -> {
-                            var roles = authentication.getAuthorities().stream()
-                                    .map(r -> r.getAuthority()).toList();
-
-                            if (roles.contains("ROLE_ADMIN")) {
-                                response.sendRedirect("/admin/dashboard");
-                            } else if (roles.contains("ROLE_OWNER")) {
-                                response.sendRedirect("/owner/dashboard");
-                            } else {
-                                // Students go here!
-                                response.sendRedirect("/properties");
-                            }
-                        })
+                        .loginProcessingUrl("/authenticateTheUser")
                         .permitAll()
+                        // CUSTOM REDIRECT LOGIC STARTS HERE
+                        .successHandler((request, response, authentication) -> {
+
+                            var roles = authentication.getAuthorities();
+                            String redirectUrl = "/user/listings"; // Default for STUDENT/BUYER
+
+                            // Check if user is an OWNER (Property Owner)
+                            if (roles.stream().anyMatch(a -> a.getAuthority().equals("ROLE_OWNER"))) {
+                                redirectUrl = "/owner/dashboard";
+                            }
+                            // Check if user is an ADMIN
+                            else if (roles.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                                redirectUrl = "/admin/dashboard";
+                            }
+
+                            response.sendRedirect(redirectUrl);
+                        })
                 )
 
-                // --- 3. LOGOUT CONFIGURATION ---
+                // --- 3. LOGOUT ---
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>List New Property - GreenNest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" th:href="@{/css/add-property.css}">
+</head>
+<body>
+
+<div class="wrapper">
+
+    <div class="form-section">
+        <div class="header">
+            <a th:href="@{/owner/dashboard}" class="back-link">
+                <i class="ph-bold ph-arrow-left"></i> Back to Dashboard
+            </a>
+            <h2>Add New Property</h2>
+            <p class="subtitle">Fill in the details below to list your rental space.</p>
+        </div>
+
+        <form th:action="@{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data">
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="title">Property Title</label>
+                    <input type="text" id="title" th:field="*{title}" class="input-field" placeholder="e.g. Spacious Room near NSBM" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" th:field="*{location}" class="input-field" placeholder="e.g. Homagama" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="price">Monthly Price (LKR)</label>
+                        <input type="number" id="price" th:field="*{price}" class="input-field" placeholder="15000" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" th:field="*{description}" class="input-field" placeholder="Describe the amenities (WiFi, A/C, etc.) and house rules..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="fileInput">Property Image</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" name="image" id="fileInput" accept="image/*" required onchange="showPreview(this)">
+                        <div class="upload-icon"><i class="ph-duotone ph-image"></i></div>
+                        <p class="upload-text"><b>Click to upload</b> or drag and drop</p>
+                        <p class="upload-text" style="font-size: 0.8rem; margin-top: 5px;">SVG, PNG, JPG (Max 10MB)</p>
+                    </div>
+
+                    <div id="preview-container">
+                        <img id="preview-img" src="" alt="Preview">
+                        <span id="file-name">filename.jpg</span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="ph-bold ph-check-circle"></i> Publish Listing
+            </button>
+        </form>
+    </div>
+
+    <div class="visual-section">
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+        <div class="visual-content">
+            <h3>Reach more students.</h3>
+            <p>GreenNest connects you directly with NSBM students looking for safe and affordable housing.</p>
+            <br>
+            <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 12px; backdrop-filter: blur(5px);">
+                <i class="ph-fill ph-shield-check" style="font-size: 1.5rem; margin-bottom: 5px;"></i>
+                <h4 style="font-family: 'Outfit', sans-serif;">Admin Verified</h4>
+                <p style="font-size: 0.85rem; margin-top: 5px; opacity: 0.8;">All listings are reviewed to ensure safety standards.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script th:src="@{/js/add-property.js}"></script>
+
+</body>
+</html>

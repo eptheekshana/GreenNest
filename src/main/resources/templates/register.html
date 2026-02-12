@@ -4,98 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join GreenNest - Create Account</title>
-
-    <style>
-        :root {
-            --primary-green: #27ae60;
-            --bg-color: #f4f7f6;
-            --text-dark: #2c3e50;
-            --error-red: #e74c3c;
-            --radius: 8px;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .onboarding-card {
-            background: white;
-            width: 100%;
-            max-width: 500px;
-            padding: 40px;
-            border-radius: var(--radius);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
-        }
-
-        .card-header { text-align: center; margin-bottom: 30px; }
-        .card-header h2 { color: var(--primary-green); margin-bottom: 5px; }
-        .sub-text { color: #7f8c8d; font-size: 0.9rem; text-align: center; margin-bottom: 20px; }
-
-        /* Inputs */
-        .input-wrapper { margin-bottom: 20px; }
-        .input-wrapper label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem; }
-        .input-wrapper input, .input-wrapper select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: var(--radius);
-            font-size: 1rem;
-            background-color: white; /* For select dropdown */
-        }
-
-        .input-wrapper input:focus, .input-wrapper select:focus {
-            outline: none;
-            border-color: var(--primary-green);
-        }
-
-        /* Error States */
-        .is-invalid { border-color: var(--error-red) !important; }
-        .error-msg { color: var(--error-red); font-size: 0.85rem; margin-top: 5px; display: block; }
-
-        .alert-danger {
-            background: #fdeaea;
-            border: 1px solid #fadbd8;
-            color: var(--error-red);
-            padding: 10px;
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-        }
-
-        /* Buttons */
-        .btn-primary {
-            background-color: var(--primary-green);
-            color: white;
-            border: none;
-            padding: 14px;
-            width: 100%;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-primary:hover { background-color: #219150; }
-
-        .form-footer { margin-top: 20px; text-align: center; font-size: 0.9rem; }
-        .link-highlight { color: var(--primary-green); text-decoration: none; font-weight: 600; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/register.css}">
 </head>
 <body>
 
 <div class="onboarding-card">
     <div class="card-header">
-        <h2>GreenNest 🌱</h2>
+        <h2>GreenNest</h2>
         <p class="sub-text">Create your account to get started</p>
     </div>
 
@@ -108,7 +23,8 @@
         <div class="input-wrapper">
             <label for="role">I am a:</label>
             <select id="role" th:field="*{role}" required>
-                <option value="STUDENT">Student (Looking for a place)</option>
+                <option value="">-- Select your role --</option>
+                <option value="STUDENT" selected>Student (Looking for a place)</option>
                 <option value="OWNER">Property Owner (Listing a place)</option>
             </select>
         </div>
@@ -157,5 +73,6 @@
     </form>
 </div>
 
+<script th:src="@{/js/register.js}"></script>
 </body>
 </html>

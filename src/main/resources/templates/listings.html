@@ -1,276 +1,118 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore Boarding Places - GreenNest</title>
-
+    <title>All Listings - GreenNest</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        /* ============================
-           1. CSS VARIABLES & RESET
-           ============================ */
         :root {
             --primary: #27ae60;
-            --primary-hover: #219150;
-            --dark: #2c3e50;
-            --light: #f4f7f6;
-            --white: #ffffff;
-            --gray: #95a5a6;
-            --radius: 8px;
-            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --dark: #0e2e1a;
+            --light: #f8f9fa;
         }
+        body { font-family: 'Outfit', sans-serif; background: var(--light); margin: 0; padding: 0; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 2.5rem; color: var(--dark); margin-bottom: 10px; }
+        .header p { color: #666; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--light);
-            color: var(--dark);
-            padding-bottom: 50px;
-        }
-
-        /* ============================
-           2. NAVIGATION
-           ============================ */
-        nav {
-            background: var(--white);
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .brand { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark);
-            margin-left: 20px;
-            font-weight: 500;
-        }
-        .nav-links a:hover { color: var(--primary); }
-
-        /* ============================
-           3. SEARCH BAR SECTION
-           ============================ */
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .search-container {
-            background: var(--white);
-            padding: 25px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 40px;
-        }
-
-        .search-form {
+        .search-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             display: flex;
             gap: 15px;
-            flex-wrap: wrap;
+            margin-bottom: 40px;
         }
-
-        .search-form input {
+        .search-bar input {
             flex: 1;
-            padding: 12px 15px;
+            padding: 12px;
             border: 1px solid #ddd;
-            border-radius: var(--radius);
-            font-size: 1rem;
-            min-width: 200px;
+            border-radius: 8px;
+            font-family: inherit;
         }
-
-        .btn-search {
-            padding: 12px 30px;
-            background-color: var(--primary);
-            color: var(--white);
+        .search-bar button {
+            background: var(--primary);
+            color: white;
             border: none;
-            border-radius: var(--radius);
+            padding: 12px 25px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
         }
-        .btn-search:hover { background-color: var(--primary-hover); }
 
-        /* ============================
-           4. PROPERTY GRID
-           ============================ */
-        h1 { margin-bottom: 25px; font-weight: 600; color: var(--dark); }
-
-        .property-grid {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px;
         }
 
-        .property-card {
-            background: var(--white);
-            border-radius: var(--radius);
+        .card {
+            background: white;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s;
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
-        .property-card:hover { transform: translateY(-5px); }
+        .card:hover { transform: translateY(-5px); }
 
         .card-img {
             width: 100%;
-            height: 220px;
+            height: 200px;
             object-fit: cover;
-            background-color: #eee;
+            background: #eee;
         }
 
-        .card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-body { padding: 20px; }
+        .price { color: var(--primary); font-weight: 700; font-size: 1.2rem; margin-bottom: 5px; }
+        .title { font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; color: var(--dark); }
+        .location { color: #666; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
 
-        .price-tag {
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 1.25rem;
-            margin-bottom: 5px;
-        }
-
-        .card-body h3 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .location-tag {
-            color: var(--gray);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-        }
-
-        .btn-view {
-            margin-top: auto;
-            display: block;
+        .empty-state {
             text-align: center;
-            background: #e8f5e9;
-            color: var(--primary);
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        .btn-view:hover { background: var(--primary); color: var(--white); }
-
-        .no-data {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 50px;
-            color: var(--gray);
-        }
-
-        /* ============================
-           5. PAGINATION STYLES
-           ============================ */
-        .pagination-container {
-            margin-top: 50px;
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-page {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 40px;
-            height: 40px;
-            padding: 0 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            text-decoration: none;
-            color: var(--dark);
-            background: var(--white);
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .btn-page:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-page.active {
-            background-color: var(--primary);
-            color: var(--white);
-            border-color: var(--primary);
+            padding: 60px;
+            color: #666;
         }
     </style>
 </head>
 <body>
 
-<nav>
-    <a href="/" class="brand">GreenNest 🌱</a>
-    <div class="nav-links">
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/search}" style="color: var(--primary);">Explore</a>
-        <a th:href="@{/login}">Login</a>
-    </div>
-</nav>
-
 <div class="container">
-
-    <div class="search-container">
-        <form th:action="@{/search}" method="get" class="search-form">
-            <input type="text" name="location" placeholder="City (e.g. Pitipana)" th:value="${location}">
-            <input type="number" name="price" placeholder="Max Price (LKR)" th:value="${price}">
-            <button type="submit" class="btn-search">Find Now</button>
-        </form>
+    <div class="header">
+        <h1>Find Your Perfect Stay</h1>
+        <p>Browse verified boarding places near NSBM Green University</p>
     </div>
 
-    <h1>Available Boarding Places</h1>
+    <form action="/search" method="get" class="search-bar">
+        <input type="text" name="location" placeholder="Location (e.g. Homagama)" th:value="${location}">
+        <input type="number" name="price" placeholder="Max Price (LKR)" th:value="${price}">
+        <button type="submit">Search</button>
+    </form>
 
-    <div class="property-grid">
-        <div th:each="property : ${properties}" class="property-card">
-            <img th:if="${property.imageName}" th:src="@{'/uploads/' + ${property.imageName}}" class="card-img" alt="Boarding Image">
-            <div th:unless="${property.imageName}" class="card-img" style="display:flex;align-items:center;justify-content:center;color:#aaa;">No Image</div>
-
+    <div class="grid" th:if="${!properties.isEmpty()}">
+        <a th:each="prop : ${properties}" th:href="@{/property/{id}(id=${prop.id})}" class="card">
+            <img th:src="@{'/uploads/' + ${prop.imageName}}" class="card-img"
+                 onerror="this.src='https://placehold.co/600x400?text=No+Image'">
             <div class="card-body">
-                <div class="price-tag" th:text="'LKR ' + ${property.price} + '/mo'"></div>
-                <h3 th:text="${property.title}">Luxury Room</h3>
-                <div class="location-tag">📍 <span th:text="${property.location}">Homagama</span></div>
-                <a th:href="@{/book/{id}(id=${property.id})}" class="btn-view">View Details</a>
+                <div class="price" th:text="'LKR ' + ${prop.price}">LKR 15,000</div>
+                <div class="title" th:text="${prop.title}">Property Title</div>
+                <div class="location">
+                    <i class="ph-fill ph-map-pin"></i>
+                    <span th:text="${prop.location}">Location</span>
+                </div>
             </div>
-        </div>
-
-        <div th:if="${#lists.isEmpty(properties)}" class="no-data">
-            <h3>No boarding places found 😕</h3>
-            <p>Try adjusting your price or location.</p>
-        </div>
+        </a>
     </div>
 
-    <div th:if="${totalPages > 1}" class="pagination-container">
-
-        <a th:if="${currentPage > 0}"
-           th:href="@{/search(page=${currentPage - 1}, location=${location}, price=${price})}"
-           class="btn-page">
-            &laquo; Prev
-        </a>
-
-        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:href="@{/search(page=${i}, location=${location}, price=${price})}"
-               th:text="${i + 1}"
-               th:class="${currentPage == i} ? 'btn-page active' : 'btn-page'">
-            </a>
-        </span>
-
-        <a th:if="${currentPage < totalPages - 1}"
-           th:href="@{/search(page=${currentPage + 1}, location=${location}, price=${price})}"
-           class="btn-page">
-            Next &raquo;
-        </a>
-
+    <div class="empty-state" th:if="${properties.isEmpty()}">
+        <i class="ph-duotone ph-house" style="font-size: 3rem; margin-bottom: 15px; color: #ccc;"></i>
+        <h3>No properties found</h3>
+        <p>Try adjusting your search filters.</p>
     </div>
-
 </div>
 
 </body>

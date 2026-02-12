@@ -27,8 +27,15 @@ public class PropertyController {
         return "listings"; // Reusing your listings.html
     }
 
+    // --- 1B. STUDENT/BUYER: LIST ALL PROPERTIES (After Login) ---
+    @GetMapping("/user/listings")
+    public String studentListings(Model model) {
+        model.addAttribute("properties", propertyService.getAllProperties());
+        return "user/listings"; // User-specific listings page
+    }
+
     // --- 2. PUBLIC: PROPERTY DETAILS ---
-    @GetMapping("/property/{id}")
+    @GetMapping({"/property/{id}", "/property-details/{id}"})
     public String showPropertyDetails(@PathVariable Long id, Model model) {
         Property property = propertyService.getPropertyById(id);
         model.addAttribute("property", property);
@@ -58,6 +65,7 @@ public class PropertyController {
         User user = userService.findByEmail(principal.getName());
         model.addAttribute("myProperties", propertyService.getPropertiesByOwner(user));
         model.addAttribute("ownerName", user.getFullName());
+        model.addAttribute("isVerified", user.isVerified());
         return "owner/dashboard";
     }
 
@@ -84,7 +92,7 @@ public class PropertyController {
             User user = userService.findByEmail(principal.getName());
             property.setOwner(user);
             propertyService.saveProperty(property, image);
-            return "redirect:/owner/dashboard?success";
+            return "redirect:/owner/property-submitted";
         } catch (IOException e) {
             e.printStackTrace();
             return "redirect:/owner/add-property?error=upload-failed";
@@ -97,5 +105,11 @@ public class PropertyController {
         // Optional: Add check to ensure only the owner can delete their own property
         propertyService.deleteProperty(id);
         return "redirect:/owner/dashboard?deleted";
+    }
+
+    // --- OWNER: PROPERTY SUBMITTED CONFIRMATION ---
+    @GetMapping("/owner/property-submitted")
+    public String showPropertySubmitted() {
+        return "owner/property-submitted";
     }
 }
