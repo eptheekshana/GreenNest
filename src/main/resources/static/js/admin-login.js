@@ -1,6 +1,6 @@
 // Admin login page interactions
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('GreenNest Admin Login Page Loaded');
+    console.log('Nboard Admin Login Page Loaded');
 
     // Form validation
     const loginForm = document.querySelector('form');

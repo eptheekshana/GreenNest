@@ -30,14 +30,14 @@ public class WebConfig implements WebMvcConfigurer {
                 if (!Files.exists(uploadPath)) {
                     try {
                         Files.createDirectories(uploadPath);
-                        logger.info("✅ Created uploads directory: {}", uploadPath.toAbsolutePath());
+                        logger.info("Created uploads directory: {}", uploadPath.toAbsolutePath());
                     } catch (IOException e) {
-                        logger.warn("⚠️ Could not create directory: {}", pathStr);
+                        logger.warn("Could not create directory: {}", pathStr);
                     }
                 }
             }
         } catch (Exception e) {
-            logger.error("❌ Error initializing upload directories", e);
+            logger.error("Error initializing upload directories", e);
         }
     }
 
@@ -52,7 +52,7 @@ public class WebConfig implements WebMvcConfigurer {
                 )
                 .setCachePeriod(3600);
 
-        logger.info("✅ Resource handlers configured for /uploads/** endpoints");
+        logger.info("Resource handlers configured for /uploads/** endpoints");
     }
 }
 
