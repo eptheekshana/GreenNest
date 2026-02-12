@@ -69,31 +69,8 @@ public class PropertyService {
         // Handle Image Upload
         if (image != null && !image.isEmpty()) {
             try {
-                String imageUrl;
-
-                // Check if DigitalOcean Spaces is configured
-                boolean spacesConfigured = spacesAccessKey != null
-                        && !spacesAccessKey.equals("YOUR_SPACES_ACCESS_KEY")
-                        && !spacesAccessKey.isEmpty();
-
-                // Decide storage method
-                boolean useLocalStorage = storageMode.equals("local")
-                        || (!spacesConfigured && storageMode.equals("auto"));
-
-                if (useLocalStorage) {
-                    // Use local file storage
-                    logger.info("Using local file storage for image upload");
-                    imageUrl = localFileStorageService.uploadImageLocally(image);
-                    logger.info("Image uploaded successfully to local storage: {}", imageUrl);
-                } else {
-                    // Use DigitalOcean Spaces
-                    logger.info("Using DigitalOcean Spaces for image upload");
-                    imageUrl = spacesService.uploadImage(image);
-                    logger.info("Image uploaded successfully to Spaces: {}", imageUrl);
-                }
-
+                String imageUrl = uploadImage(image);
                 property.setImageUrl(imageUrl);
-
             } catch (IOException e) {
                 logger.error("Failed to upload image: {}", e.getMessage());
                 throw e;
@@ -106,6 +83,51 @@ public class PropertyService {
         property.setStatus("PENDING");
 
         propertyRepository.save(property);
+    }
+
+    public void updateProperty(Property existing, Property updated, MultipartFile image) throws IOException {
+        existing.setTitle(updated.getTitle());
+        existing.setLocation(updated.getLocation());
+        existing.setPrice(updated.getPrice());
+        existing.setDescription(updated.getDescription());
+
+        if (image != null && !image.isEmpty()) {
+            if (existing.getImageUrl() != null) {
+                if (existing.getImageUrl().startsWith("/uploads/")) {
+                    localFileStorageService.deleteImageLocally(existing.getImageUrl());
+                } else {
+                    spacesService.deleteImage(existing.getImageUrl());
+                }
+            }
+            String imageUrl = uploadImage(image);
+            existing.setImageUrl(imageUrl);
+        }
+
+        existing.setStatus("PENDING");
+        propertyRepository.save(existing);
+    }
+
+    private String uploadImage(MultipartFile image) throws IOException {
+        String imageUrl;
+
+        boolean spacesConfigured = spacesAccessKey != null
+                && !spacesAccessKey.equals("YOUR_SPACES_ACCESS_KEY")
+                && !spacesAccessKey.isEmpty();
+
+        boolean useLocalStorage = storageMode.equals("local")
+                || (!spacesConfigured && storageMode.equals("auto"));
+
+        if (useLocalStorage) {
+            logger.info("Using local file storage for image upload");
+            imageUrl = localFileStorageService.uploadImageLocally(image);
+            logger.info("Image uploaded successfully to local storage: {}", imageUrl);
+        } else {
+            logger.info("Using DigitalOcean Spaces for image upload");
+            imageUrl = spacesService.uploadImage(image);
+            logger.info("Image uploaded successfully to Spaces: {}", imageUrl);
+        }
+
+        return imageUrl;
     }
 
     // --- 7. PUBLIC: SEARCH (Only search APPROVED items) ---

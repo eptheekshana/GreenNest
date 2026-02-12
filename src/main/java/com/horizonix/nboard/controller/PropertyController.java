@@ -82,6 +82,7 @@ public class PropertyController {
         }
 
         model.addAttribute("property", new Property());
+        model.addAttribute("isEdit", false);
         return "owner/add-property";
     }
 
@@ -134,5 +135,51 @@ public class PropertyController {
     @GetMapping("/owner/property-submitted")
     public String showPropertySubmitted() {
         return "owner/property-submitted";
+    }
+
+    // --- 8. OWNER: SHOW EDIT FORM ---
+    @GetMapping("/owner/edit/{id}")
+    public String showEditPropertyForm(@PathVariable Long id, Model model, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        Property property = propertyService.getPropertyById(id);
+
+        if (!property.getOwner().getId().equals(user.getId())) {
+            return "redirect:/owner/dashboard?error=not-owner";
+        }
+
+        model.addAttribute("property", property);
+        model.addAttribute("isEdit", true);
+        return "owner/add-property";
+    }
+
+    // --- 9. OWNER: UPDATE PROPERTY ---
+    @PostMapping("/owner/edit/{id}")
+    public String updateProperty(@PathVariable Long id,
+                                 @ModelAttribute Property property,
+                                 @RequestParam(value = "image", required = false) MultipartFile image,
+                                 Principal principal,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            User user = userService.findByEmail(principal.getName());
+            Property existing = propertyService.getPropertyById(id);
+
+            if (!existing.getOwner().getId().equals(user.getId())) {
+                redirectAttributes.addFlashAttribute("error", "You cannot edit this listing.");
+                return "redirect:/owner/dashboard?error=not-owner";
+            }
+
+            propertyService.updateProperty(existing, property, image);
+            redirectAttributes.addFlashAttribute("submitSuccess", true);
+            redirectAttributes.addFlashAttribute("propertyTitle", property.getTitle());
+            return "redirect:/owner/property-submitted";
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Failed to upload image: " + e.getMessage());
+            return "redirect:/owner/edit/" + id + "?error=upload-failed";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "An error occurred: " + e.getMessage());
+            return "redirect:/owner/edit/" + id + "?error=unknown";
+        }
     }
 }
