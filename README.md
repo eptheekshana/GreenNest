@@ -20,18 +20,27 @@ A specialized property management and boarding platform for NSBM Green Universit
 2. **Configure environment variables**
    ```bash
    cp .env.example .env
-   # Edit .env with your local configuration
+   # Edit .env with your actual credentials (database, DigitalOcean Spaces, etc.)
    ```
 
-3. **Build and run**
+3. **Run the application**
+   
+   **Option A: Using the run script (recommended)**
    ```bash
+   ./run.sh
+   ```
+   This script automatically loads environment variables from `.env` and starts the application.
+   
+   **Option B: Export environment variables manually**
+   ```bash
+   export $(cat .env | grep -v '^#' | xargs)
    ./mvnw spring-boot:run
    ```
 
 4. **Access the application**
    - URL: `http://localhost:8080`
    - Admin Dashboard: `http://localhost:8080/admin`
-   - Admin Login: `admin@nboard.com` / `admin123`
+   - Default Admin Login: `admin@nboard.com` / `admin123`
 
 ## 📋 Project Structure
 

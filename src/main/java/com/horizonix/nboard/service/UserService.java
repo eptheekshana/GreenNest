@@ -8,18 +8,40 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired private UserRepository userRepository;
     @Autowired private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        logger.debug("Loading user by email: {}", email);
         User user = userRepository.findByEmail(email);
-        if (user == null) throw new UsernameNotFoundException("Invalid user");
+        if (user == null) {
+            logger.warn("User not found with email: {}", email);
+            throw new UsernameNotFoundException("Invalid email or password");
+        }
+
+        // Check if user is verified (especially for OWNER role)
+        if (!user.isVerified() && user.getRole() == Role.OWNER) {
+            logger.warn("OWNER user not verified: {}", email);
+            throw new UsernameNotFoundException("Your account is pending admin verification. Please wait for approval.");
+        }
+
+        // Check if user is enabled
+        if (!user.isEnabled()) {
+            logger.warn("User account disabled: {}", email);
+            throw new UsernameNotFoundException("Your account has been disabled. Please contact support.");
+        }
+
+        logger.debug("User found: {} with enabled={} and authorities={}", email, user.isEnabled(), user.getAuthorities());
         return user;
     }
 
@@ -30,7 +52,12 @@ public class UserService implements UserDetailsService {
             user.setRole(Role.STUDENT);
         }
 
+        // Hash the password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // Clear confirmPassword to avoid validation issues during save
+        user.setConfirmPassword(null);
+
         user.setEnabled(true); // Enable login immediately
 
         if (user.getRole() == Role.OWNER) {

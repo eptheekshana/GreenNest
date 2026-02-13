@@ -22,11 +22,14 @@
 
         <div class="input-wrapper">
             <label for="role">I am a:</label>
-            <select id="role" th:field="*{role}" required>
+            <select id="role" th:field="*{role}"
+                    th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'"
+                    required>
                 <option value="">-- Select your role --</option>
-                <option value="STUDENT" selected>Student (Looking for a place)</option>
+                <option value="STUDENT">Student (Looking for a place)</option>
                 <option value="OWNER">Property Owner (Listing a place)</option>
             </select>
+            <span class="error-msg" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
         </div>
 
         <div class="input-wrapper">

@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class NboardApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(NboardApplication.class, args);
 	}
 

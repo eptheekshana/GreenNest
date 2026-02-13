@@ -1,7 +1,7 @@
 package com.horizonix.nboard.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,15 +21,23 @@ public class User implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email must be valid")
     @Column(nullable = false, unique = true) private String email;
+
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     @Column(nullable = false) private String password;
+
+    @NotBlank(message = "Full name is required")
     @Column(nullable = false) private String fullName;
 
     // Transient field for password confirmation
     @Transient
     private String confirmPassword;
 
-    // Add this field
+    @NotBlank(message = "Contact number is required")
+    @Pattern(regexp = "[0-9]{10}", message = "Contact number must be 10 digits")
     @Column(name = "contact_number")
     private String contactNumber;
 
@@ -37,6 +45,7 @@ public class User implements UserDetails {
     private boolean enabled = true;
     private boolean isVerified = false;
 
+    @NotNull(message = "Role is required")
     @Enumerated(EnumType.STRING) private Role role;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

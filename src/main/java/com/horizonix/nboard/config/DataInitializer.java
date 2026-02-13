@@ -46,6 +46,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setFullName("Super Admin");
             admin.setEmail("admin@nboard.com");
             admin.setPassword(passwordEncoder.encode("admin123")); // 🔒 Password: admin123
+            admin.setContactNumber("0771111111");
             admin.setRole(Role.ADMIN); // Ensure Role.ADMIN exists in your enum/string
             admin.setVerified(true);
             admin.setEnabled(true);

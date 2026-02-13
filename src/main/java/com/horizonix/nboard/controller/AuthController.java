@@ -10,16 +10,22 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 public class AuthController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     private UserService userService;
 
     // --- Standard User Login ---
     @GetMapping("/login")
-    public String showLoginPage() { return "login"; }
+    public String showLoginPage() {
+        return "login";
+    }
 
     // ---  HIDDEN ADMIN LOGIN ---
     // Access this by typing: http://localhost:8080/secret-admin-entry
@@ -38,20 +44,38 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") User user,
                                BindingResult result) {
-        if (result.hasErrors()) { return "register"; }
+        logger.info("Registration attempt for email: {}", user.getEmail());
 
+        // Check for validation errors
+        if (result.hasErrors()) {
+            logger.warn("Validation errors during registration:");
+            result.getAllErrors().forEach(error ->
+                logger.warn("  - {}: {}", error.getObjectName(), error.getDefaultMessage())
+            );
+            return "register";
+        }
+
+        // Check if email is already taken
         if (userService.isEmailTaken(user.getEmail())) {
+            logger.warn("Email already registered: {}", user.getEmail());
             result.rejectValue("email", "error.email", "Email is already registered.");
             return "register";
         }
 
-        userService.saveUser(user);
+        try {
+            userService.saveUser(user);
+            logger.info("User registered successfully: {} with role: {}", user.getEmail(), user.getRole());
 
-        // Redirect with role-specific message
-        if (user.getRole().toString().equals("OWNER")) {
-            return "redirect:/login?success=ownerWait";
-        } else {
-            return "redirect:/login?success";
+            // Redirect with role-specific message
+            if (user.getRole().toString().equals("OWNER")) {
+                return "redirect:/login?success=ownerWait";
+            } else {
+                return "redirect:/login?success";
+            }
+        } catch (Exception e) {
+            logger.error("Error saving user: {}", user.getEmail(), e);
+            result.reject("registration.error", "An error occurred during registration. Please try again.");
+            return "register";
         }
     }
 }
