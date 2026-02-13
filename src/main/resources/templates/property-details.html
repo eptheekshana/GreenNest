@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Property Details - GreenNest</title>
+    <title>Property Details - Nboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -276,7 +276,7 @@
     <!-- Left Column: Property Details -->
     <div class="card">
         <div class="image-container">
-            <img th:src="${property.imageName != null} ? @{'/uploads/' + ${property.imageName}} : @{'/images/boarding-room.JPEG'}"
+            <img th:src="${property.imageUrl != null} ? ${property.imageUrl} : @{'/images/boarding-room.JPEG'}"
                  alt="Property Image" class="main-image" onerror="this.src='https://via.placeholder.com/800x400'">
         </div>
 

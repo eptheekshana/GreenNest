@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>List New Property - GreenNest</title>
+    <title>List New Property - Nboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" th:href="@{/css/add-property.css}">
@@ -15,12 +15,26 @@
             <a th:href="@{/owner/dashboard}" class="back-link">
                 <i class="ph-bold ph-arrow-left"></i> Back to Dashboard
             </a>
-            <h2>Add New Property</h2>
-            <p class="subtitle">Fill in the details below to list your rental space.</p>
+            <h2 th:text="${isEdit} ? 'Edit Property' : 'Add New Property'">Add New Property</h2>
+            <p class="subtitle" th:text="${isEdit} ? 'Update the details below and resubmit for verification.' : 'Fill in the details below to list your rental space.'">Fill in the details below to list your rental space.</p>
         </div>
 
-        <form th:action="@{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data">
+        <!-- Display Error Message if Upload Failed -->
+        <div th:if="${param.error != null}" style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ph-bold ph-warning-circle"></i>
+            <span th:if="${param.error[0] == 'upload-failed'}">Failed to upload image. Please try again.</span>
+            <span th:if="${param.error[0] == 'not-verified'}">You must be verified by admin before adding properties.</span>
+            <span th:if="${param.error[0] == 'no-image'}">Please upload a property image.</span>
+            <span th:if="${param.error[0] == 'unknown'}">An error occurred. Please try again.</span>
+        </div>
 
+        <!-- Display Error from Flash Attributes -->
+        <div th:if="${error}" style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ph-bold ph-warning-circle"></i>
+            <span th:text="${error}">Error message</span>
+        </div>
+
+        <form th:action="${isEdit} ? @{/owner/edit/{id}(id=${property.id})} : @{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data" id="propertyForm">
             <div class="form-grid">
                 <div class="input-group">
                     <label for="title">Property Title</label>
@@ -46,10 +60,17 @@
                 <div class="input-group">
                     <label for="fileInput">Property Image</label>
                     <div class="file-upload-wrapper">
-                        <input type="file" name="image" id="fileInput" accept="image/*" required onchange="showPreview(this)">
+                        <input type="file" name="image" id="fileInput" accept="image/*" th:attr="required=${!isEdit}" onchange="showPreview(this)">
                         <div class="upload-icon"><i class="ph-duotone ph-image"></i></div>
                         <p class="upload-text"><b>Click to upload</b> or drag and drop</p>
                         <p class="upload-text" style="font-size: 0.8rem; margin-top: 5px;">SVG, PNG, JPG (Max 10MB)</p>
+                    </div>
+
+                    <div th:if="${isEdit}" style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
+                        Current image (upload a new one to replace):
+                        <div style="margin-top: 8px;">
+                            <img th:src="${property.imageUrl}" alt="Current Property Image" style="width: 100%; max-width: 360px; border-radius: 10px; border: 1px solid #e2e8f0;" onerror="this.src='https://placehold.co/600x400/f1f5f9/94a3b8?text=No+Image'">
+                        </div>
                     </div>
 
                     <div id="preview-container">
@@ -60,7 +81,7 @@
             </div>
 
             <button type="submit" class="btn-submit">
-                <i class="ph-bold ph-check-circle"></i> Publish Listing
+                <i class="ph-bold ph-check-circle"></i> <span th:text="${isEdit} ? 'Update Listing' : 'Publish Listing'">Publish Listing</span>
             </button>
         </form>
     </div>
@@ -70,7 +91,7 @@
         <div class="circle c2"></div>
         <div class="visual-content">
             <h3>Reach more students.</h3>
-            <p>GreenNest connects you directly with NSBM students looking for safe and affordable housing.</p>
+            <p>Nboard connects you directly with NSBM students looking for safe and affordable housing.</p>
             <br>
             <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 12px; backdrop-filter: blur(5px);">
                 <i class="ph-fill ph-shield-check" style="font-size: 1.5rem; margin-bottom: 5px;"></i>

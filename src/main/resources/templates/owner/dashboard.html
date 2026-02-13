@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Owner Dashboard - GreenNest</title>
+    <title>Owner Dashboard - Nboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
@@ -215,6 +215,13 @@
         }
         .btn-trash:hover { background: #fee2e2; transform: scale(1.1); box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2); }
 
+        .btn-edit {
+            color: var(--primary); background: #ecfdf5; width: 34px; height: 34px;
+            display: flex; align-items: center; justify-content: center; border-radius: 10px;
+            transition: 0.2s; text-decoration: none;
+        }
+        .btn-edit:hover { background: #d1fae5; transform: scale(1.1); box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2); }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -225,7 +232,7 @@
 
 <aside class="sidebar">
     <div class="brand">
-        <i class="ph-fill ph-plant" style="font-size: 1.8rem;"></i> GreenNest
+        <i class="ph-fill ph-plant" style="font-size: 1.8rem;"></i> Nboard
     </div>
 
     <nav class="nav">
@@ -308,7 +315,7 @@
 
         <div th:each="prop : ${myProperties}" class="prop-card">
             <div class="img-container">
-                <img th:src="@{'/uploads/' + ${prop.imageName}}" class="prop-img"
+                <img th:src="${prop.imageUrl}" class="prop-img"
                      onerror="this.src='https://placehold.co/600x400/f1f5f9/94a3b8?text=No+Image'" alt="Property Image">
 
                 <span class="prop-badge"
@@ -326,9 +333,14 @@
                         <i class="ph-fill ph-map-pin"></i>
                         <span th:text="${prop.location}">Location</span>
                     </div>
-                    <a th:href="@{/owner/delete/{id}(id=${prop.id})}" class="btn-trash" onclick="return confirm('Delete listing?');">
-                        <i class="ph-bold ph-trash"></i>
-                    </a>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <a th:href="@{/owner/edit/{id}(id=${prop.id})}" class="btn-edit" title="Edit listing">
+                            <i class="ph-bold ph-pencil-simple"></i>
+                        </a>
+                        <a th:href="@{/owner/delete/{id}(id=${prop.id})}" class="btn-trash" onclick="return confirm('Delete listing?');">
+                            <i class="ph-bold ph-trash"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -374,3 +386,4 @@
 
 </body>
 </html>
+

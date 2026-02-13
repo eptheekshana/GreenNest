@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Your Boarding Place - GreenNest</title>
+    <title>Find Your Boarding Place - Nboard</title>
 
     <style>
         :root {
@@ -139,7 +139,7 @@
 <body>
 
 <nav class="navbar">
-    <a href="/" class="brand">GreenNest 🌱</a>
+    <a href="/" class="brand">Nboard 🌱</a>
     <div class="nav-links">
         <a href="/">Home</a>
         <a href="owner/add-property.html" class="btn-add">+ List Property</a>
@@ -158,7 +158,7 @@
 
         <div th:each="property : ${properties}" class="property-card">
 
-            <img th:src="@{'/uploads/' + ${property.imageName}}" alt="Property Image" class="card-img">
+            <img th:src="${property.imageUrl}" alt="Property Image" class="card-img">
 
             <div class="card-body">
                 <div class="price-tag" th:text="'LKR ' + ${property.price} + '/mo'">LKR 15,000/mo</div>

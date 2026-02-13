@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>All Listings - GreenNest</title>
+    <title>All Listings - Nboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
@@ -95,7 +95,7 @@
 
     <div class="grid" th:if="${!properties.isEmpty()}">
         <a th:each="prop : ${properties}" th:href="@{/property/{id}(id=${prop.id})}" class="card">
-            <img th:src="@{'/uploads/' + ${prop.imageName}}" class="card-img"
+            <img th:src="${prop.imageUrl}" class="card-img"
                  onerror="this.src='https://placehold.co/600x400?text=No+Image'">
             <div class="card-body">
                 <div class="price" th:text="'LKR ' + ${prop.price}">LKR 15,000</div>

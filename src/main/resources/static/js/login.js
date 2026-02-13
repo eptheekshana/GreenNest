@@ -1,6 +1,6 @@
 // Login page interactions
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('GreenNest Login Page Loaded');
+    console.log('Nboard Login Page Loaded');
 
     // Form validation
     const loginForm = document.querySelector('form');

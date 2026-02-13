@@ -1,6 +1,6 @@
 // Admin dashboard interactions
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('GreenNest Admin Dashboard Loaded');
+    console.log('Nboard Admin Dashboard Loaded');
 
     // Auto-hide success messages after 5 seconds
     const alerts = document.querySelectorAll('.alert-success');

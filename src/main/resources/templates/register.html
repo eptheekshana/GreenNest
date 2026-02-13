@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join GreenNest - Create Account</title>
+    <title>Join Nboard - Create Account</title>
     <link rel="stylesheet" th:href="@{/css/register.css}">
 </head>
 <body>
 
 <div class="onboarding-card">
     <div class="card-header">
-        <h2>GreenNest</h2>
+        <h2>Nboard</h2>
         <p class="sub-text">Create your account to get started</p>
     </div>
 
@@ -22,18 +22,21 @@
 
         <div class="input-wrapper">
             <label for="role">I am a:</label>
-            <select id="role" th:field="*{role}" required>
+            <select id="role" th:field="*{role}"
+                    th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'"
+                    required>
                 <option value="">-- Select your role --</option>
-                <option value="STUDENT" selected>Student (Looking for a place)</option>
+                <option value="STUDENT">Student (Looking for a place)</option>
                 <option value="OWNER">Property Owner (Listing a place)</option>
             </select>
+            <span class="error-msg" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
         </div>
 
         <div class="input-wrapper">
             <label for="fullName">Full Name</label>
             <input type="text" id="fullName" th:field="*{fullName}"
                    th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'"
-                   placeholder="e.g. Sadewma Perera"
+                   placeholder="e.g. Sadewma Marasinghe"
                    maxlength="255" required>
             <span class="error-msg" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
         </div>
@@ -42,7 +45,7 @@
             <label for="email">Email Address</label>
             <input type="email" id="email" th:field="*{email}"
                    th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
-                   placeholder="name@student.nsbm.ac.lk"
+                   placeholder="sadew@gmail.com"
                    maxlength="255" required>
             <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
         </div>
@@ -61,8 +64,16 @@
             <label for="password">Password</label>
             <input type="password" id="password" th:field="*{password}"
                    th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
-                   placeholder="Min 6 characters" required>
+                   placeholder="Min 6 characters" minlength="6" required>
             <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
+
+        <div class="input-wrapper">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" th:field="*{confirmPassword}"
+                   th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
+                   placeholder="Re-enter your password" minlength="6" required>
+            <span class="error-msg" id="confirmPasswordError" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
         </div>
 
         <button type="submit" class="btn-primary">Create Account</button>
