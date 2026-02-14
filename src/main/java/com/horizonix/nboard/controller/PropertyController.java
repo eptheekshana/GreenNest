@@ -41,7 +41,7 @@ public class PropertyController {
     public String showPropertyDetails(@PathVariable Long id, Model model) {
         Property property = propertyService.getPropertyById(id);
         model.addAttribute("property", property);
-        return "property-details"; // You need to create this HTML file
+        return "single-property";
     }
 
     // --- 3. PUBLIC: SEARCH ---
