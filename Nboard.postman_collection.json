@@ -1,0 +1,865 @@
+{
+	"info": {
+		"_postman_id": "nboard-api-collection-2026",
+		"name": "Nboard API Collection",
+		"description": "Complete API collection for Nboard - Student Boarding Management Platform\n\nThis collection includes all API endpoints for:\n- User authentication and management\n- Property listings and management\n- Booking system\n- Admin operations\n\nDeveloped as university project by eptheekshana",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "newuser@example.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "text"
+								},
+								{
+									"key": "firstName",
+									"value": "John",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "Doe",
+									"type": "text"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "0771234567",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "USER",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "Register a new user account"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "user@nboard.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "user123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Login to the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"logout"
+							]
+						},
+						"description": "Logout from the system"
+					},
+					"response": []
+				}
+			],
+			"description": "User authentication endpoints"
+		},
+		{
+			"name": "User - Student",
+			"item": [
+				{
+					"name": "User Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/dashboard",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"dashboard"
+							]
+						},
+						"description": "Get user dashboard"
+					},
+					"response": []
+				},
+				{
+					"name": "View Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"profile"
+							]
+						},
+						"description": "View user profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "firstName",
+									"value": "UpdatedFirstName",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "UpdatedLastName",
+									"type": "text"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "0779876543",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"profile"
+							]
+						},
+						"description": "Update user profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Browse Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/properties?city=&priceMin=&priceMax=&propertyType=&gender=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"properties"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": ""
+								},
+								{
+									"key": "priceMin",
+									"value": ""
+								},
+								{
+									"key": "priceMax",
+									"value": ""
+								},
+								{
+									"key": "propertyType",
+									"value": ""
+								},
+								{
+									"key": "gender",
+									"value": ""
+								}
+							]
+						},
+						"description": "Browse and filter properties"
+					},
+					"response": []
+				},
+				{
+					"name": "View Property Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/property/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"property",
+								"1"
+							]
+						},
+						"description": "View detailed information of a property"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "propertyId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "checkInDate",
+									"value": "2026-03-01",
+									"type": "text"
+								},
+								{
+									"key": "checkOutDate",
+									"value": "2026-09-01",
+									"type": "text"
+								},
+								{
+									"key": "message",
+									"value": "I am interested in this property",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/booking",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"booking"
+							]
+						},
+						"description": "Create a booking request"
+					},
+					"response": []
+				},
+				{
+					"name": "My Bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"bookings"
+							]
+						},
+						"description": "View all my booking requests"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for student users"
+		},
+		{
+			"name": "Owner - Property Management",
+			"item": [
+				{
+					"name": "Owner Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/owner/dashboard",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"owner",
+								"dashboard"
+							]
+						},
+						"description": "Get property owner dashboard"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Property",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Comfortable Room Near NSBM",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Spacious room with all amenities",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "123 Main St",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Homagama",
+									"type": "text"
+								},
+								{
+									"key": "district",
+									"value": "Colombo",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "15000",
+									"type": "text"
+								},
+								{
+									"key": "priceType",
+									"value": "MONTHLY",
+									"type": "text"
+								},
+								{
+									"key": "propertyType",
+									"value": "ROOM",
+									"type": "text"
+								},
+								{
+									"key": "genderPreference",
+									"value": "ANY",
+									"type": "text"
+								},
+								{
+									"key": "amenities",
+									"value": "WiFi,Parking,AC",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/owner/add-property",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"owner",
+								"add-property"
+							]
+						},
+						"description": "Add a new property listing"
+					},
+					"response": []
+				},
+				{
+					"name": "My Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/owner/properties",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"owner",
+								"properties"
+							]
+						},
+						"description": "View all my properties"
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Property",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Updated Property Title",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Updated description",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "18000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/owner/edit-property/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"owner",
+								"edit-property",
+								"1"
+							]
+						},
+						"description": "Edit existing property"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Property",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/owner/delete-property/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"owner",
+								"delete-property",
+								"1"
+							]
+						},
+						"description": "Delete a property"
+					},
+					"response": []
+				},
+				{
+					"name": "Property Bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/owner/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"owner",
+								"bookings"
+							]
+						},
+						"description": "View booking requests for my properties"
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Booking",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/owner/booking/1/confirm",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"owner",
+								"booking",
+								"1",
+								"confirm"
+							]
+						},
+						"description": "Confirm a booking request"
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Booking",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/owner/booking/1/reject",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"owner",
+								"booking",
+								"1",
+								"reject"
+							]
+						},
+						"description": "Reject a booking request"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for property owners"
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Admin Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/dashboard",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"dashboard"
+							]
+						},
+						"description": "Get admin dashboard with statistics"
+					},
+					"response": []
+				},
+				{
+					"name": "Manage Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							]
+						},
+						"description": "View all users"
+					},
+					"response": []
+				},
+				{
+					"name": "Approve User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/user/2/approve",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"user",
+								"2",
+								"approve"
+							]
+						},
+						"description": "Approve a pending user"
+					},
+					"response": []
+				},
+				{
+					"name": "Suspend User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/user/2/suspend",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"user",
+								"2",
+								"suspend"
+							]
+						},
+						"description": "Suspend a user account"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/user/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"user",
+								"2"
+							]
+						},
+						"description": "Delete a user account"
+					},
+					"response": []
+				},
+				{
+					"name": "Manage Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/properties",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"properties"
+							]
+						},
+						"description": "View all properties"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Property",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/property/1/verify",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"property",
+								"1",
+								"verify"
+							]
+						},
+						"description": "Verify a property listing"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Property",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/property/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"property",
+								"1"
+							]
+						},
+						"description": "Delete a property"
+					},
+					"response": []
+				},
+				{
+					"name": "All Bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"bookings"
+							]
+						},
+						"description": "View all bookings in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Platform Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/statistics",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"statistics"
+							]
+						},
+						"description": "Get platform statistics"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin endpoints for platform management"
+		},
+		{
+			"name": "Public",
+			"item": [
+				{
+					"name": "Home Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Get home page"
+					},
+					"response": []
+				},
+				{
+					"name": "Browse Properties (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/properties",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"properties"
+							]
+						},
+						"description": "Public property listings"
+					},
+					"response": []
+				}
+			],
+			"description": "Public endpoints (no authentication required)"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
+
