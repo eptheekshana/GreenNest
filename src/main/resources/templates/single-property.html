@@ -1,5 +1,5 @@
-!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,8 +103,12 @@
             flex-wrap: wrap;
         }
 
-        .btn {
+        .button-actions form {
             flex: 1;
+            min-width: 150px;
+        }
+
+        .btn {
             min-width: 150px;
             padding: 14px 25px;
             text-align: center;
@@ -113,6 +117,9 @@
             font-size: 16px;
             font-weight: 600;
             transition: all 0.3s ease;
+            border: none;
+            width: 100%;
+            cursor: pointer;
         }
 
         .book-btn {
@@ -135,6 +142,29 @@
             transform: translateY(-2px);
         }
 
+        .owner-card {
+            margin-top: 25px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background-color: #f9fafb;
+        }
+
+        .owner-card h3 {
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .owner-row {
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .owner-label {
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
         /* Responsive adjustment for small screens */
         @media (max-width: 600px) {
             .property-header {
@@ -154,16 +184,16 @@
 
 <div class="container">
     <div class="property-image">
-        <img src=  alt=" Room for Rent">
+        <img th:src="${property.imageUrl != null} ? ${property.imageUrl} : @{'/images/boarding-room.JPEG'}" alt="Room for Rent">
     </div>
 
     <div class="property-content">
         <div class="property-header">
-            <div class="property-title">Single Room for Rent</div>
-            <div class="property-price">Rs. 15,000 / month</div>
+            <div class="property-title" th:text="${property.title}">Single Room for Rent</div>
+            <div class="property-price">Rs. <span th:text="${#numbers.formatDecimal(property.price, 0, 0)}">15,000</span> / month</div>
         </div>
 
-        <div class="property-description">
+        <div class="property-description" th:text="${property.description}">
             This comfortable single room is ideal for students or working professionals.
             Located within walking distance to public transport, supermarkets, and local universities.
             Enjoy a peaceful, quiet environment with all essential utilities ready for you to move in.
@@ -181,9 +211,29 @@
             </ul>
         </div>
 
+        <div class="owner-card">
+            <h3>Owner Details</h3>
+            <div class="owner-row">
+                <span class="owner-label">Name:</span>
+                <span th:text="${property.owner.fullName}">Owner Name</span>
+            </div>
+            <div class="owner-row">
+                <span class="owner-label">Email:</span>
+                <span th:text="${property.owner.email}">owner@example.com</span>
+            </div>
+            <div class="owner-row" th:if="${property.owner.contactNumber}">
+                <span class="owner-label">Phone:</span>
+                <span th:text="${property.owner.contactNumber}">+94 XX XXX XXXX</span>
+            </div>
+        </div>
+
         <div class="button-actions">
-            <a href="#" class="btn book-btn">Book Now</a>
-            <a href="#" class="btn visit-btn">Visit Property</a>
+            <form th:action="@{/book/{propertyId}(propertyId=${property.id})}" method="post">
+                <button type="submit" class="btn book-btn">Book Now</button>
+            </form>
+            <form th:action="@{/book/{propertyId}(propertyId=${property.id})}" method="post">
+                <button type="submit" class="btn visit-btn">Request Visit</button>
+            </form>
         </div>
     </div>
 </div>
