@@ -64,15 +64,42 @@
             <label for="password">Password</label>
             <input type="password" id="password" th:field="*{password}"
                    th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
-                   placeholder="Min 6 characters" minlength="6" required>
+                   placeholder="Min 8 characters" minlength="8" required>
             <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+
+            <!-- Password Requirements Display -->
+            <div class="password-requirements">
+                <p class="requirements-title">Password must contain:</p>
+                <ul class="requirements-list">
+                    <li id="req-length" class="requirement">
+                        <span class="requirement-icon">✓</span>
+                        <span>At least 8 characters</span>
+                    </li>
+                    <li id="req-upper" class="requirement">
+                        <span class="requirement-icon">✓</span>
+                        <span>At least one uppercase letter (A-Z)</span>
+                    </li>
+                    <li id="req-lower" class="requirement">
+                        <span class="requirement-icon">✓</span>
+                        <span>At least one lowercase letter (a-z)</span>
+                    </li>
+                    <li id="req-number" class="requirement">
+                        <span class="requirement-icon">✓</span>
+                        <span>At least one number (0-9)</span>
+                    </li>
+                    <li id="req-special" class="requirement">
+                        <span class="requirement-icon">✓</span>
+                        <span>At least one special character (!@#$%^&*)</span>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <div class="input-wrapper">
             <label for="confirmPassword">Confirm Password</label>
             <input type="password" id="confirmPassword" th:field="*{confirmPassword}"
                    th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
-                   placeholder="Re-enter your password" minlength="6" required>
+                   placeholder="Re-enter your password" minlength="8" required>
             <span class="error-msg" id="confirmPasswordError" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
         </div>
 
