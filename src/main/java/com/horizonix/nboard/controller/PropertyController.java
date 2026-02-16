@@ -4,6 +4,7 @@ import com.horizonix.nboard.entity.Property;
 import com.horizonix.nboard.entity.User;
 import com.horizonix.nboard.service.PropertyService;
 import com.horizonix.nboard.service.UserService;
+import com.horizonix.nboard.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ public class PropertyController {
 
     @Autowired private PropertyService propertyService;
     @Autowired private UserService userService;
+    @Autowired private BookingService bookingService;
 
     // --- 1. PUBLIC: LIST ALL PROPERTIES ---
     @GetMapping("/properties")
@@ -66,6 +68,7 @@ public class PropertyController {
     public String showOwnerDashboard(Model model, Principal principal) {
         User user = userService.findByEmail(principal.getName());
         model.addAttribute("myProperties", propertyService.getPropertiesByOwner(user));
+        model.addAttribute("bookingRequests", bookingService.getRequestsForOwner(user));
         model.addAttribute("ownerName", user.getFullName());
         model.addAttribute("isVerified", user.isVerified());
         return "owner/dashboard";
@@ -180,6 +183,34 @@ public class PropertyController {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "An error occurred: " + e.getMessage());
             return "redirect:/owner/edit/" + id + "?error=unknown";
+        }
+    }
+
+    // --- 10. OWNER: ACCEPT BOOKING REQUEST ---
+    @PostMapping("/owner/booking/{id}/accept")
+    public String acceptBookingRequest(@PathVariable Long id, Principal principal, RedirectAttributes redirectAttributes) {
+        try {
+            bookingService.updateBookingStatus(id, "ACCEPTED");
+            redirectAttributes.addFlashAttribute("successMessage", "Booking request accepted!");
+            return "redirect:/owner/dashboard?success=accepted";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Failed to accept booking: " + e.getMessage());
+            return "redirect:/owner/dashboard?error=failed";
+        }
+    }
+
+    // --- 11. OWNER: REJECT BOOKING REQUEST ---
+    @PostMapping("/owner/booking/{id}/reject")
+    public String rejectBookingRequest(@PathVariable Long id, Principal principal, RedirectAttributes redirectAttributes) {
+        try {
+            bookingService.updateBookingStatus(id, "REJECTED");
+            redirectAttributes.addFlashAttribute("successMessage", "Booking request rejected!");
+            return "redirect:/owner/dashboard?success=rejected";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Failed to reject booking: " + e.getMessage());
+            return "redirect:/owner/dashboard?error=failed";
         }
     }
 }
