@@ -42,4 +42,12 @@ public class BookingService {
     public List<Booking> getBookingsForStudent(User student) {
         return bookingRepository.findByStudent(student);
     }
+
+    // Update booking status (ACCEPTED or REJECTED)
+    public void updateBookingStatus(Long bookingId, String status) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found with ID: " + bookingId));
+        booking.setStatus(status);
+        bookingRepository.save(booking);
+    }
 }
