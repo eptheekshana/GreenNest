@@ -31,3 +31,20 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment Variables & Secrets ###
+.env
+.env.local
+.env.*.local
+ENV_SETUP.md
+
+### Database Files ###
+*.mv.db
+*.trace.db
+*.h2.db
+nboard_db*
+
+### Uploaded Files ###
+/uploads/
+/src/main/resources/static/uploads/
+

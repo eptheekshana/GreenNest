@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Booking Requests - Nboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .status-badge { width: 100px; display: inline-block; text-align: center; }
+        .table-container { background: white; border-radius: 15px; overflow: hidden; }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Incoming Visit Requests</h2>
+        <span class="text-muted" th:text="${#lists.size(bookings)} + ' total requests'"></span>
+    </div>
+
+    <div th:if="${param.success}" class="alert alert-success">
+        Status updated successfully!
+    </div>
+
+    <div class="card shadow-sm border-0 table-container">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-success">
+                <tr>
+                    <th>Student Name</th>
+                    <th>Property</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="booking : ${bookings}">
+                    <td>
+                        <strong th:text="${booking.student.fullName}"></strong><br>
+                        <small th:text="${booking.student.email}"></small>
+                    </td>
+                    <td th:text="${booking.property.title}"></td>
+                    <td th:text="${#temporals.format(booking.requestDate,'yyyy-MM-dd HH:mm')}"></td>
+                    <td>
+                        <span class="badge status-badge"
+                              th:classappend="${booking.status=='PENDING'?'bg-warning text-dark':
+                              (booking.status=='ACCEPTED'?'bg-success':'bg-danger')}"
+                              th:text="${booking.status}">
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <div th:if="${booking.status == 'PENDING'}">
+                            <form th:action="@{/bookings/accept/{id}(id=${booking.id})}" method="post" class="d-inline">
+                                <button class="btn btn-sm btn-success">Accept</button>
+                            </form>
+                            <form th:action="@{/bookings/reject/{id}(id=${booking.id})}" method="post" class="d-inline">
+                                <button class="btn btn-sm btn-danger">Reject</button>
+                            </form>
+                        </div>
+                        <span th:unless="${booking.status == 'PENDING'}" class="text-muted">Processed</span>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(bookings)}">
+                    <td colspan="5" class="text-center py-4">
+                        No booking requests found.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

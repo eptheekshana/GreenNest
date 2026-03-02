@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nboard - NSBM Boarding Platform</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+
+<main>
+    <section class="hero-container">
+        <div class="hero-content">
+            <h1 class="main-heading">
+                Find Your Perfect <br>
+                <span class="brand-highlight">Nboard</span> Near NSBM
+            </h1>
+
+            <p class="sub-heading">
+                The safest and easiest way for students to discover <br>
+                verified boarding places, rooms, and annexes.
+            </p>
+
+            <div class="button-group">
+                <a href="/register" class="btn btn-fill">Get Started</a>
+                <a href="/login" class="btn btn-outline">Log In</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROPERTIES SECTION -->
+    <section class="properties-section">
+        <h2 class="properties-title">Featured Properties</h2>
+
+        <div class="properties-grid" th:if="${not #lists.isEmpty(properties)}">
+            <div class="property-card" th:each="property : ${properties}">
+                <img th:src="${property.imageUrl != null} ? ${property.imageUrl} : @{'/images/boarding-room.JPEG'}"
+                     alt="Property Image" class="property-image">
+                <div class="property-content">
+                    <h3 class="property-title" th:text="${property.title}">Property Title</h3>
+                    <p class="property-location" th:text="${property.location}">Location</p>
+                    <p class="property-description" th:text="${property.description}">Description</p>
+                    <div class="property-price" th:text="'Rs. ' + ${property.price}">Rs. 0</div>
+                    <a th:href="@{/property/{id}(id=${property.id})}" class="property-link">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="no-properties" th:if="${#lists.isEmpty(properties)}">
+            <p>No properties available at the moment. Check back soon!</p>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/js/home.js}"></script>
+</body>
+</html>

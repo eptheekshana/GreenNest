@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Boarding Places - Nboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================
+           1. CSS VARIABLES & RESET
+           ============================ */
+        :root {
+            --primary: #27ae60;
+            --primary-hover: #219150;
+            --dark: #2c3e50;
+            --light: #f4f7f6;
+            --white: #ffffff;
+            --gray: #95a5a6;
+            --radius: 8px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            padding-bottom: 50px;
+        }
+
+        /* ============================
+           2. NAVIGATION
+           ============================ */
+        nav {
+            background: var(--white);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .brand { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            margin-left: 20px;
+            font-weight: 500;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* ============================
+           3. SEARCH BAR SECTION
+           ============================ */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .search-container {
+            background: var(--white);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-form input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            min-width: 200px;
+        }
+
+        .btn-search {
+            padding: 12px 30px;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-search:hover { background-color: var(--primary-hover); }
+
+        /* ============================
+           4. PROPERTY GRID
+           ============================ */
+        h1 { margin-bottom: 25px; font-weight: 600; color: var(--dark); }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .property-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+        }
+        .property-card:hover { transform: translateY(-5px); }
+
+        .card-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+
+        .card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+
+        .price-tag {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 5px;
+        }
+
+        .card-body h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .location-tag {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .btn-view {
+            margin-top: auto;
+            display: block;
+            text-align: center;
+            background: #e8f5e9;
+            color: var(--primary);
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .btn-view:hover { background: var(--primary); color: var(--white); }
+
+        .no-data {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            color: var(--gray);
+        }
+
+        /* ============================
+           5. PAGINATION STYLES
+           ============================ */
+        .pagination-container {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-page {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--dark);
+            background: var(--white);
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .btn-page:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-page.active {
+            background-color: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="brand">Nboard</a>
+    <div class="nav-links">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/search}" style="color: var(--primary);">Explore</a>
+        <a th:href="@{/login}">Login</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="search-container">
+        <form th:action="@{/search}" method="get" class="search-form">
+            <input type="text" name="location" placeholder="City (e.g. Pitipana)" th:value="${location}">
+            <input type="number" name="price" placeholder="Max Price (LKR)" th:value="${price}">
+            <button type="submit" class="btn-search">Find Now</button>
+        </form>
+    </div>
+
+    <h1>Available Boarding Places</h1>
+
+    <div class="property-grid">
+        <a th:each="property : ${properties}" th:href="@{/property/{id}(id=${property.id})}" class="property-card">
+            <img th:if="${property.imageUrl}" th:src="${property.imageUrl}" class="card-img" alt="Boarding Image">
+            <div th:unless="${property.imageUrl}" class="card-img" style="display:flex;align-items:center;justify-content:center;color:#aaa;">No Image</div>
+
+            <div class="card-body">
+                <div class="price-tag" th:text="'LKR ' + ${property.price} + '/mo'"></div>
+                <h3 th:text="${property.title}">Luxury Room</h3>
+                <div class="location-tag">📍 <span th:text="${property.location}">Homagama</span></div>
+            </div>
+        </a>
+
+        <div th:if="${#lists.isEmpty(properties)}" class="no-data">
+            <h3>No boarding places found 😕</h3>
+            <p>Try adjusting your price or location.</p>
+        </div>
+    </div>
+
+    <div th:if="${totalPages > 1}" class="pagination-container">
+
+        <a th:if="${currentPage > 0}"
+           th:href="@{/search(page=${currentPage - 1}, location=${location}, price=${price})}"
+           class="btn-page">
+            &laquo; Prev
+        </a>
+
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/search(page=${i}, location=${location}, price=${price})}"
+               th:text="${i + 1}"
+               th:class="${currentPage == i} ? 'btn-page active' : 'btn-page'">
+            </a>
+        </span>
+
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/search(page=${currentPage + 1}, location=${location}, price=${price})}"
+           class="btn-page">
+            Next &raquo;
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

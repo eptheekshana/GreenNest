@@ -1,0 +1,148 @@
+:root {
+    --primary-green: #27ae60;
+    --bg-color: #f4f7f6;
+    --text-dark: #2c3e50;
+    --error-red: #e74c3c;
+    --radius: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.onboarding-card {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    border-radius: var(--radius);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+}
+
+.card-header { text-align: center; margin-bottom: 30px; }
+.card-header h2 { color: var(--primary-green); margin-bottom: 5px; }
+.sub-text { color: #7f8c8d; font-size: 0.9rem; text-align: center; margin-bottom: 20px; }
+
+/* Inputs */
+.input-wrapper { margin-bottom: 20px; }
+.input-wrapper label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9rem; }
+.input-wrapper input, .input-wrapper select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    background-color: white; /* For select dropdown */
+}
+
+.input-wrapper input:focus, .input-wrapper select:focus {
+    outline: none;
+    border-color: var(--primary-green);
+}
+
+/* Error States */
+.is-invalid { border-color: var(--error-red) !important; }
+.error-msg { color: var(--error-red); font-size: 0.85rem; margin-top: 5px; display: block; }
+
+.alert-danger {
+    background: #fdeaea;
+    border: 1px solid #fadbd8;
+    color: var(--error-red);
+    padding: 10px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+    padding: 14px;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-primary:hover { background-color: #219150; }
+
+.form-footer { margin-top: 20px; text-align: center; font-size: 0.9rem; }
+.link-highlight { color: var(--primary-green); text-decoration: none; font-weight: 600; }
+
+/* Password Requirements */
+.password-requirements {
+    margin-top: 12px;
+    padding: 12px;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: var(--radius);
+    display: none;
+}
+
+.password-requirements.active {
+    display: block;
+}
+
+.requirements-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    margin-top: 0;
+}
+
+.requirements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.requirement {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin-bottom: 6px;
+    transition: color 0.2s;
+}
+
+.requirement:last-child {
+    margin-bottom: 0;
+}
+
+.requirement-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background-color: #ecf0f1;
+    color: #95a5a6;
+    font-size: 0.7rem;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.requirement.met {
+    color: var(--primary-green);
+}
+
+.requirement.met .requirement-icon {
+    background-color: #d5f4e6;
+    color: var(--primary-green);
+}
