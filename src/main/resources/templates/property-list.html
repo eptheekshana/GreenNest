@@ -162,7 +162,7 @@
             <img th:src="${property.imageUrl}" alt="Property Image" class="card-img">
 
             <div class="card-body">
-                <div class="price-tag" th:text="'LKR ' + ${property.price} + '/mo'">LKR 15,000/mo</div>
+                <div class="price-tag" th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 2, 'DEFAULT')} + '/mo'">LKR 15,000.00/mo</div>
                 <h3 class="card-title" th:text="${property.title}">Luxury Room</h3>
 
                 <div class="location-tag">

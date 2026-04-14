@@ -236,7 +236,7 @@
             <div th:unless="${property.imageUrl}" class="card-img" style="display:flex;align-items:center;justify-content:center;color:#aaa;">No Image</div>
 
             <div class="card-body">
-                <div class="price-tag" th:text="'LKR ' + ${property.price} + '/mo'"></div>
+                <div class="price-tag" th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 2, 'DEFAULT')} + '/mo'"></div>
                 <h3 th:text="${property.title}">Luxury Room</h3>
                 <div class="location-tag">📍 <span th:text="${property.location}">Homagama</span></div>
                 <a th:href="@{/property-details/{id}(id=${property.id})}" class="btn-view">View Details</a>

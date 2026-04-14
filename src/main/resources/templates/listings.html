@@ -101,7 +101,7 @@
             <img th:src="${prop.imageUrl}" class="card-img"
                  onerror="this.src='https://placehold.co/600x400?text=No+Image'">
             <div class="card-body">
-                <div class="price" th:text="'LKR ' + ${prop.price}">LKR 15,000</div>
+                <div class="price" th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 2, 'DEFAULT')}">LKR 15,000.00</div>
                 <div class="title" th:text="${prop.title}">Property Title</div>
                 <div class="location">
                     <i class="ph-fill ph-map-pin"></i>

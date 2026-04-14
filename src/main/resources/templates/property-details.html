@@ -288,7 +288,7 @@
                 <span th:text="${property.location}">Location</span>
             </div>
             <div class="property-price">
-                Rs. <span th:text="${#numbers.formatDecimal(property.price, 0, 'DEFAULT')}">0</span>
+                Rs. <span th:text="${#numbers.formatDecimal(property.price, 1, 2, 'DEFAULT')}">0.00</span>
                 <span class="price-period">/month</span>
             </div>
         </div>

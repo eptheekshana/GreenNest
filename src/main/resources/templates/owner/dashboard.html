@@ -326,7 +326,7 @@
             </div>
 
             <div class="card-body">
-                <div class="price-tag" th:text="'LKR ' + ${prop.price}"></div>
+                <div class="price-tag" th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 2, 'DEFAULT')}"></div>
                 <div class="prop-title" th:text="${prop.title}">Property Title</div>
 
                 <div class="card-footer">

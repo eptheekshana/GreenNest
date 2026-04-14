@@ -43,7 +43,7 @@
                     <h3 class="property-title" th:text="${property.title}">Property Title</h3>
                     <p class="property-location" th:text="${property.location}">Location</p>
                     <p class="property-description" th:text="${property.description}">Description</p>
-                    <div class="property-price" th:text="'Rs. ' + ${property.price}">Rs. 0</div>
+                    <div class="property-price" th:text="'Rs. ' + ${#numbers.formatDecimal(property.price, 1, 2, 'DEFAULT')}">Rs. 0.00</div>
                     <a th:href="@{/property-details/{id}(id=${property.id})}" class="property-link">View Details</a>
                 </div>
             </div>
