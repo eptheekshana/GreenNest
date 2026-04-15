@@ -36,6 +36,7 @@ public class Property {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "property_photos", joinColumns = @JoinColumn(name = "property_id"))
+    @OrderColumn(name = "photo_order")
     @Column(name = "photo_url", length = 500)
     private List<String> photoUrls = new ArrayList<>();
 
