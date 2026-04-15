@@ -325,7 +325,7 @@
     <div class="card">
         <div class="image-container">
             <img id="mainPropertyImage"
-                 th:src="${property.primaryPhotoUrl != null} ? ${property.primaryPhotoUrl} : @{'/images/boarding-room.JPEG'}"
+                 th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
                  alt="Property Image" class="main-image" onerror="this.src='https://via.placeholder.com/800x400'">
 
             <div th:if="${not #lists.isEmpty(property.resolvedPhotoUrls)}" class="thumbnail-strip">
@@ -374,7 +374,7 @@
             </div>
             <div class="detail-item">
                 <span class="detail-label">Posted</span>
-                <span class="detail-value" th:text="${property.createdAt != null} ? ${#temporals.format(property.createdAt, 'MMM dd, yyyy')} : 'Recently'">Recently</span>
+                <span class="detail-value" th:text="${property.createdAt != null ? #temporals.format(property.createdAt, 'MMM dd, yyyy') : 'Recently'}">Recently</span>
             </div>
             <div class="detail-item">
                 <span class="detail-label">Status</span>

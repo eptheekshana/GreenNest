@@ -37,7 +37,7 @@
 
         <div class="properties-grid" th:if="${not #lists.isEmpty(properties)}">
             <div class="property-card" th:each="property : ${properties}">
-                <img th:src="${property.primaryPhotoUrl != null} ? ${property.primaryPhotoUrl} : @{'/images/boarding-room.JPEG'}"
+                <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
                      alt="Property Image" class="property-image">
                 <div class="property-content">
                     <h3 class="property-title" th:text="${property.title}">Property Title</h3>

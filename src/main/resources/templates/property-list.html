@@ -159,7 +159,7 @@
 
         <div th:each="property : ${properties}" class="property-card">
 
-            <img th:src="${property.primaryPhotoUrl != null} ? ${property.primaryPhotoUrl} : @{'/images/boarding-room.JPEG'}" alt="Property Image" class="card-img">
+            <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}" alt="Property Image" class="card-img">
 
             <div class="card-body">
                 <div class="price-tag" th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 2, 'DEFAULT')} + '/mo'">LKR 15,000.00/mo</div>
