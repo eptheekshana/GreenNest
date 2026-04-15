@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -65,18 +67,14 @@ public class PropertyService {
     }
 
     // --- 6. OWNER: SAVE/UPDATE PROPERTY ---
-    public void saveProperty(Property property, MultipartFile image) throws IOException {
-        // Handle Image Upload
-        if (image != null && !image.isEmpty()) {
-            try {
-                String imageUrl = uploadImage(image);
-                property.setImageUrl(imageUrl);
-            } catch (IOException e) {
-                logger.error("Failed to upload image: {}", e.getMessage());
-                throw e;
-            }
+    public void saveProperty(Property property, List<MultipartFile> images) throws IOException {
+        List<String> uploadedImageUrls = uploadImages(images);
+
+        if (uploadedImageUrls.isEmpty()) {
+            logger.warn("No images provided for property: {}", property.getTitle());
         } else {
-            logger.warn("No image provided for property: {}", property.getTitle());
+            property.setPhotoUrls(uploadedImageUrls);
+            property.setImageUrl(property.getPrimaryPhotoUrl());
         }
 
         // Always set to PENDING when saving/updating
@@ -85,26 +83,45 @@ public class PropertyService {
         propertyRepository.save(property);
     }
 
-    public void updateProperty(Property existing, Property updated, MultipartFile image) throws IOException {
+    public void updateProperty(Property existing, Property updated, List<MultipartFile> images) throws IOException {
         existing.setTitle(updated.getTitle());
         existing.setLocation(updated.getLocation());
         existing.setPrice(updated.getPrice());
         existing.setDescription(updated.getDescription());
 
-        if (image != null && !image.isEmpty()) {
-            if (existing.getImageUrl() != null) {
-                if (existing.getImageUrl().startsWith("/uploads/")) {
-                    localFileStorageService.deleteImageLocally(existing.getImageUrl());
-                } else {
-                    spacesService.deleteImage(existing.getImageUrl());
-                }
-            }
-            String imageUrl = uploadImage(image);
-            existing.setImageUrl(imageUrl);
+        List<String> uploadedImageUrls = uploadImages(images);
+        if (!uploadedImageUrls.isEmpty()) {
+            deleteImages(existing.getResolvedPhotoUrls());
+            existing.setPhotoUrls(uploadedImageUrls);
+            existing.setImageUrl(existing.getPrimaryPhotoUrl());
         }
 
         existing.setStatus("PENDING");
         propertyRepository.save(existing);
+    }
+
+    private List<String> uploadImages(List<MultipartFile> images) throws IOException {
+        if (images == null || images.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<String> uploadedImageUrls = new ArrayList<>();
+
+        for (MultipartFile image : images) {
+            if (image == null || image.isEmpty()) {
+                continue;
+            }
+
+            try {
+                uploadedImageUrls.add(uploadImage(image));
+            } catch (IOException e) {
+                deleteImages(uploadedImageUrls);
+                logger.error("Failed to upload image: {}", e.getMessage());
+                throw e;
+            }
+        }
+
+        return uploadedImageUrls;
     }
 
     private String uploadImage(MultipartFile image) throws IOException {
@@ -130,6 +147,24 @@ public class PropertyService {
         return imageUrl;
     }
 
+    private void deleteImages(List<String> imageUrls) {
+        if (imageUrls == null) {
+            return;
+        }
+
+        for (String imageUrl : imageUrls) {
+            if (imageUrl == null || imageUrl.isBlank()) {
+                continue;
+            }
+
+            if (imageUrl.startsWith("/uploads/")) {
+                localFileStorageService.deleteImageLocally(imageUrl);
+            } else {
+                spacesService.deleteImage(imageUrl);
+            }
+        }
+    }
+
     // --- 7. PUBLIC: SEARCH (Only search APPROVED items) ---
     public Page<Property> searchProperties(String location, Double price, Pageable pageable) {
         if (location == null) location = "";
@@ -142,17 +177,7 @@ public class PropertyService {
 
     // --- 8. OWNER: DELETE ---
     public void deleteProperty(Long id) {
-        Property property = propertyRepository.findById(id).orElse(null);
-        if (property != null && property.getImageUrl() != null) {
-            // Delete image from storage (local or cloud)
-            if (property.getImageUrl().startsWith("/uploads/")) {
-                // Local storage
-                localFileStorageService.deleteImageLocally(property.getImageUrl());
-            } else {
-                // DigitalOcean Spaces
-                spacesService.deleteImage(property.getImageUrl());
-            }
-        }
+        propertyRepository.findById(id).ifPresent(property -> deleteImages(property.getResolvedPhotoUrls()));
         propertyRepository.deleteById(id);
     }
 }

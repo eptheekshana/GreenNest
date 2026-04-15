@@ -112,7 +112,7 @@
             <tbody>
             <tr th:each="prop : ${pendingProperties}">
                 <td>
-                    <img th:src="${prop.imageUrl}" class="prop-thumb"
+                    <img th:src="${prop.primaryPhotoUrl != null} ? ${prop.primaryPhotoUrl} : @{'/images/boarding-room.JPEG'}" class="prop-thumb"
                          onerror="this.src='https://placehold.co/60x40?text=No+Img'" alt="Property Image">
                 </td>
                 <td>

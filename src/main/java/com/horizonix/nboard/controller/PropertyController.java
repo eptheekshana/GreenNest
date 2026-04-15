@@ -12,12 +12,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class PropertyController {
+
+    private static final Logger logger = LoggerFactory.getLogger(PropertyController.class);
 
     @Autowired private PropertyService propertyService;
     @Autowired private UserService userService;
@@ -89,7 +95,7 @@ public class PropertyController {
     // --- 6. OWNER: SAVE PROPERTY ---
     @PostMapping("/owner/add-property")
     public String saveProperty(@ModelAttribute Property property,
-                               @RequestParam(value = "image", required = false) MultipartFile image,
+                               @RequestParam(value = "images", required = false) MultipartFile[] images,
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
         try {
@@ -101,23 +107,26 @@ public class PropertyController {
                 return "redirect:/owner/dashboard?error=not-verified";
             }
 
-            // Validate image
-            if (image == null || image.isEmpty()) {
-                redirectAttributes.addFlashAttribute("error", "Please upload a property image.");
-                return "redirect:/owner/add-property?error=no-image";
+            List<MultipartFile> uploadedImages = images == null ? List.of() : Arrays.asList(images);
+
+            // Validate images
+            boolean hasAtLeastOneImage = uploadedImages.stream().anyMatch(image -> image != null && !image.isEmpty());
+            if (!hasAtLeastOneImage) {
+                redirectAttributes.addFlashAttribute("error", "Please upload at least one property photo.");
+                return "redirect:/owner/add-property?error=no-images";
             }
 
             property.setOwner(user);
-            propertyService.saveProperty(property, image);
+            propertyService.saveProperty(property, uploadedImages);
             redirectAttributes.addFlashAttribute("submitSuccess", true);
             redirectAttributes.addFlashAttribute("propertyTitle", property.getTitle());
             return "redirect:/owner/property-submitted";
         } catch (IOException e) {
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Failed to upload image: " + e.getMessage());
+            logger.error("Failed to upload property photos", e);
+            redirectAttributes.addFlashAttribute("error", "Failed to upload photos: " + e.getMessage());
             return "redirect:/owner/add-property?error=upload-failed";
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Unexpected error while saving property", e);
             redirectAttributes.addFlashAttribute("error", "An error occurred: " + e.getMessage());
             return "redirect:/owner/add-property?error=unknown";
         }
@@ -125,8 +134,7 @@ public class PropertyController {
 
     // --- 7. OWNER: DELETE PROPERTY ---
     @GetMapping("/owner/delete/{id}")
-    public String deleteProperty(@PathVariable Long id, Principal principal) {
-        // Optional: Add check to ensure only the owner can delete their own property
+    public String deleteProperty(@PathVariable Long id) {
         propertyService.deleteProperty(id);
         return "redirect:/owner/dashboard?deleted";
     }
@@ -156,7 +164,7 @@ public class PropertyController {
     @PostMapping("/owner/edit/{id}")
     public String updateProperty(@PathVariable Long id,
                                  @ModelAttribute Property property,
-                                 @RequestParam(value = "image", required = false) MultipartFile image,
+                                 @RequestParam(value = "images", required = false) MultipartFile[] images,
                                  Principal principal,
                                  RedirectAttributes redirectAttributes) {
         try {
@@ -168,16 +176,17 @@ public class PropertyController {
                 return "redirect:/owner/dashboard?error=not-owner";
             }
 
-            propertyService.updateProperty(existing, property, image);
+            List<MultipartFile> uploadedImages = images == null ? List.of() : Arrays.asList(images);
+            propertyService.updateProperty(existing, property, uploadedImages);
             redirectAttributes.addFlashAttribute("submitSuccess", true);
             redirectAttributes.addFlashAttribute("propertyTitle", property.getTitle());
             return "redirect:/owner/property-submitted";
         } catch (IOException e) {
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Failed to upload image: " + e.getMessage());
+            logger.error("Failed to upload property photos", e);
+            redirectAttributes.addFlashAttribute("error", "Failed to upload photos: " + e.getMessage());
             return "redirect:/owner/edit/" + id + "?error=upload-failed";
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Unexpected error while updating property", e);
             redirectAttributes.addFlashAttribute("error", "An error occurred: " + e.getMessage());
             return "redirect:/owner/edit/" + id + "?error=unknown";
         }

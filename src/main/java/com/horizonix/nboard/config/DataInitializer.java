@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -29,7 +30,7 @@ public class DataInitializer implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         try {
             // Run initialization logic
             initializeSampleData();
@@ -76,33 +77,26 @@ public class DataInitializer implements CommandLineRunner {
             }
 
             // Create sample properties
-            createPropertyIfNotExists(owner,
-                    "Modern Boarding House Near NSBM",
-                    "Colombo 05",
-                    "A spacious and well-maintained boarding house...",
-                    15000.0,
-                    "boarding-room.JPEG"
-            );
-
-            // ... (rest of your existing properties) ...
+            createPropertyIfNotExists(owner);
 
             logger.info("Sample properties initialized successfully");
         }
     }
 
-    private void createPropertyIfNotExists(User owner, String title, String location,
-                                           String description, Double price, String imageName) {
+    private void createPropertyIfNotExists(User owner) {
+        String title = "Modern Boarding House Near NSBM";
         if (propertyRepository.findByStatusOrderByCreatedAtDesc("APPROVED")
                 .stream()
                 .noneMatch(p -> p.getTitle().equals(title))) {
 
             Property property = new Property();
             property.setTitle(title);
-            property.setLocation(location);
-            property.setDescription(description);
-            property.setPrice(price);
+            property.setLocation("Colombo 05");
+            property.setDescription("A spacious and well-maintained boarding house...");
+            property.setPrice(15000.0);
             // For sample data, use local path - in production, this would be Spaces URL
-            property.setImageUrl("/images/" + imageName);
+            property.setImageUrl("/images/boarding-room.JPEG");
+            property.setPhotoUrls(Collections.singletonList("/images/boarding-room.JPEG"));
             property.setOwner(owner);
             property.setStatus("APPROVED");
             property.setCreatedAt(LocalDateTime.now());

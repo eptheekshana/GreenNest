@@ -316,7 +316,7 @@
 
         <div th:each="prop : ${myProperties}" class="prop-card">
             <div class="img-container">
-                <img th:src="${prop.imageUrl}" class="prop-img"
+                <img th:src="${prop.primaryPhotoUrl != null} ? ${prop.primaryPhotoUrl} : @{'/images/boarding-room.JPEG'}" class="prop-img"
                      onerror="this.src='https://placehold.co/600x400/f1f5f9/94a3b8?text=No+Image'" alt="Property Image">
 
                 <span class="prop-badge"

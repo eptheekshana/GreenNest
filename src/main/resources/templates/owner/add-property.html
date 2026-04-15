@@ -23,9 +23,9 @@
         <!-- Display Error Message if Upload Failed -->
         <div th:if="${param.error != null}" style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
             <i class="ph-bold ph-warning-circle"></i>
-            <span th:if="${param.error[0] == 'upload-failed'}">Failed to upload image. Please try again.</span>
+            <span th:if="${param.error[0] == 'upload-failed'}">Failed to upload photos. Please try again.</span>
             <span th:if="${param.error[0] == 'not-verified'}">You must be verified by admin before adding properties.</span>
-            <span th:if="${param.error[0] == 'no-image'}">Please upload a property image.</span>
+            <span th:if="${param.error[0] == 'no-images'}">Please upload at least one property photo.</span>
             <span th:if="${param.error[0] == 'unknown'}">An error occurred. Please try again.</span>
         </div>
 
@@ -35,7 +35,7 @@
             <span th:text="${error}">Error message</span>
         </div>
 
-        <form th:action="${isEdit} ? @{/owner/edit/{id}(id=${property.id})} : @{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data" id="propertyForm">
+        <form th:action="${isEdit} ? @{/owner/edit/{id}(id=${property.id})} : @{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data" id="propertyForm" th:attr="data-is-edit=${isEdit}">
             <div class="form-grid">
                 <div class="input-group">
                     <label for="title">Property Title</label>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="input-group">
                         <label for="price">Monthly Price (LKR)</label>
-                        <input type="number" id="price" th:field="*{price}" class="input-field" placeholder="15000" required>
+                        <input type="number" id="price" th:field="*{price}" class="input-field" placeholder="15000.00" step="0.01" min="0" required>
                     </div>
                 </div>
 
@@ -59,24 +59,28 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="fileInput">Property Image</label>
+                    <label for="fileInput">Property Photos</label>
                     <div class="file-upload-wrapper">
-                        <input type="file" name="image" id="fileInput" accept="image/*" th:attr="required=${!isEdit}" onchange="showPreview(this)">
+                        <input type="file" name="images" id="fileInput" accept="image/*" multiple th:attr="required=${!isEdit}" onchange="showPreview(this)">
                         <div class="upload-icon"><i class="ph-duotone ph-image"></i></div>
-                        <p class="upload-text"><b>Click to upload</b> or drag and drop</p>
-                        <p class="upload-text" style="font-size: 0.8rem; margin-top: 5px;">SVG, PNG, JPG (Max 10MB)</p>
+                        <p class="upload-text"><b>Click to upload</b> or drag and drop multiple photos</p>
+                        <p class="upload-text" style="font-size: 0.8rem; margin-top: 5px;">SVG, PNG, JPG (Max 10MB each)</p>
                     </div>
 
-                    <div th:if="${isEdit}" style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
-                        Current image (upload a new one to replace):
-                        <div style="margin-top: 8px;">
-                            <img th:src="${property.imageUrl}" alt="Current Property Image" style="width: 100%; max-width: 360px; border-radius: 10px; border: 1px solid #e2e8f0;" onerror="this.src='https://placehold.co/600x400/f1f5f9/94a3b8?text=No+Image'">
+                    <div th:if="${isEdit and not #lists.isEmpty(property.resolvedPhotoUrls)}" class="existing-gallery">
+                        <p class="gallery-label">Current gallery</p>
+                        <p class="gallery-note">Uploading new photos will replace the existing gallery.</p>
+                        <div class="existing-gallery-grid">
+                            <img th:each="photo : ${property.resolvedPhotoUrls}" th:src="${photo}" alt="Existing property photo" onerror="this.src='https://placehold.co/600x400/f1f5f9/94a3b8?text=No+Image'">
                         </div>
                     </div>
 
                     <div id="preview-container">
-                        <img id="preview-img" src="" alt="Preview">
-                        <span id="file-name">filename.jpg</span>
+                        <div class="preview-header">
+                            <span>Selected photos</span>
+                            <span id="file-count">0 files</span>
+                        </div>
+                        <div id="preview-grid"></div>
                     </div>
                 </div>
             </div>

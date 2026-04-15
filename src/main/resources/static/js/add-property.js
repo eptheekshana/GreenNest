@@ -1,29 +1,43 @@
 function showPreview(input) {
-    const file = input.files && input.files[0];
+    const files = Array.from(input.files || []);
     const previewContainer = document.getElementById("preview-container");
-    const previewImg = document.getElementById("preview-img");
-    const fileName = document.getElementById("file-name");
+    const previewGrid = document.getElementById("preview-grid");
+    const fileCount = document.getElementById("file-count");
 
-    if (!file) {
+    if (!files.length) {
         previewContainer.style.display = "none";
-        previewImg.src = "";
-        fileName.textContent = "";
+        previewGrid.innerHTML = "";
+        fileCount.textContent = "0 files";
         return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        previewImg.src = e.target.result;
-        fileName.textContent = file.name;
-        previewContainer.style.display = "flex";
-    };
-    reader.readAsDataURL(file);
+    previewGrid.innerHTML = "";
+    fileCount.textContent = `${files.length} file${files.length === 1 ? '' : 's'}`;
+    previewContainer.style.display = "flex";
+
+    files.forEach((file) => {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const card = document.createElement("div");
+            card.className = "preview-card";
+            card.innerHTML = `
+                <img src="${e.target.result}" alt="Preview of ${file.name}">
+                <div class="preview-caption">${file.name}</div>
+            `;
+            previewGrid.appendChild(card);
+        };
+
+        reader.readAsDataURL(file);
+    });
 }
 
 // Add form submission handler
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('propertyForm');
     const submitBtn = form.querySelector('button[type="submit"]');
+    const isEdit = form.dataset.isEdit === 'true';
+    const originalSubmitLabel = submitBtn.innerHTML;
 
     form.addEventListener('submit', function(e) {
         // Disable submit button to prevent double submission
@@ -35,21 +49,39 @@ document.addEventListener('DOMContentLoaded', function() {
         const location = document.getElementById('location').value.trim();
         const price = document.getElementById('price').value;
         const fileInput = document.getElementById('fileInput');
+        const selectedFiles = Array.from(fileInput.files || []);
 
-        if (!title || !location || !price || !fileInput.files[0]) {
+        if (!title || !location || !price) {
             e.preventDefault();
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="ph-bold ph-check-circle"></i> Publish Listing';
-            alert('Please fill all required fields and select an image');
+            submitBtn.innerHTML = originalSubmitLabel;
+            alert('Please fill all required fields');
             return false;
         }
 
-        // Check file size (max 10MB)
-        if (fileInput.files[0].size > 10 * 1024 * 1024) {
+        if (!isEdit && selectedFiles.length === 0) {
             e.preventDefault();
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="ph-bold ph-check-circle"></i> Publish Listing';
-            alert('Image size must be less than 10MB');
+            submitBtn.innerHTML = originalSubmitLabel;
+            alert('Please select at least one property photo');
+            return false;
+        }
+
+        const invalidFile = selectedFiles.find((file) => !file.type.startsWith('image/'));
+        if (invalidFile) {
+            e.preventDefault();
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalSubmitLabel;
+            alert(`Invalid file type: ${invalidFile.name}. Please select image files only.`);
+            return false;
+        }
+
+        const oversizedFile = selectedFiles.find((file) => file.size > 10 * 1024 * 1024);
+        if (oversizedFile) {
+            e.preventDefault();
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalSubmitLabel;
+            alert(`${oversizedFile.name} is larger than 10MB.`);
             return false;
         }
     });
