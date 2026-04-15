@@ -46,7 +46,14 @@ public class PropertyController {
     @GetMapping({"/property/{id}", "/property-details/{id}"})
     public String showPropertyDetails(@PathVariable Long id, Model model) {
         Property property = propertyService.getPropertyById(id);
+        List<Property> featuredProperties = propertyService.getAllProperties()
+                .stream()
+                .filter(p -> !p.getId().equals(id))
+                .limit(4)
+                .toList();
+
         model.addAttribute("property", property);
+        model.addAttribute("featuredProperties", featuredProperties);
         return "property-details"; // You need to create this HTML file
     }
 
