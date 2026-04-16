@@ -7,9 +7,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/register.css}">
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
 </head>
 <body>
 
+<main class="auth-shell">
+    <section class="auth-layout">
+        <div class="auth-side">
+            <h2>Create your Nboard account</h2>
+            <p>Join as a student or property owner and access a cleaner, faster housing experience.</p>
+            <ul>
+                <li>Students can explore trusted boardings</li>
+                <li>Owners can upload and manage listings</li>
+                <li>Admin approval improves platform safety</li>
+            </ul>
+        </div>
+
+        <div class="auth-panel">
 <div class="onboarding-card">
     <div class="card-header">
         <h2>Nboard</h2>
@@ -85,6 +99,9 @@
         </div>
     </form>
 </div>
+        </div>
+    </section>
+</main>
 
 <script th:src="@{/js/register.js}"></script>
 </body>

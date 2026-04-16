@@ -6,107 +6,56 @@
     <title>Available Boarding Places - Nboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <style>
-        :root {
-            --primary: #27ae60;
-            --dark: #0e2e1a;
-            --light: #f8f9fa;
-        }
-        body { font-family: 'Outfit', sans-serif; background: var(--light); margin: 0; padding: 0; }
-        .container { max-width: 1200px; margin: 40px auto; padding: 20px; }
-        .header { text-align: center; margin-bottom: 40px; }
-        .header h1 { font-size: 2.5rem; color: var(--dark); margin-bottom: 10px; }
-        .header p { color: #666; }
-
-        .search-bar {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            display: flex;
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-        .search-bar input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-        }
-        .search-bar button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-        .card:hover { transform: translateY(-5px); }
-
-        .card-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: #eee;
-        }
-
-        .card-body { padding: 20px; }
-        .price { color: var(--primary); font-weight: 700; font-size: 1.2rem; margin-bottom: 5px; }
-        .title { font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; color: var(--dark); }
-        .location { color: #666; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px;
-            color: #666;
-        }
-    </style>
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
+<main class="site-shell">
+    <nav class="site-nav">
+        <a href="/" class="site-brand">N<span>board</span></a>
+        <div class="site-links">
+            <a href="/">Home</a>
+            <a href="/properties" class="active">Explore</a>
+            <a href="/login">Login</a>
+            <a href="/register">Sign Up</a>
+        </div>
+    </nav>
+
+    <section class="listings-banner">
+        <div class="listings-banner-content">
+            <span class="banner-chip">Student Friendly</span>
+            <h2>Verified boardings near NSBM</h2>
+            <p>Find safe, budget-friendly places with trusted owner details and fresh listings updated regularly.</p>
+        </div>
+    </section>
+
+    <section class="page-header">
         <h1>Find Your Perfect Stay</h1>
         <p>Browse verified boarding places near NSBM Green University</p>
-    </div>
+    </section>
 
-    <form action="/search" method="get" class="search-bar">
-        <input type="text" name="location" placeholder="Location (e.g. Homagama)" th:value="${location}">
-        <input type="number" name="price" placeholder="Max Price (LKR)" th:value="${price}">
-        <button type="submit">Search</button>
-    </form>
+    <section class="search-panel">
+        <form action="/search" method="get" class="search-form-modern">
+            <input type="text" name="location" placeholder="Location (e.g. Homagama)" th:value="${location}">
+            <input type="number" step="1" min="0" name="price" placeholder="Max Price (LKR)" th:value="${price}">
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+    </section>
 
-    <div class="grid" th:if="${!properties.isEmpty()}">
-        <a th:each="prop : ${properties}" th:href="@{/property/{id}(id=${prop.id})}" class="card">
+    <section class="card-grid-shell">
+    <div class="grid properties-grid" th:if="${!properties.isEmpty()}">
+        <a th:each="prop : ${properties}" th:href="@{/property/{id}(id=${prop.id})}" class="card property-card">
             <img th:src="${prop.primaryPhotoUrl != null ? prop.primaryPhotoUrl : '/images/boarding-room.JPEG'}" class="card-img"
                  onerror="this.src='https://placehold.co/600x400?text=No+Image'">
             <div class="card-body">
-                <div class="price" th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 2, 'DEFAULT')}">LKR 15,000.00</div>
-                <div class="title" th:text="${prop.title}">Property Title</div>
-                <div class="location">
+                <div class="price property-price" th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 0, 'DEFAULT')}">LKR 15000</div>
+                <div class="title property-title" th:text="${prop.title}">Property Title</div>
+                <div class="location property-location">
                     <i class="ph-fill ph-map-pin"></i>
                     <span th:text="${prop.location}">Location</span>
                 </div>
+                <span class="property-link">View Details</span>
             </div>
         </a>
     </div>
@@ -116,7 +65,8 @@
         <h3>No properties found</h3>
         <p>Try adjusting your search filters.</p>
     </div>
-</div>
+    </section>
+</main>
 
 </body>
 </html>
