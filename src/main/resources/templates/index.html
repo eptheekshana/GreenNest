@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nboard - NSBM Boarding Platform</title>
 
+    <script>document.documentElement.classList.add('js-enabled');</script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
     <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
 </head>
@@ -23,47 +25,102 @@
     </nav>
 
     <section class="hero-container">
-        <div class="hero-content">
-            <h1 class="main-heading">
-                Find Your Perfect <br>
-                <span class="brand-highlight">Nboard</span> Near NSBM
-            </h1>
+        <div class="hero-content" data-reveal="hero">
+            <div class="hero-copy">
+                <span class="hero-badge">Verified student living near NSBM</span>
 
-            <p class="sub-heading">
-                The safest and easiest way for students to discover <br>
-                verified boarding places, rooms, and annexes.
-            </p>
+                <h1 class="main-heading">
+                    Find your next <br>
+                    <span class="brand-highlight">boarding</span> with confidence
+                </h1>
 
-            <div class="button-group">
-                <a href="/register" class="btn btn-fill">Get Started</a>
-                <a href="/properties" class="btn btn-outline">Browse Listings</a>
+                <p class="sub-heading">
+                    Discover modern, verified boarding places, compare prices instantly,
+                    and choose a home that fits your routine, budget, and comfort.
+                </p>
+
+                <div class="button-group">
+                    <a href="/register" class="btn btn-fill">Get Started</a>
+                    <a href="/properties" class="btn btn-outline">Browse Listings</a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <strong th:text="${#lists.size(properties)}">0</strong>
+                        <span>Live boardings</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>Verified</strong>
+                        <span>Owner approval flow</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>24/7</strong>
+                        <span>Always accessible</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual" data-reveal="hero-visual">
+                <div class="floating-orb floating-orb-one"></div>
+                <div class="floating-orb floating-orb-two"></div>
+
+                <div class="hero-preview-card" th:if="${not #lists.isEmpty(properties)}">
+                    <div class="preview-ribbon">Featured stay</div>
+                    <img th:src="${properties[0].primaryPhotoUrl != null ? properties[0].primaryPhotoUrl : '/images/boarding-room.JPEG'}"
+                         alt="Featured property image" class="hero-preview-image">
+                    <div class="hero-preview-body">
+                        <h3 th:text="${properties[0].title}">Property Title</h3>
+                        <p th:text="${properties[0].location}">Location</p>
+                        <strong th:text="'LKR ' + ${#numbers.formatDecimal(properties[0].price, 1, 0, 'DEFAULT')}">LKR 0</strong>
+                    </div>
+                </div>
+
+                <div class="hero-preview-card hero-preview-empty" th:unless="${not #lists.isEmpty(properties)}">
+                    <div class="preview-ribbon">Live listings</div>
+                    <div class="hero-empty-art">
+                        <i class="ph-fill ph-house-simple"></i>
+                    </div>
+                    <div class="hero-preview-body">
+                        <h3>Fresh boardings are on the way</h3>
+                        <p>New verified listings will appear here as soon as they go live.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="home-intro">
         <div class="home-intro-grid">
-            <div class="search-container">
-                <h3 class="intro-title">Trusted listings for students</h3>
-                <p class="sub-text">Every property is reviewed before it goes live. Compare rent, location, and owner details in one place.</p>
+            <div class="search-container" data-reveal="intro-card">
+                <span class="section-label">Why students choose Nboard</span>
+                <h3 class="intro-title">A smoother way to find a safe stay</h3>
+                <p class="sub-text">
+                    Every property is reviewed before it goes live. Compare rent, location,
+                    and owner details in one polished view.
+                </p>
+                <ul class="intro-list">
+                    <li><i class="ph-fill ph-shield-check"></i> Verified owners and approved properties</li>
+                    <li><i class="ph-fill ph-image-square"></i> Clear photo-first property previews</li>
+                    <li><i class="ph-fill ph-map-pin"></i> Easy discovery near NSBM and surrounding areas</li>
+                </ul>
                 <div class="button-group intro-cta">
                     <a href="/properties" class="btn btn-primary">Start Searching</a>
                 </div>
             </div>
-            <div class="stat-pill-grid">
-                <div class="stat-pill">
+            <div class="stat-pill-grid" data-reveal="intro-stats">
+                <div class="stat-pill stagger-item" style="--delay: 0ms;">
                     <strong th:text="${#lists.size(properties)}">0</strong>
                     <span>Active boardings</span>
                 </div>
-                <div class="stat-pill">
+                <div class="stat-pill stagger-item" style="--delay: 90ms;">
                     <strong>100%</strong>
                     <span>Owner verified flow</span>
                 </div>
-                <div class="stat-pill">
+                <div class="stat-pill stagger-item" style="--delay: 180ms;">
                     <strong>24/7</strong>
                     <span>Fast online discovery</span>
                 </div>
-                <div class="stat-pill">
+                <div class="stat-pill stagger-item" style="--delay: 270ms;">
                     <strong>NSBM</strong>
                     <span>Focused local community</span>
                 </div>
@@ -72,23 +129,31 @@
     </section>
 
     <section class="properties-section">
-        <h2 class="properties-title">Featured Properties</h2>
+        <div class="properties-header" data-reveal="section-header">
+            <span class="section-label">Live picks</span>
+            <h2 class="properties-title">Featured Properties</h2>
+            <p class="section-description">Take a quick look at some of the newest and most interesting boardings on the platform.</p>
+        </div>
 
         <div class="properties-grid" th:if="${not #lists.isEmpty(properties)}">
-            <div class="property-card" th:each="property : ${properties}">
+            <div class="property-card featured-card" th:each="property, stat : ${properties}" data-reveal="property-card" th:style="'--delay:' + ${stat.index * 90} + 'ms'">
                 <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
                      alt="Property Image" class="property-image">
                 <div class="property-content">
+                    <div class="card-meta-row">
+                        <span class="card-badge">Verified</span>
+                        <span class="card-badge card-badge-soft">Ready to move in</span>
+                    </div>
                     <h3 class="property-title" th:text="${property.title}">Property Title</h3>
                     <p class="property-location" th:text="${property.location}">Location</p>
                     <p class="property-description" th:text="${property.description}">Description</p>
-                    <div class="property-price" th:text="'Rs. ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">Rs. 0</div>
+                    <div class="property-price" th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">LKR 0</div>
                     <a th:href="@{/property-details/{id}(id=${property.id})}" class="property-link">View Details</a>
                 </div>
             </div>
         </div>
 
-        <div class="no-properties" th:if="${#lists.isEmpty(properties)}">
+        <div class="no-properties" th:if="${#lists.isEmpty(properties)}" data-reveal="empty-state">
             <p>No properties available at the moment. Check back soon!</p>
         </div>
     </section>
