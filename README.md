@@ -66,7 +66,7 @@ Key environment variables (see `.env.example`):
 
 ```properties
 # Database
-DATABASE_URL=jdbc:mysql://localhost:3306/nboard
+DATABASE_URL=jdbc:mysql://139.59.237.242:3306/nboard?createDatabaseIfNotExist=true&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
 DATABASE_USERNAME=root
 DATABASE_PASSWORD=password
 
@@ -85,7 +85,9 @@ See [HEROKU_DEPLOYMENT.md](./HEROKU_DEPLOYMENT.md) for detailed instructions.
 **Quick deploy:**
 ```bash
 heroku create your-app-name
-heroku config:set DATABASE_URL="..." --app your-app-name
+heroku config:set DATABASE_URL="jdbc:mysql://139.59.237.242:3306/nboard?createDatabaseIfNotExist=true&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true" --app your-app-name
+heroku config:set DATABASE_USERNAME="root" --app your-app-name
+heroku config:set DATABASE_PASSWORD="***" --app your-app-name
 git push heroku main
 ```
 
@@ -121,6 +123,8 @@ All environment variables have safe defaults. However, for production:
 - ✅ Made environment variables optional with safe defaults
 - ✅ Created `Procfile` for Heroku process management
 - ✅ Enhanced `.gitignore` to prevent secret commits
+- ⚠ If Heroku shows a generic error page, check the logs for MySQL auth issues like `Access denied for user ...`
+- ⚠ Make sure the database user in `DATABASE_USERNAME` is allowed to connect from Heroku's network, and that `DATABASE_PASSWORD` matches the MySQL server
 
 ## 🔄 CI/CD
 
