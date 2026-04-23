@@ -67,7 +67,7 @@ Key environment variables (see `.env.example`):
 ```properties
 # Database
 DATABASE_URL=jdbc:mysql://139.59.237.242:3306/nboard?createDatabaseIfNotExist=true&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
-DATABASE_USERNAME=root
+DATABASE_USERNAME=heroku_user
 DATABASE_PASSWORD=password
 
 # DigitalOcean Spaces (for file uploads)
@@ -86,7 +86,7 @@ See [HEROKU_DEPLOYMENT.md](./HEROKU_DEPLOYMENT.md) for detailed instructions.
 ```bash
 heroku create your-app-name
 heroku config:set DATABASE_URL="jdbc:mysql://139.59.237.242:3306/nboard?createDatabaseIfNotExist=true&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true" --app your-app-name
-heroku config:set DATABASE_USERNAME="root" --app your-app-name
+heroku config:set DATABASE_USERNAME="heroku_user" --app your-app-name
 heroku config:set DATABASE_PASSWORD="***" --app your-app-name
 git push heroku main
 ```
