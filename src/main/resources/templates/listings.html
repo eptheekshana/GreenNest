@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Boarding Places - Nboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
+</head>
+<body>
+
+<main class="site-shell">
+    <nav class="site-nav">
+        <a href="/" class="site-brand">N<span>board</span></a>
+        <div class="site-links">
+            <a href="/">Home</a>
+            <a href="/properties" class="active">Explore</a>
+            <a href="/login">Login</a>
+            <a href="/register">Sign Up</a>
+        </div>
+    </nav>
+
+    <section class="listings-banner">
+        <div class="listings-banner-content">
+            <span class="banner-chip">Student Friendly</span>
+            <h2>Verified boardings near NSBM</h2>
+            <p>Find safe, budget-friendly places with trusted owner details and fresh listings updated regularly.</p>
+        </div>
+    </section>
+
+    <section class="page-header">
+        <h1>Find Your Perfect Stay</h1>
+        <p>Browse verified boarding places near NSBM Green University</p>
+    </section>
+
+    <section class="search-panel">
+        <form action="/search" method="get" class="search-form-modern">
+            <input type="text" name="location" placeholder="Location (e.g. Homagama)" th:value="${location}">
+            <input type="number" step="1" min="0" name="price" placeholder="Max Price (LKR)" th:value="${price}">
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+    </section>
+
+    <section class="card-grid-shell">
+    <div class="grid properties-grid" th:if="${!properties.isEmpty()}">
+        <a th:each="prop : ${properties}" th:href="@{/property/{id}(id=${prop.id})}" class="card property-card">
+            <img th:src="${prop.primaryPhotoUrl != null ? prop.primaryPhotoUrl : '/images/boarding-room.JPEG'}" class="card-img"
+                 onerror="this.src='https://placehold.co/600x400?text=No+Image'">
+            <div class="card-body">
+                <div class="price property-price" th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 0, 'DEFAULT')}">LKR 15000</div>
+                <div class="title property-title" th:text="${prop.title}">Property Title</div>
+                <div class="location property-location">
+                    <i class="ph-fill ph-map-pin"></i>
+                    <span th:text="${prop.location}">Location</span>
+                </div>
+                <span class="property-link">View Details</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="empty-state" th:if="${properties.isEmpty()}">
+        <i class="ph-duotone ph-house" style="font-size: 3rem; margin-bottom: 15px; color: #ccc;"></i>
+        <h3>No properties found</h3>
+        <p>Try adjusting your search filters.</p>
+    </div>
+    </section>
+</main>
+
+</body>
+</html>

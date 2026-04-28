@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Boarding Places - Nboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
+</head>
+<body>
+
+<main class="site-shell">
+<nav class="site-nav">
+    <a href="/" class="site-brand">N<span>board</span></a>
+    <div class="site-links">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/search}" class="active">Explore</a>
+        <a th:href="@{/login}">Login</a>
+    </div>
+</nav>
+
+<section class="listings-banner">
+    <div class="listings-banner-content">
+        <span class="banner-chip">Quick Discovery</span>
+        <h2>Browse trusted places in minutes</h2>
+        <p>Filter by location and budget, then compare listings with verified owner and property information.</p>
+    </div>
+</section>
+
+<section class="page-header">
+    <h1>Available Boarding Places</h1>
+    <p>Use location and budget filters to find the best fit for your stay.</p>
+</section>
+
+<section class="search-panel">
+        <form th:action="@{/search}" method="get" class="search-form-modern">
+            <input type="text" name="location" placeholder="City (e.g. Pitipana)" th:value="${location}">
+            <input type="number" name="price" step="1" min="0" placeholder="Max Price (LKR)" th:value="${price}">
+            <button type="submit" class="btn-search">Find Now</button>
+        </form>
+</section>
+
+<section class="card-grid-shell">
+    <div class="property-grid properties-grid">
+        <div th:each="property : ${properties}" class="property-card">
+            <img th:if="${property.primaryPhotoUrl}" th:src="${property.primaryPhotoUrl}" class="card-img" alt="Boarding Image">
+            <div th:unless="${property.primaryPhotoUrl}" class="card-img" style="display:flex;align-items:center;justify-content:center;color:#aaa;">No Image</div>
+
+            <div class="card-body">
+                <div class="price-tag property-price" th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')} + '/mo'"></div>
+                <h3 class="property-title" th:text="${property.title}">Luxury Room</h3>
+                <div class="location-tag property-location">📍 <span th:text="${property.location}">Homagama</span></div>
+                <a th:href="@{/property-details/{id}(id=${property.id})}" class="btn-view property-link">View Details</a>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(properties)}" class="no-data">
+            <h3>No boarding places found 😕</h3>
+            <p>Try adjusting your price or location.</p>
+        </div>
+    </div>
+
+    <div th:if="${totalPages > 1}" class="pagination-container">
+
+        <a th:if="${currentPage > 0}"
+           th:href="@{/search(page=${currentPage - 1}, location=${location}, price=${price})}"
+           class="btn-page">
+            &laquo; Prev
+        </a>
+
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/search(page=${i}, location=${location}, price=${price})}"
+               th:text="${i + 1}"
+               th:class="${currentPage == i} ? 'btn-page active' : 'btn-page'">
+            </a>
+        </span>
+
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/search(page=${currentPage + 1}, location=${location}, price=${price})}"
+           class="btn-page">
+            Next &raquo;
+        </a>
+
+    </div>
+
+</section>
+</main>
+
+</body>
+</html>

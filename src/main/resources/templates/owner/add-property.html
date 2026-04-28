@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>List New Property - Nboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" th:href="@{/css/add-property.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+</head>
+<body>
+
+<div class="wrapper">
+
+    <div class="form-section">
+        <div class="header">
+            <a th:href="@{/owner/dashboard}" class="back-link">
+                <i class="ph-bold ph-arrow-left"></i> Back to Dashboard
+            </a>
+            <h2 th:text="${isEdit} ? 'Edit Property' : 'Add New Property'">Add New Property</h2>
+            <p class="subtitle" th:text="${isEdit} ? 'Update the details below and resubmit for verification.' : 'Fill in the details below to list your rental space.'">Fill in the details below to list your rental space.</p>
+        </div>
+
+        <!-- Display Error Message if Upload Failed -->
+        <div th:if="${param.error != null}" style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ph-bold ph-warning-circle"></i>
+            <span th:if="${param.error[0] == 'upload-failed'}">Failed to upload photos. Please try again.</span>
+            <span th:if="${param.error[0] == 'not-verified'}">You must be verified by admin before adding properties.</span>
+            <span th:if="${param.error[0] == 'no-images'}">Please upload at least one property photo.</span>
+            <span th:if="${param.error[0] == 'unknown'}">An error occurred. Please try again.</span>
+        </div>
+
+        <!-- Display Error from Flash Attributes -->
+        <div th:if="${error}" style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="ph-bold ph-warning-circle"></i>
+            <span th:text="${error}">Error message</span>
+        </div>
+
+        <form th:action="${isEdit} ? @{/owner/edit/{id}(id=${property.id})} : @{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data" id="propertyForm" th:attr="data-is-edit=${isEdit}">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="title">Property Title</label>
+                    <input type="text" id="title" th:field="*{title}" class="input-field" placeholder="e.g. Spacious Room near NSBM" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" th:field="*{location}" class="input-field" placeholder="e.g. Homagama" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="price">Monthly Price (LKR)</label>
+                        <input type="number" id="price" th:field="*{price}" class="input-field" placeholder="15000.00" step="0.01" min="0" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" th:field="*{description}" class="input-field" placeholder="Describe the amenities (WiFi, A/C, etc.) and house rules..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="fileInput">Property Photos</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" name="images" id="fileInput" accept="image/*" multiple th:attr="required=${!isEdit}" onchange="showPreview(this)">
+                        <div class="upload-icon"><i class="ph-duotone ph-image"></i></div>
+                        <p class="upload-text"><b>Click to upload</b> or drag and drop multiple photos</p>
+                        <p class="upload-text" style="font-size: 0.8rem; margin-top: 5px;">SVG, PNG, JPG (Max 10MB each)</p>
+                    </div>
+
+                    <div th:if="${isEdit and not #lists.isEmpty(property.resolvedPhotoUrls)}" class="existing-gallery">
+                        <p class="gallery-label">Current gallery</p>
+                        <p class="gallery-note">Uploading new photos will replace the existing gallery.</p>
+                        <div class="existing-gallery-grid">
+                            <img th:each="photo : ${property.resolvedPhotoUrls}" th:src="${photo}" alt="Existing property photo" onerror="this.src='https://placehold.co/600x400/f1f5f9/94a3b8?text=No+Image'">
+                        </div>
+                    </div>
+
+                    <div id="preview-container">
+                        <div class="preview-header">
+                            <span>Selected photos</span>
+                            <span id="file-count">0 files</span>
+                        </div>
+                        <div id="preview-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="ph-bold ph-check-circle"></i> <span th:text="${isEdit} ? 'Update Listing' : 'Publish Listing'">Publish Listing</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="visual-section">
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+        <div class="visual-content">
+            <h3>Reach more students.</h3>
+            <p>Nboard connects you directly with NSBM students looking for safe and affordable housing.</p>
+            <br>
+            <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 12px; backdrop-filter: blur(5px);">
+                <i class="ph-fill ph-shield-check" style="font-size: 1.5rem; margin-bottom: 5px;"></i>
+                <h4 style="font-family: 'Outfit', sans-serif;">Admin Verified</h4>
+                <p style="font-size: 0.85rem; margin-top: 5px; opacity: 0.8;">All listings are reviewed to ensure safety standards.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script th:src="@{/js/add-property.js}"></script>
+
+</body>
+</html>

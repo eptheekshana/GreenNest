@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - Nboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
+</head>
+<body>
+<main class="auth-shell">
+    <section class="auth-layout">
+        <div class="auth-side">
+            <h2>Verify your email</h2>
+            <p>We sent a 6-digit OTP to your email. Enter it below to activate your account.</p>
+            <ul>
+                <li>Code expires in a few minutes</li>
+                <li>Use resend if you did not receive it</li>
+                <li>Check spam folder if needed</li>
+            </ul>
+        </div>
+
+        <div class="auth-panel">
+            <div class="onboarding-card">
+                <div class="card-header">
+                    <h2>Email Verification</h2>
+                    <p class="sub-text">Complete registration with OTP</p>
+                </div>
+
+                <div th:if="${param.sent}" class="alert alert-success">
+                    OTP was sent to your email address.
+                </div>
+                <div th:if="${param.resent}" class="alert alert-success">
+                    A new OTP was sent.
+                </div>
+                <div th:if="${param.sendError}" class="alert alert-danger">
+                    Account created, but OTP email failed. Please use resend OTP.
+                </div>
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                <form th:action="@{/verify-email}" method="post">
+                    <input type="hidden" name="email" th:value="${email}">
+
+                    <div class="input-wrapper">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" th:value="${email}" readonly>
+                    </div>
+
+                    <div class="input-wrapper">
+                        <label for="otp">OTP Code</label>
+                        <input type="text" id="otp" name="otp" minlength="6" maxlength="6" pattern="[0-9]{6}" placeholder="Enter 6-digit code" required>
+                    </div>
+
+                    <div class="action-area">
+                        <button type="submit" class="btn-primary">Verify Email</button>
+                    </div>
+                </form>
+
+                <form th:action="@{/verify-email/resend}" method="post" style="margin-top: 12px;">
+                    <input type="hidden" name="email" th:value="${email}">
+                    <button type="submit" class="btn-primary" style="background: #374151;">Resend OTP</button>
+                </form>
+
+                <div class="form-footer">
+                    <p>Already verified? <a th:href="@{/login}" class="link-highlight">Go to login</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+

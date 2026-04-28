@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nboard - NSBM Boarding Platform</title>
+    <script>document.documentElement.classList.add('js-enabled');</script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+<main class="home-shell">
+    <nav class="top-nav" data-reveal>
+        <a href="/" class="brand">N<span>board</span></a>
+        <div class="nav-links">
+            <a href="/" class="active">Home</a>
+            <a href="/properties">Listings</a>
+            <a href="/login">Login</a>
+            <a href="/register" class="nav-button">Register</a>
+        </div>
+    </nav>
+
+    <section class="hero" data-reveal>
+        <p class="hero-tag">Simple and trusted boarding search</p>
+        <h1>Find your next boarding near NSBM.</h1>
+        <p class="hero-text">
+            Explore verified spaces, compare monthly rent, and contact owners directly.
+        </p>
+        <div class="hero-actions">
+            <a href="/properties" class="btn btn-primary">Browse Listings</a>
+            <a href="/register" class="btn btn-secondary">Create Account</a>
+        </div>
+        <p class="hero-count">
+            <strong th:text="${#lists.size(properties)}">0</strong> active listings available now
+        </p>
+    </section>
+
+    <section class="featured" data-reveal>
+        <div class="section-head">
+            <h2>Featured Boardings</h2>
+            <p>Clean and clear listings with key details.</p>
+        </div>
+
+        <div class="property-grid" th:if="${not #lists.isEmpty(properties)}">
+            <article class="property-card" th:each="property : ${properties}" data-reveal>
+                <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
+                     alt="Property image" class="property-image">
+                <div class="property-body">
+                    <h3 th:text="${property.title}">Property Title</h3>
+                    <p class="property-location" th:text="${property.location}">Location</p>
+                    <p class="property-description" th:text="${property.description}">Description</p>
+                    <div class="property-footer">
+                        <strong th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">LKR 0</strong>
+                        <a th:href="@{/property-details/{id}(id=${property.id})}">View</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(properties)}" data-reveal>
+            <p>No properties available right now. Please check back soon.</p>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/js/home.js}"></script>
+</body>
+</html>

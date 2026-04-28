@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Nboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
+</head>
+
+<body>
+
+<main class="auth-shell">
+    <section class="auth-layout">
+        <div class="auth-side">
+            <h2>Welcome back to Nboard</h2>
+            <p>Manage listings, browse verified rooms, and connect with trusted owners around NSBM.</p>
+            <ul>
+                <li>Fast search with location and budget</li>
+                <li>Verified owner and property flows</li>
+                <li>Clean dashboard for owners and admins</li>
+            </ul>
+        </div>
+
+        <div class="auth-panel">
+    <div class="onboarding-card">
+
+        <div class="card-header">
+            <h2>Welcome Back! </h2>
+            <p class="sub-text">Login to manage your boarding place or find your next home.</p>
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+            <strong>Access Denied.</strong> Invalid email or password.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success" role="alert">
+            <strong>Logged Out.</strong> See you soon!
+        </div>
+        <div th:if="${param.success == 'ownerWait'}" class="alert alert-success">
+            <strong>Account Created!</strong> Please wait for Admin approval. You'll be notified once verified.
+        </div>
+        <div th:if="${param.success}" class="alert alert-success">
+            <strong>Registration Successful!</strong> Your account has been created. Please login now.
+        </div>
+
+        <form th:action="@{/authenticateTheUser}" method="post">
+
+            <div class="input-wrapper">
+                <label for="username">Email Address</label>
+                <input type="email" id="username" name="username"
+                       placeholder="name@student.nsbm.ac.lk"
+                       required autofocus>
+            </div>
+
+            <div class="input-wrapper">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password"
+                       placeholder="Enter your password"
+                       required>
+            </div>
+
+            <div class="action-area">
+                <button type="submit" class="btn-primary">Sign In</button>
+            </div>
+
+            <div class="form-footer">
+                <p>New to Nboard? <a th:href="@{/register}" class="link-highlight">Create an account</a></p>
+            </div>
+        </form>
+    </div>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/js/login.js}"></script>
+</body>
+</html>
