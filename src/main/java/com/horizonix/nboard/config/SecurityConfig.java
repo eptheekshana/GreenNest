@@ -29,7 +29,7 @@ public class SecurityConfig {
 
                 // --- 1. PERMISSIONS ---
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/register", "/verify-email", "/verify-email/**", "/properties", "/property/**", "/property-details/**", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                        .requestMatchers("/", "/login", "/register", "/verify-email", "/verify-email/**", "/properties", "/property/**", "/property-details/**", "/css/**", "/js/**", "/images/**", "/uploads/**", "/internal/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/user/**").hasRole("STUDENT")
                         .requestMatchers("/api/owner/**").hasRole("OWNER")

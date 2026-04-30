@@ -57,10 +57,16 @@ public class AuthController {
             return "register";
         }
 
-        // Check if email is already taken
-        if (userService.isEmailTaken(user.getEmail())) {
-            logger.warn("Email already registered: {}", user.getEmail());
-            result.rejectValue("email", "error.email", "Email is already registered.");
+        // Check if email is already taken (handle DB errors gracefully)
+        try {
+            if (userService.isEmailTaken(user.getEmail())) {
+                logger.warn("Email already registered: {}", user.getEmail());
+                result.rejectValue("email", "error.email", "Email is already registered.");
+                return "register";
+            }
+        } catch (DataAccessException dae) {
+            logger.error("Database error while checking existing email for {}", user.getEmail(), dae);
+            result.reject("registration.error", "Database connection issue. Please try again shortly.");
             return "register";
         }
 
