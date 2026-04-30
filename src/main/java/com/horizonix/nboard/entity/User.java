@@ -45,6 +45,10 @@ public class User implements UserDetails {
     private boolean enabled = true;
     private boolean isVerified = false;
 
+    // Keeps compatibility with existing DB schema where email_verified is NOT NULL.
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified = true;
+
     @NotNull(message = "Role is required")
     @Enumerated(EnumType.STRING) private Role role;
 

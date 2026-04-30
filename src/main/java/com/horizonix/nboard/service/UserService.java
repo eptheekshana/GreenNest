@@ -59,6 +59,7 @@ public class UserService implements UserDetailsService {
         user.setConfirmPassword(null);
 
         user.setEnabled(true); // Enable login immediately
+        user.setEmailVerified(true);
 
         if (user.getRole() == Role.OWNER) {
             user.setVerified(false); // Owners need admin approval
