@@ -10,7 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -19,6 +22,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired private UserRepository userRepository;
     @Autowired private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+    @Autowired private EmailVerificationService emailVerificationService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -27,6 +31,11 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             logger.warn("User not found with email: {}", email);
             throw new UsernameNotFoundException("Invalid email or password");
+        }
+
+        if (!user.isEmailVerified()) {
+            logger.warn("User email not verified: {}", email);
+            throw new UsernameNotFoundException("Please verify your email before logging in.");
         }
 
         // Check if user is verified (especially for OWNER role)
@@ -47,10 +56,12 @@ public class UserService implements UserDetailsService {
 
     // Ensure this method is named 'saveUser' exactly
     public void saveUser(User user) {
+        saveUser(user, null);
+    }
+
+    public void saveUser(User user, String verificationBaseUrl) {
         // Set default role if not specified
-        if (user.getRole() == null) {
-            user.setRole(Role.STUDENT);
-        }
+        user.setRole(Objects.requireNonNullElse(user.getRole(), Role.STUDENT));
 
         // Hash the password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -58,15 +69,44 @@ public class UserService implements UserDetailsService {
         // Clear confirmPassword to avoid validation issues during save
         user.setConfirmPassword(null);
 
-        user.setEnabled(true); // Enable login immediately
-        user.setEmailVerified(true);
+        String verificationToken = UUID.randomUUID().toString();
+        user.setVerificationToken(verificationToken);
+        user.setVerificationTokenExpiresAt(LocalDateTime.now().plusHours(24));
+
+        user.setEnabled(true);
+        user.setEmailVerified(false);
 
         if (user.getRole() == Role.OWNER) {
             user.setVerified(false); // Owners need admin approval
         } else {
             user.setVerified(true); // Students are immediately verified
         }
+
+        User savedUser = userRepository.save(user);
+        emailVerificationService.sendVerificationEmail(savedUser, verificationToken, verificationBaseUrl);
+    }
+
+    public boolean verifyEmail(String token) {
+        if (token == null || token.isBlank()) {
+            return false;
+        }
+
+        User user = userRepository.findByVerificationToken(token.trim());
+        if (user == null) {
+            return false;
+        }
+
+        if (user.getVerificationTokenExpiresAt() != null && user.getVerificationTokenExpiresAt().isBefore(LocalDateTime.now())) {
+            logger.warn("Verification token expired for {}", user.getEmail());
+            return false;
+        }
+
+        user.setEmailVerified(true);
+        user.setEnabled(true);
+        user.setVerificationToken(null);
+        user.setVerificationTokenExpiresAt(null);
         userRepository.save(user);
+        return true;
     }
 
     // Ensure helper methods exist
@@ -76,6 +116,10 @@ public class UserService implements UserDetailsService {
     public List<User> getPendingOwners() { return userRepository.findByRoleAndIsVerifiedFalse(Role.OWNER); }
     public void approveOwner(Long id) {
         User user = userRepository.findById(id).orElse(null);
-        if (user != null) { user.setVerified(true); userRepository.save(user); }
+        if (user != null) {
+            user.setVerified(true);
+            user.setEnabled(true);
+            userRepository.save(user);
+        }
     }
 }

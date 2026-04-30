@@ -23,6 +23,8 @@ A specialized property management and boarding platform for NSBM Green Universit
    # Edit .env with your actual credentials (database, DigitalOcean Spaces, etc.)
    ```
 
+   If you prefer a separate local secret file for SendGrid, create `sendgrid.env` with your API key, then run `source ./sendgrid.env`. The file is ignored by git.
+
 3. **Run the application**
    
    **Option A: Using the run script (recommended)**
@@ -74,6 +76,15 @@ DATABASE_PASSWORD=password
 DO_SPACES_KEY=your_key
 DO_SPACES_SECRET=your_secret
 DO_SPACES_BUCKET=nboard
+
+# SendGrid (email verification)
+SENDGRID_API_KEY=your_sendgrid_api_key
+SENDGRID_FROM_EMAIL=no-reply@yourdomain.com
+SENDGRID_FROM_NAME=Nboard
+SENDGRID_DATA_RESIDENCY=eu
+
+# Base URL used for verification links
+APP_BASE_URL=http://localhost:8080
 ```
 
 ## 🐳 Deployment
@@ -97,6 +108,8 @@ All environment variables have safe defaults. However, for production:
 
 - Set `DATABASE_URL` to your production database
 - Configure `DO_SPACES_KEY` and `DO_SPACES_SECRET` for file uploads
+- Configure `SENDGRID_API_KEY` and a verified sender address for email verification
+- Set `SENDGRID_DATA_RESIDENCY=eu` to route SendGrid traffic through the EU endpoint
 - Use strong database passwords
 
 ## 📦 Features
@@ -106,6 +119,7 @@ All environment variables have safe defaults. However, for production:
 - **Booking System**: Request and manage bookings
 - **Admin Dashboard**: Manage users, properties, and bookings
 - **Image Upload**: Upload property images (DigitalOcean Spaces or local)
+- **Email Verification**: SendGrid-powered verification emails with token links
 - **Role-Based Access Control**: Admin, Owner, User roles
 
 ## 🔐 Security

@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,19 +65,23 @@ public class AuthController {
         }
 
         try {
-            userService.saveUser(user);
+            userService.saveUser(user, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
             logger.info("User registered successfully: {} with role: {}", user.getEmail(), user.getRole());
-
-            // Redirect with role-specific message
-            if (user.getRole().toString().equals("OWNER")) {
-                return "redirect:/login?success=ownerWait";
-            } else {
-                return "redirect:/login?success";
-            }
+            return "redirect:/login?verificationSent";
         } catch (Exception e) {
             logger.error("Error saving user: {}", user.getEmail(), e);
             result.reject("registration.error", "An error occurred during registration. Please try again.");
             return "register";
         }
+    }
+
+    @GetMapping("/verify-email")
+    public String verifyEmail(@RequestParam("token") String token) {
+        boolean verified = userService.verifyEmail(token);
+        if (!verified) {
+            return "redirect:/login?verificationError";
+        }
+
+        return "redirect:/login?verified";
     }
 }

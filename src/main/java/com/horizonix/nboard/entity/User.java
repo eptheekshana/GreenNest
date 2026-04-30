@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,7 +48,13 @@ public class User implements UserDetails {
 
     // Keeps compatibility with existing DB schema where email_verified is NOT NULL.
     @Column(name = "email_verified", nullable = false)
-    private boolean emailVerified = true;
+    private boolean emailVerified = false;
+
+    @Column(name = "verification_token", length = 128)
+    private String verificationToken;
+
+    @Column(name = "verification_token_expires_at")
+    private LocalDateTime verificationTokenExpiresAt;
 
     @NotNull(message = "Role is required")
     @Enumerated(EnumType.STRING) private Role role;

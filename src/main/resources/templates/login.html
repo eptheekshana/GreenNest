@@ -39,11 +39,20 @@
         <div th:if="${param.logout}" class="alert alert-success" role="alert">
             <strong>Logged Out.</strong> See you soon!
         </div>
-        <div th:if="${param.success == 'ownerWait'}" class="alert alert-success">
-            <strong>Account Created!</strong> Please wait for Admin approval. You'll be notified once verified.
+        <div th:if="${param.verificationSent}" class="alert alert-success">
+            <strong>Check your email!</strong> We sent you a verification link. Please verify your account before logging in.
+        </div>
+        <div th:if="${param.verified}" class="alert alert-success">
+            <strong>Email verified!</strong> Your account is now active. You can log in now.
+        </div>
+        <div th:if="${param.verificationError}" class="alert alert-danger">
+            <strong>Verification failed.</strong> The link is invalid or has expired.
+        </div>
+        <div th:if="${param.ownerWait}" class="alert alert-success">
+            <strong>Account Approved for Verification.</strong> Please wait for Admin approval after verifying your email.
         </div>
         <div th:if="${param.success}" class="alert alert-success">
-            <strong>Registration Successful!</strong> Your account has been created. Please login now.
+            <strong>Registration Successful!</strong> Your account has been created.
         </div>
 
         <form th:action="@{/authenticateTheUser}" method="post">

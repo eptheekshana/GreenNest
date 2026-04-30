@@ -24,8 +24,10 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Map;
 
@@ -45,6 +47,27 @@ public class AuthApiController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody AuthLoginRequest request,
                                    HttpServletRequest httpRequest) {
+        User existingUser = userService.findByEmail(request.email());
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid email or password"));
+        }
+
+        if (!existingUser.isEmailVerified()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "Please verify your email before logging in."));
+        }
+
+        if (!existingUser.isVerified() && existingUser.getRole() == Role.OWNER) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "Your account is pending admin verification. Please wait for approval."));
+        }
+
+        if (!existingUser.isEnabled()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "Your account has been disabled. Please contact support."));
+        }
+
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
@@ -63,16 +86,16 @@ public class AuthApiController {
                 securityContext
         );
 
-        User user = userService.findByEmail(request.email());
-        String token = jwtService.generateToken(user);
+        User authenticatedUser = existingUser;
+        String token = jwtService.generateToken(authenticatedUser);
 
         return ResponseEntity.ok(new AuthResponse(
                 token,
                 "Bearer",
                 jwtService.getExpirationMs() / 1000,
-                user.getEmail(),
-                user.getFullName(),
-                user.getRole().name()
+                authenticatedUser.getEmail(),
+                authenticatedUser.getFullName(),
+                authenticatedUser.getRole().name()
         ));
     }
 
@@ -105,10 +128,21 @@ public class AuthApiController {
         }
         user.setRole(role);
 
-        userService.saveUser(user);
+        userService.saveUser(user, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("message", "Registration successful"));
+                .body(Map.of("message", "Registration successful. Please check your email to verify your account."));
+    }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam("token") String token) {
+        boolean verified = userService.verifyEmail(token);
+        if (!verified) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "Invalid or expired verification token."));
+        }
+
+        return ResponseEntity.ok(Map.of("message", "Email verified successfully."));
     }
 
     @GetMapping("/me")

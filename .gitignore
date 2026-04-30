@@ -36,6 +36,7 @@ build/
 .env
 .env.local
 .env.*.local
+sendgrid.env
 ENV_SETUP.md
 
 ### Database Files ###

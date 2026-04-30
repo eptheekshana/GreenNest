@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Optional version for safer null handling
     Optional<User> findUserByEmail(String email);
 
+    User findByVerificationToken(String verificationToken);
+
     // Required for Admin Dashboard (Jan 19 Task)
     // "Find all users who have THIS role and are NOT verified"
     List<User> findByRoleAndIsVerifiedFalse(Role role);
