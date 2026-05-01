@@ -83,7 +83,12 @@ public class UserService implements UserDetailsService {
         }
 
         User savedUser = userRepository.save(user);
-        emailVerificationService.sendVerificationEmail(savedUser, verificationToken, verificationBaseUrl);
+            try {
+              emailVerificationService.sendVerificationEmail(savedUser, verificationToken, verificationBaseUrl);
+            } catch (RuntimeException ex) {
+              userRepository.delete(savedUser);
+              throw ex;
+            }
     }
 
     public boolean verifyEmail(String token) {

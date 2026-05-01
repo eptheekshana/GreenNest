@@ -99,6 +99,11 @@ heroku create your-app-name
 heroku config:set DATABASE_URL="jdbc:mysql://139.59.237.242:3306/nboard?createDatabaseIfNotExist=true&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true" --app your-app-name
 heroku config:set DATABASE_USERNAME="heroku_user" --app your-app-name
 heroku config:set DATABASE_PASSWORD="***" --app your-app-name
+heroku config:set SENDGRID_API_KEY="***" --app your-app-name
+heroku config:set SENDGRID_FROM_EMAIL="no-reply@yourdomain.com" --app your-app-name
+heroku config:set SENDGRID_FROM_NAME="Nboard" --app your-app-name
+heroku config:set SENDGRID_DATA_RESIDENCY="eu" --app your-app-name
+heroku config:set APP_BASE_URL="https://your-app-name.herokuapp.com" --app your-app-name
 git push heroku main
 ```
 
@@ -110,6 +115,8 @@ All environment variables have safe defaults. However, for production:
 - Configure `DO_SPACES_KEY` and `DO_SPACES_SECRET` for file uploads
 - Configure `SENDGRID_API_KEY` and a verified sender address for email verification
 - Set `SENDGRID_DATA_RESIDENCY=eu` to route SendGrid traffic through the EU endpoint
+- Make sure `SENDGRID_FROM_EMAIL` is a verified sender in your SendGrid account; otherwise SendGrid will reject the mail
+- Set `APP_BASE_URL` to your public Heroku app URL so verification links point to the correct domain
 - Use strong database passwords
 
 ## 📦 Features

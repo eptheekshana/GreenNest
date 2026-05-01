@@ -128,7 +128,12 @@ public class AuthApiController {
         }
         user.setRole(role);
 
-        userService.saveUser(user, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
+            try {
+              userService.saveUser(user, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
+            } catch (IllegalStateException e) {
+              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                  .body(Map.of("message", e.getMessage()));
+            }
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("message", "Registration successful. Please check your email to verify your account."));

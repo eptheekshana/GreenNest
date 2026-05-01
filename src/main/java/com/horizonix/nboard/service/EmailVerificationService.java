@@ -25,7 +25,7 @@ public class EmailVerificationService {
 	@Value("${sendgrid.api-key:}")
 	private String sendGridApiKey;
 
-	@Value("${sendgrid.from-email:no-reply@nboard.local}")
+	@Value("${sendgrid.from-email:}")
 	private String fromEmail;
 
 	@Value("${sendgrid.from-name:Nboard}")
@@ -41,8 +41,11 @@ public class EmailVerificationService {
 		String verificationUrl = buildVerificationUrl(token, baseUrl);
 
 		if (sendGridApiKey == null || sendGridApiKey.isBlank()) {
-			logger.info("SendGrid is not configured. Email verification link for {}: {}", user.getEmail(), verificationUrl);
-			return;
+			throw new IllegalStateException("SendGrid is not configured. Set SENDGRID_API_KEY in the Heroku config vars.");
+		}
+
+		if (fromEmail == null || fromEmail.isBlank()) {
+			throw new IllegalStateException("SendGrid sender is not configured. Set SENDGRID_FROM_EMAIL to a verified sender address.");
 		}
 
 		try {
@@ -76,12 +79,12 @@ public class EmailVerificationService {
 			if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
 				logger.info("Verification email sent to {}", user.getEmail());
 			} else {
-				logger.warn("SendGrid returned status {} for {}. Falling back to logging the verification link.", response.getStatusCode(), user.getEmail());
-				logger.info("Verification link for {}: {}", user.getEmail(), verificationUrl);
+				String body = response.getBody();
+				logger.warn("SendGrid returned status {} for {}. Response body: {}", response.getStatusCode(), user.getEmail(), body);
+				throw new IllegalStateException("SendGrid rejected the verification email (status " + response.getStatusCode() + "). Check the verified sender, API key, and SendGrid response body in the logs.");
 			}
 		} catch (IOException ex) {
-			logger.warn("Failed to send verification email to {} via SendGrid. Logging verification link instead.", user.getEmail(), ex);
-			logger.info("Verification link for {}: {}", user.getEmail(), verificationUrl);
+			throw new IllegalStateException("Failed to send verification email via SendGrid. Check network access and API key configuration.", ex);
 		}
 	}
 

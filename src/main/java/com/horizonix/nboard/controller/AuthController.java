@@ -68,6 +68,10 @@ public class AuthController {
             userService.saveUser(user, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
             logger.info("User registered successfully: {} with role: {}", user.getEmail(), user.getRole());
             return "redirect:/login?verificationSent";
+            } catch (IllegalStateException e) {
+              logger.error("Email verification configuration failed for {}", user.getEmail(), e);
+              result.reject("registration.email", e.getMessage());
+              return "register";
         } catch (Exception e) {
             logger.error("Error saving user: {}", user.getEmail(), e);
             result.reject("registration.error", "An error occurred during registration. Please try again.");
