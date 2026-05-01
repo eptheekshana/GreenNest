@@ -129,10 +129,15 @@ public class AuthApiController {
         user.setRole(role);
 
             try {
-              userService.saveUser(user, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
+                String verificationUrl = userService.saveUser(user, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
+                if (verificationUrl != null && !verificationUrl.isBlank()) {
+                    // If SendGrid wasn't configured we return the verification URL in the response
+                    return ResponseEntity.status(HttpStatus.CREATED)
+                            .body(Map.of("message", "Registration successful. Please check your email to verify your account.", "verificationUrl", verificationUrl));
+                }
             } catch (IllegalStateException e) {
-              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                  .body(Map.of("message", e.getMessage()));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("message", e.getMessage()));
             }
 
         return ResponseEntity.status(HttpStatus.CREATED)

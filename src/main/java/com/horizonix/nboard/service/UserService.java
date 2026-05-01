@@ -55,11 +55,11 @@ public class UserService implements UserDetailsService {
     }
 
     // Ensure this method is named 'saveUser' exactly
-    public void saveUser(User user) {
-        saveUser(user, null);
+    public String saveUser(User user) {
+        return saveUser(user, null);
     }
 
-    public void saveUser(User user, String verificationBaseUrl) {
+    public String saveUser(User user, String verificationBaseUrl) {
         // Set default role if not specified
         user.setRole(Objects.requireNonNullElse(user.getRole(), Role.STUDENT));
 
@@ -83,12 +83,14 @@ public class UserService implements UserDetailsService {
         }
 
         User savedUser = userRepository.save(user);
-            try {
-              emailVerificationService.sendVerificationEmail(savedUser, verificationToken, verificationBaseUrl);
-            } catch (RuntimeException ex) {
-              userRepository.delete(savedUser);
-              throw ex;
-            }
+        try {
+            // sendVerificationEmail now returns the verification URL (for fallback/testing)
+            String verificationUrl = emailVerificationService.sendVerificationEmail(savedUser, verificationToken, verificationBaseUrl);
+            return verificationUrl;
+        } catch (RuntimeException ex) {
+            userRepository.delete(savedUser);
+            throw ex;
+        }
     }
 
     public boolean verifyEmail(String token) {

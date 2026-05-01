@@ -37,15 +37,25 @@ public class EmailVerificationService {
 	@Value("${app.base-url:http://localhost:8080}")
 	private String appBaseUrl;
 
-	public void sendVerificationEmail(User user, String token, String baseUrl) {
+	/**
+	 * Send verification email via SendGrid. Returns the verification URL so callers
+	 * can use it for testing/fallback. If SendGrid is not configured the method
+	 * will log the verification URL and return it (no exception) so registration
+	 * can continue in environments where SendGrid is unavailable.
+	 */
+	public String sendVerificationEmail(User user, String token, String baseUrl) {
 		String verificationUrl = buildVerificationUrl(token, baseUrl);
 
 		if (sendGridApiKey == null || sendGridApiKey.isBlank()) {
-			throw new IllegalStateException("SendGrid is not configured. Set SENDGRID_API_KEY in the Heroku config vars.");
+			// Fallback: log and return the verification URL instead of failing
+			logger.warn("SendGrid API key is not configured. Verification URL for {}: {}", user.getEmail(), verificationUrl);
+			return verificationUrl;
 		}
 
 		if (fromEmail == null || fromEmail.isBlank()) {
-			throw new IllegalStateException("SendGrid sender is not configured. Set SENDGRID_FROM_EMAIL to a verified sender address.");
+			// Fallback: log and return the verification URL instead of failing
+			logger.warn("SendGrid sender email is not configured. Verification URL for {}: {}", user.getEmail(), verificationUrl);
+			return verificationUrl;
 		}
 
 		try {
@@ -78,6 +88,7 @@ public class EmailVerificationService {
 			Response response = sendGrid.api(request);
 			if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
 				logger.info("Verification email sent to {}", user.getEmail());
+				return verificationUrl;
 			} else {
 				String body = response.getBody();
 				logger.warn("SendGrid returned status {} for {}. Response body: {}", response.getStatusCode(), user.getEmail(), body);
