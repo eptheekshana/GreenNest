@@ -1,13 +1,13 @@
 package com.horizonix.nboard.service;
 
 import com.horizonix.nboard.entity.User;
-import com.sendgrid.Content;
-import com.sendgrid.Email;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
