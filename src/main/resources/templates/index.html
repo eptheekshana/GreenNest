@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,8 +14,13 @@
         <div class="nav-links">
             <a href="/" class="active">Home</a>
             <a href="/properties">Listings</a>
-            <a href="/login">Login</a>
-            <a href="/register" class="nav-button">Register</a>
+            <div sec:authorize="!isAuthenticated()">
+                <a href="/login">Login</a>
+                <a href="/register" class="nav-button">Register</a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <a href="/logout" class="nav-button">Logout</a>
+            </div>
         </div>
     </nav>
 
@@ -24,7 +29,9 @@
         <p>The easiest way to find a boarding place near NSBM Green University.</p>
         <div>
             <a href="/properties" class="btn btn-primary">Browse Listings</a>
-            <a href="/register" class="btn btn-secondary">Create an Account</a>
+            <div sec:authorize="!isAuthenticated()">
+                <a href="/register" class="btn btn-secondary">Create an Account</a>
+            </div>
         </div>
     </section>
 
