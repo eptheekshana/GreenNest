@@ -48,58 +48,17 @@
     <header class="admin-header">
         <div>
             <h1>Overview</h1>
-            <p class="subtitle">Manage approvals for users and listings.</p>
+            <p class="subtitle">Manage property listing approvals.</p>
         </div>
         <div class="total-pending-card">
-            <div class="count" th:text="${pendingOwners.size() + pendingProperties.size()}">0</div>
+            <div class="count" th:text="${pendingProperties.size()}">0</div>
             <div class="label">Total Pending Items</div>
         </div>
     </header>
 
-    <div th:if="${param.ownerSuccess}" class="alert-success">
-        <i class="ph-fill ph-check-circle"></i> Owner verified successfully!
-    </div>
     <div th:if="${param.propSuccess}" class="alert-success">
         <i class="ph-fill ph-check-circle"></i> Property listing approved and is now live!
     </div>
-
-    <section>
-        <div class="admin-section-header">
-            <h2><i class="ph-fill ph-user-circle"></i> Pending Owner Verifications</h2>
-            <span class="badge-count" th:if="${!pendingOwners.isEmpty()}" th:text="${pendingOwners.size()}">0</span>
-        </div>
-        <div class="table-container card">
-            <table class="admin-table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th class="action-cell">Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="user : ${pendingOwners}">
-                    <td th:text="'#' + ${user.id}">#1</td>
-                    <td class="user-name" th:text="${user.fullName}">Name</td>
-                    <td th:text="${user.email}">email@example.com</td>
-                    <td><span class="status-badge">OWNER</span></td>
-                    <td class="action-cell">
-                        <form th:action="@{/admin/approve/{id}(id=${user.id})}" method="post">
-                            <button type="submit" class="btn-approve">
-                                <i class="ph-bold ph-check"></i> Verify User
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                <tr th:if="${pendingOwners.isEmpty()}">
-                    <td colspan="5" class="empty-state">No pending owner verifications.</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
 
     <section style="margin-top: 40px;">
         <div class="admin-section-header">
