@@ -67,11 +67,10 @@ public class User implements UserDetails {
     // Validation: Ensure passwords match
     @AssertTrue(message = "Passwords do not match")
     public boolean isPasswordMatching() {
-        // Skip validation if confirmPassword is null (e.g., during login or password updates)
-        if (confirmPassword == null || confirmPassword.isEmpty()) {
-            return true;
+        if (this.password == null || this.confirmPassword == null) {
+            return true; // Skip validation if either is not set
         }
-        return password != null && password.equals(confirmPassword);
+        return this.password.equals(this.confirmPassword);
     }
 
     // --- UserDetails Logic ---

@@ -20,8 +20,16 @@
             <input type="email" id="email" th:field="*{email}" class="form-control" required placeholder="you@example.com">
         </div>
         <div class="form-group">
+            <label for="contactNumber">Phone Number</label>
+            <input type="tel" id="contactNumber" th:field="*{contactNumber}" class="form-control" required placeholder="e.g., 0771234567">
+        </div>
+        <div class="form-group">
             <label for="password">Password</label>
             <input type="password" id="password" th:field="*{password}" class="form-control" required placeholder="••••••••">
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" required placeholder="••••••••">
         </div>
         <div class="form-group">
             <label for="role">I am a...</label>
