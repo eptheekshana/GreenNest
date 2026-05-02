@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
-<nav class="top-nav" data-reveal>
+<nav class="top-nav">
     <div class="container">
         <a href="/" class="brand">Nboard</a>
         <div class="nav-links">
@@ -45,9 +45,11 @@
             <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Hand-picked listings that are clean, safe, and close to campus.</p>
         </div>
         <div class="property-grid" th:if="${not #lists.isEmpty(properties)}">
-            <div class="property-card" th:each="property : ${properties}" data-reveal>
-                <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
-                     alt="Property image" class="property-image">
+            <div class="property-card" th:each="property, iterStat : ${properties}" data-reveal th:style="'transition-delay: ' + ${iterStat.index * 100} + 'ms'">
+                <div class="property-image-wrapper">
+                    <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
+                         alt="Property image" class="property-image">
+                </div>
                 <div class="property-body">
                     <h3 th:text="${property.title}">Property Title</h3>
                     <p class="property-location" th:text="${property.location}">Location</p>

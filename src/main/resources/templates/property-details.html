@@ -40,7 +40,7 @@
     </style>
 </head>
 <body>
-<nav class="top-nav" data-reveal>
+<nav class="top-nav">
     <div class="container">
         <a href="/" class="brand">Nboard</a>
         <div class="nav-links">
@@ -60,7 +60,7 @@
 
 <main class="container" data-reveal>
     <div class="property-details-grid">
-        <div>
+        <div data-reveal>
             <h1 th:text="${property.title}" style="font-size: 2.8rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.5rem;">Property Title</h1>
             <p class="property-location" th:text="${property.location}" style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 2.5rem;">Location</p>
             <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"

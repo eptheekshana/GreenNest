@@ -1,20 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Fade-in effect for elements
+    // --- Intersection Observer for reveal animations ---
     const revealElements = document.querySelectorAll('[data-reveal]');
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = 1;
-                entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('revealed');
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px' // Trigger a bit earlier
+    });
 
     revealElements.forEach(el => {
-        el.style.opacity = 0;
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
         observer.observe(el);
     });
+
+    // --- Scrolled Nav Bar Effect ---
+    const nav = document.querySelector('.top-nav');
+    if (nav) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    }
 });
