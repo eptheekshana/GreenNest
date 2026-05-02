@@ -28,16 +28,16 @@
 
 <div class="container">
     <section class="hero">
-        <h1>Find Your Perfect Boarding</h1>
-        <p>The easiest way to find a boarding place near NSBM Green University.</p>
+        <h1>Find Your Perfect Boarding Near NSBM</h1>
+        <p>The simplest, most trusted way to discover and book boarding places near NSBM Green University.</p>
         <div>
             <a href="/properties" class="btn btn-primary">Browse Listings</a>
-            <a href="/register" class="btn btn-secondary" sec:authorize="!isAuthenticated()">Create an Account</a>
+            <a href="/register" class="btn btn-secondary" sec:authorize="!isAuthenticated()">Become a Host</a>
         </div>
     </section>
 
     <section class="featured">
-        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 3rem;">Featured Properties</h2>
+        <h2 style="text-align: center; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 3.5rem;">Featured Properties</h2>
         <div class="property-grid" th:if="${not #lists.isEmpty(properties)}">
             <div class="property-card" th:each="property : ${properties}">
                 <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
@@ -46,14 +46,14 @@
                     <h3 th:text="${property.title}">Property Title</h3>
                     <p class="property-location" th:text="${property.location}">Location</p>
                     <div class="property-footer">
-                        <strong th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">LKR 0</strong>
-                        <a th:href="@{/property-details/{id}(id=${property.id})}">View Details</a>
+                        <strong th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')} + ' / month'">LKR 0 / month</strong>
+                        <a th:href="@{/property-details/{id}(id=${property.id})}">View</a>
                     </div>
                 </div>
             </div>
         </div>
-        <div th:if="${#lists.isEmpty(properties)}" style="text-align: center; color: var(--text-muted);">
-            <p>No properties available at the moment.</p>
+        <div th:if="${#lists.isEmpty(properties)}" style="text-align: center; color: var(--text-muted); padding: 4rem 0;">
+            <p>No properties available at the moment. Please check back soon!</p>
         </div>
     </section>
 </div>

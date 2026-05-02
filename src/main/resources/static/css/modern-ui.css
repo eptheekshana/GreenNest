@@ -1,16 +1,18 @@
-/* Modern UI Design System for Nboard */
+/* Enhanced Modern UI Design System for Nboard */
 :root {
-    --primary: #27ae60;
-    --primary-dark: #218838;
-    --primary-soft: #e9f7ef;
-    --text: #212529;
-    --text-muted: #6c757d;
-    --bg: #f8f9fa;
+    --primary: #16a34a; /* A slightly more vibrant green */
+    --primary-dark: #15803d;
+    --primary-soft: #dcfce7;
+    --text: #0f172a; /* A darker, slate-colored text for better contrast */
+    --text-muted: #64748b;
+    --bg: #f8fafc;
     --surface: #ffffff;
-    --border: #dee2e6;
-    --danger: #dc3545;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    --radius: 0.5rem;
+    --border: #e2e8f0;
+    --danger: #dc2626;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --radius: 0.75rem; /* Slightly larger radius for a softer look */
 }
 
 body {
@@ -19,23 +21,25 @@ body {
     color: var(--text);
     margin: 0;
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 2rem;
 }
 
 /* --- Navigation --- */
 .top-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 0;
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
-    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 0;
 }
 
 .brand {
@@ -48,13 +52,14 @@ body {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
 .nav-links a {
     color: var(--text-muted);
     text-decoration: none;
     font-weight: 500;
+    transition: color 0.2s ease;
 }
 
 .nav-links a.active,
@@ -65,39 +70,49 @@ body {
 .nav-button {
     background: var(--primary);
     color: #ffffff;
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.2rem;
     border-radius: var(--radius);
     text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+.nav-button:hover {
+    background: var(--primary-dark);
 }
 
 /* --- Hero Section --- */
 .hero {
     text-align: center;
-    padding: 5rem 1.5rem;
+    padding: 6rem 1.5rem;
 }
 
 .hero h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 700;
+    letter-spacing: -0.04em;
     margin: 0 0 1rem;
 }
 
 .hero p {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: var(--text-muted);
-    max-width: 600px;
-    margin: 0 auto 2rem;
+    max-width: 650px;
+    margin: 0 auto 2.5rem;
 }
 
 /* --- Buttons --- */
 .btn {
-    padding: 0.75rem 1.5rem;
+    padding: 0.85rem 1.75rem;
     border-radius: var(--radius);
     text-decoration: none;
     font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 .btn-primary {
@@ -105,39 +120,28 @@ body {
     color: #ffffff;
 }
 
-.btn-primary:hover {
-    background: var(--primary-dark);
-}
-
 .btn-secondary {
-    background: var(--border);
-    color: var(--text);
-}
-
-/* --- Cards --- */
-.card {
     background: var(--surface);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
+    color: var(--text);
+    border: 1px solid var(--border);
 }
 
 /* --- Forms --- */
 .auth-card {
     background: var(--surface);
-    padding: 2.5rem;
+    padding: 3rem;
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-lg);
     width: 100%;
-    max-width: 420px;
-    margin: 3rem auto;
+    max-width: 450px;
+    margin: 4rem auto;
 }
 
 .auth-card h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 .form-group {
@@ -148,22 +152,29 @@ body {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
+    color: var(--text-muted);
 }
 
 .form-control {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.85rem 1rem;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-sizing: border-box;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 /* --- Property Grid --- */
 .property-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 3rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
+    padding: 4rem 0;
 }
 
 .property-card {
@@ -171,11 +182,16 @@ body {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
 }
 
 .property-image {
     width: 100%;
-    height: 200px;
+    height: 220px;
     object-fit: cover;
 }
 
@@ -185,7 +201,8 @@ body {
 
 .property-body h3 {
     margin: 0 0 0.5rem;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
 .property-location {
@@ -197,10 +214,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 1.5rem;
 }
 
 .property-footer strong {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
     color: var(--primary);
 }
 
@@ -212,17 +231,20 @@ body {
 
 /* --- Alerts --- */
 .alert {
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     margin-bottom: 1.5rem;
     border-radius: var(--radius);
+    border: 1px solid transparent;
 }
 
 .alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
 }
 
 .alert-success {
     background-color: var(--primary-soft);
-    color: var(--primary-dark);
+    border-color: #bbf7d0;
+    color: #166534;
 }

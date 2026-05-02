@@ -11,21 +11,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 3rem 0;
+            margin: 4rem 0 3rem;
         }
         .property-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: var(--surface);
-            padding: 1.5rem;
+            padding: 1.5rem 2rem;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             margin-bottom: 1.5rem;
+            transition: box-shadow 0.2s ease;
         }
-        .status { font-weight: 600; }
-        .status.pending { color: #ffc107; }
-        .status.approved { color: #28a745; }
+        .property-item:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        .status { font-weight: 600; padding: 0.4rem 0.8rem; border-radius: 999px; font-size: 0.8rem; }
+        .status.pending { background-color: #fffbeb; color: #b45309; }
+        .status.approved { background-color: var(--primary-soft); color: var(--primary-dark); }
     </style>
 </head>
 <body>
@@ -43,14 +47,14 @@
 
 <div class="container">
     <div class="dashboard-header">
-        <h1 style="font-size: 2.5rem; margin: 0;">Your Properties</h1>
+        <h1 style="font-size: 2.8rem; font-weight: 700; letter-spacing: -0.03em; margin: 0;">Your Properties</h1>
         <a href="/owner/add-property" class="btn btn-primary">Add New Property</a>
     </div>
 
     <div th:if="${not #lists.isEmpty(properties)}">
         <div class="property-item" th:each="property : ${properties}">
             <div>
-                <h3 th:text="${property.title}" style="margin: 0; font-size: 1.2rem;">Property Title</h3>
+                <h3 th:text="${property.title}" style="margin: 0; font-size: 1.2rem; font-weight: 600;">Property Title</h3>
                 <p th:text="${property.location}" style="color: var(--text-muted); margin: 0.25rem 0 0;">Location</p>
             </div>
             <div class="status" th:classappend="${property.approved} ? 'approved' : 'pending'"
@@ -58,8 +62,9 @@
         </div>
     </div>
 
-    <div th:if="${#lists.isEmpty(properties)}" style="text-align: center; color: var(--text-muted); padding: 3rem 0;">
-        <p>You haven't added any properties yet.</p>
+    <div th:if="${#lists.isEmpty(properties)}" style="text-align: center; color: var(--text-muted); padding: 4rem 0; background: var(--surface); border-radius: var(--radius);">
+        <p style="font-size: 1.1rem;">You haven't added any properties yet.</p>
+        <a href="/owner/add-property" class="btn btn-primary" style="margin-top: 1rem;">Add Your First Property</a>
     </div>
 </div>
 </body>

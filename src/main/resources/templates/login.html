@@ -9,13 +9,13 @@
 </head>
 <body>
 <div class="auth-card">
-    <h1>Login to Your Account</h1>
+    <h1>Welcome Back</h1>
     <div th:if="${param.error}" class="alert alert-danger">
         Invalid username or password.
     </div>
     <form th:action="@{/login}" method="post">
         <div class="form-group">
-            <label for="username">Email</label>
+            <label for="username">Email Address</label>
             <input type="email" id="username" name="username" class="form-control" required>
         </div>
         <div class="form-group">
@@ -24,8 +24,8 @@
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
     </form>
-    <p style="text-align: center; margin-top: 1.5rem;">
-        Don't have an account? <a href="/register" style="color: var(--primary); text-decoration: none;">Register</a>
+    <p style="text-align: center; margin-top: 2rem; color: var(--text-muted);">
+        Don't have an account? <a href="/register" style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign Up</a>
     </p>
 </div>
 </body>

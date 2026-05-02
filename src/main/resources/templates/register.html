@@ -9,14 +9,14 @@
 </head>
 <body>
 <div class="auth-card">
-    <h1>Create an Account</h1>
+    <h1>Create Your Account</h1>
     <form th:action="@{/register}" th:object="${user}" method="post">
         <div class="form-group">
             <label for="fullName">Full Name</label>
             <input type="text" id="fullName" th:field="*{fullName}" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">Email Address</label>
             <input type="email" id="email" th:field="*{email}" class="form-control" required>
         </div>
         <div class="form-group">
@@ -24,16 +24,16 @@
             <input type="password" id="password" th:field="*{password}" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="role">Role</label>
+            <label for="role">I am a...</label>
             <select id="role" th:field="*{role}" class="form-control" required>
                 <option value="STUDENT">Student</option>
-                <option value="OWNER">Owner</option>
+                <option value="OWNER">Property Owner</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
     </form>
-    <p style="text-align: center; margin-top: 1.5rem;">
-        Already have an account? <a href="/login" style="color: var(--primary); text-decoration: none;">Login</a>
+    <p style="text-align: center; margin-top: 2rem; color: var(--text-muted);">
+        Already have an account? <a href="/login" style="color: var(--primary); text-decoration: none; font-weight: 600;">Log In</a>
     </p>
 </div>
 </body>

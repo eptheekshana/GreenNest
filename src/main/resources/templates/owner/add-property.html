@@ -24,24 +24,24 @@
     <h1>Add a New Property</h1>
     <form th:action="@{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="title">Title</label>
+            <label for="title">Property Title</label>
             <input type="text" id="title" th:field="*{title}" class="form-control" required>
         </div>
         <div class="form-group">
             <label for="description">Description</label>
-            <textarea id="description" th:field="*{description}" class="form-control" required rows="4"></textarea>
+            <textarea id="description" th:field="*{description}" class="form-control" required rows="5"></textarea>
         </div>
         <div class="form-group">
-            <label for="price">Price (LKR)</label>
+            <label for="price">Monthly Rent (LKR)</label>
             <input type="number" id="price" th:field="*{price}" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="location">Location</label>
+            <label for="location">Location / Address</label>
             <input type="text" id="location" th:field="*{location}" class="form-control" required>
         </div>
         <div class="form-group">
             <label for="primaryPhoto">Primary Photo</label>
-            <input type="file" id="primaryPhoto" name="primaryPhoto" class="form-control" required>
+            <input type="file" id="primaryPhoto" name="primaryPhoto" class="form-control" required accept="image/*">
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%;">Submit for Approval</button>
     </form>
