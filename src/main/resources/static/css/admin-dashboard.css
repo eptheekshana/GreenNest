@@ -1,14 +1,26 @@
 /* Simplified Admin Dashboard Styles */
+:root {
+    --admin-bg: #f7f8fa;
+    --admin-surface: #ffffff;
+    --admin-border: #e9ecef;
+    --admin-text: #212529;
+    --admin-text-muted: #6c757d;
+    --admin-primary: #27ae60;
+    --admin-primary-soft: #e9f7ef;
+}
+
 body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--admin-bg);
+    color: var(--admin-text);
+    margin: 0;
     display: flex;
-    min-height: 100vh;
-    background-color: #f8f9fa;
 }
 
 .admin-sidebar {
-    width: 240px;
-    background: #ffffff;
-    border-right: 1px solid #dee2e6;
+    width: 250px;
+    background: var(--admin-surface);
+    border-right: 1px solid var(--admin-border);
     position: fixed;
     height: 100%;
     padding: 1.5rem;
@@ -19,11 +31,11 @@ body {
 .admin-logo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #27ae60;
+    color: var(--admin-primary);
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 .admin-nav {
@@ -34,9 +46,9 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem 1rem;
+    padding: 0.85rem 1rem;
     border-radius: 0.5rem;
-    color: #495057;
+    color: var(--admin-text-muted);
     font-weight: 500;
     text-decoration: none;
     margin-bottom: 0.5rem;
@@ -44,8 +56,8 @@ body {
 
 .admin-nav-item.active,
 .admin-nav-item:hover {
-    background-color: #e9f7ef;
-    color: #27ae60;
+    background-color: var(--admin-primary-soft);
+    color: var(--admin-primary);
 }
 
 .admin-nav-item i {
@@ -55,7 +67,7 @@ body {
 .admin-profile {
     margin-top: auto;
     padding-top: 1.5rem;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid var(--admin-border);
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -73,32 +85,10 @@ body {
     font-weight: 600;
 }
 
-.admin-user-info .name {
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.admin-user-info .role {
-    font-size: 0.8rem;
-    color: #6c757d;
-}
-
-.logout-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #6c757d;
-    margin-left: auto;
-}
-
-.logout-btn:hover {
-    color: #dc3545;
-}
-
 .admin-main-content {
-    margin-left: 240px;
+    margin-left: 250px;
     flex-grow: 1;
-    padding: 2.5rem;
+    padding: 3rem;
 }
 
 .admin-header {
@@ -106,36 +96,35 @@ body {
 }
 
 .admin-header h1 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
     margin: 0;
 }
 
-.admin-header .subtitle {
-    font-size: 1rem;
-    color: #6c757d;
+.admin-table-container {
+    background: var(--admin-surface);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
 .admin-table {
     width: 100%;
-    background: #ffffff;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-collapse: collapse;
 }
 
 .admin-table th,
 .admin-table td {
-    padding: 1rem 1.25rem;
-    vertical-align: middle;
+    padding: 1.25rem 1.5rem;
     text-align: left;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid var(--admin-border);
 }
 
 .admin-table th {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     font-weight: 600;
-    color: #6c757d;
+    color: var(--admin-text-muted);
 }
 
 .admin-table tr:last-child td {
@@ -143,20 +132,21 @@ body {
 }
 
 .prop-thumb {
-    width: 60px;
-    height: 40px;
-    border-radius: 0.25rem;
+    width: 70px;
+    height: 45px;
+    border-radius: 0.35rem;
     object-fit: cover;
 }
 
 .btn-approve {
-    background: #28a745;
+    background: var(--admin-primary);
     color: #ffffff;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
     font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .btn-approve:hover {

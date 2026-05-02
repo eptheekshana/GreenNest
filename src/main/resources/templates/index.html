@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nboard - NSBM Boarding Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/home-simplified.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
 </head>
 <body>
-<div class="container">
-    <nav class="top-nav">
+<nav class="top-nav">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
         <a href="/" class="brand">Nboard</a>
         <div class="nav-links">
             <a href="/" class="active">Home</a>
@@ -19,27 +19,25 @@
                 <a href="/register" class="nav-button">Register</a>
             </div>
             <div sec:authorize="isAuthenticated()">
+                <a href="/owner/dashboard">Dashboard</a>
                 <a href="/logout" class="nav-button">Logout</a>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
+<div class="container">
     <section class="hero">
         <h1>Find Your Perfect Boarding</h1>
         <p>The easiest way to find a boarding place near NSBM Green University.</p>
         <div>
             <a href="/properties" class="btn btn-primary">Browse Listings</a>
-            <div sec:authorize="!isAuthenticated()">
-                <a href="/register" class="btn btn-secondary">Create an Account</a>
-            </div>
+            <a href="/register" class="btn btn-secondary" sec:authorize="!isAuthenticated()">Create an Account</a>
         </div>
     </section>
 
     <section class="featured">
-        <div class="section-head">
-            <h2>Featured Properties</h2>
-        </div>
-
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 3rem;">Featured Properties</h2>
         <div class="property-grid" th:if="${not #lists.isEmpty(properties)}">
             <div class="property-card" th:each="property : ${properties}">
                 <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
@@ -54,9 +52,8 @@
                 </div>
             </div>
         </div>
-
-        <div th:if="${#lists.isEmpty(properties)}">
-            <p style="text-align: center; color: #6c757d;">No properties available at the moment. Please check back later.</p>
+        <div th:if="${#lists.isEmpty(properties)}" style="text-align: center; color: var(--text-muted);">
+            <p>No properties available at the moment.</p>
         </div>
     </section>
 </div>

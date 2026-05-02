@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Successful - Nboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/auth.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
 </head>
 <body>
-<div class="auth-card">
+<div class="auth-card" style="text-align: center;">
     <h1>Registration Successful</h1>
     <p>Your account has been created. You can now log in.</p>
-    <a href="/login" class="btn-primary" style="text-align: center; text-decoration: none;">Login</a>
+    <a href="/login" class="btn btn-primary" style="text-decoration: none;">Login</a>
 </div>
 </body>
 </html>

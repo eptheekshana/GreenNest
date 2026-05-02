@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,22 +22,22 @@
         </a>
         <a href="#" class="admin-nav-item">
             <i class="ph-bold ph-users"></i>
-            <span>All Users</span>
+            <span>Users</span>
         </a>
         <a href="#" class="admin-nav-item">
             <i class="ph-bold ph-house"></i>
-            <span>All Listings</span>
+            <span>Listings</span>
         </a>
     </nav>
     <div class="admin-profile">
         <div class="admin-avatar">A</div>
-        <div class="admin-user-info">
-            <div class="name">Administrator</div>
-            <div class="role">Super User</div>
+        <div>
+            <div style="font-weight: 600;">Administrator</div>
+            <div style="font-size: 0.8rem; color: var(--admin-text-muted);">Super User</div>
         </div>
-        <form th:action="@{/logout}" method="post">
-            <button type="submit" class="logout-btn">
-                <i class="ph-bold ph-sign-out"></i>
+        <form th:action="@{/logout}" method="post" style="margin-left: auto;">
+            <button type="submit" class="logout-btn" style="background: none; border: none; cursor: pointer; color: var(--admin-text-muted);">
+                <i class="ph-bold ph-sign-out" style="font-size: 1.3rem;"></i>
             </button>
         </form>
     </div>
@@ -45,36 +45,42 @@
 
 <main class="admin-main-content">
     <header class="admin-header">
-        <h1>Dashboard</h1>
-        <p class="subtitle">Pending Property Listings</p>
+        <h1>Pending Approvals</h1>
     </header>
 
-    <div th:if="${param.propSuccess}" class="alert-success">
+    <div th:if="${param.propSuccess}" class="alert-success" style="background-color: var(--admin-primary-soft); color: var(--admin-primary); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
         Property listing approved and is now live!
     </div>
 
-    <div class="table-container">
+    <div class="admin-table-container">
         <table class="admin-table">
             <thead>
             <tr>
-                <th>Image</th>
-                <th>Property Title</th>
+                <th>Property</th>
                 <th>Owner</th>
-                <th>Price</th>
-                <th>Location</th>
+                <th>Details</th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="prop : ${pendingProperties}">
                 <td>
-                    <img th:src="${prop.primaryPhotoUrl != null ? prop.primaryPhotoUrl : '/images/boarding-room.JPEG'}" class="prop-thumb"
-                         onerror="this.src='https.placehold.co/60x40?text=No+Img'" alt="Property Image">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img th:src="${prop.primaryPhotoUrl != null ? prop.primaryPhotoUrl : '/images/boarding-room.JPEG'}" class="prop-thumb"
+                             onerror="this.src='https.placehold.co/70x45?text=No+Img'" alt="Property Image">
+                        <div>
+                            <div style="font-weight: 600;" th:text="${prop.title}">Property Title</div>
+                            <div style="font-size: 0.9rem; color: var(--admin-text-muted);" th:text="${prop.location}">Location</div>
+                        </div>
+                    </div>
                 </td>
-                <td th:text="${prop.title}">Title</td>
-                <td th:text="${prop.owner.fullName}">Owner Name</td>
-                <td th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 0, 'DEFAULT')}">15000</td>
-                <td th:text="${prop.location}">Location</td>
+                <td>
+                    <div th:text="${prop.owner.fullName}">Owner Name</div>
+                    <div style="font-size: 0.9rem; color: var(--admin-text-muted);" th:text="${prop.owner.email}">owner@email.com</div>
+                </td>
+                <td>
+                    <div style="font-weight: 600; color: var(--admin-primary);" th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 0, 'DEFAULT')}">LKR 15,000</div>
+                </td>
                 <td>
                     <form th:action="@{/admin/approve-property/{id}(id=${prop.id})}" method="post">
                         <button type="submit" class="btn-approve">Approve</button>
@@ -82,7 +88,9 @@
                 </td>
             </tr>
             <tr th:if="${pendingProperties.isEmpty()}">
-                <td colspan="6" style="text-align: center; color: #6c757d; padding: 2rem;">No pending property listings.</td>
+                <td colspan="4" style="text-align: center; padding: 3rem; color: var(--admin-text-muted);">
+                    No pending property listings.
+                </td>
             </tr>
             </tbody>
         </table>

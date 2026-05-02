@@ -5,26 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Property Submitted - Nboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/home-simplified.css}">
-    <link rel="stylesheet" th:href="@{/css/auth.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
 </head>
 <body>
-<div class="container">
-    <nav class="top-nav">
-        <a href="/" class="brand">Nboard</a>
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/properties">Listings</a>
-            <a href="/owner/dashboard">Dashboard</a>
-            <a href="/logout" class="nav-button">Logout</a>
-        </div>
-    </nav>
-
-    <div class="auth-card" style="margin: 2rem auto; text-align: center;">
-        <h1>Property Submitted</h1>
-        <p>Your property has been submitted for approval. You will be notified once it has been reviewed.</p>
-        <a href="/owner/dashboard" class="btn-primary" style="text-decoration: none;">Back to Dashboard</a>
-    </div>
+<div class="auth-card" style="text-align: center;">
+    <h1>Property Submitted</h1>
+    <p>Your property has been submitted for approval. You will be notified once it has been reviewed.</p>
+    <a href="/owner/dashboard" class="btn btn-primary" style="text-decoration: none;">Back to Dashboard</a>
 </div>
 </body>
 </html>

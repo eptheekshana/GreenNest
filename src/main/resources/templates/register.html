@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Nboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/auth.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
 </head>
 <body>
 <div class="auth-card">
     <h1>Create an Account</h1>
-
     <form th:action="@{/register}" th:object="${user}" method="post">
         <div class="form-group">
             <label for="fullName">Full Name</label>
@@ -31,8 +30,11 @@
                 <option value="OWNER">Owner</option>
             </select>
         </div>
-        <button type="submit" class="btn-primary">Register</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
     </form>
+    <p style="text-align: center; margin-top: 1.5rem;">
+        Already have an account? <a href="/login" style="color: var(--primary); text-decoration: none;">Login</a>
+    </p>
 </div>
 </body>
 </html>

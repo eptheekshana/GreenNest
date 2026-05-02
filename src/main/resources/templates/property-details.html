@@ -1,16 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${property.title} + ' - Nboard'">Property Details</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/home-simplified.css}">
-    <link rel="stylesheet" th:href="@{/css/property-details.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <style>
+        .property-details-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .property-main-image {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border-radius: var(--radius);
+        }
+        .property-info {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <nav class="top-nav">
+<nav class="top-nav">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
         <a href="/" class="brand">Nboard</a>
         <div class="nav-links">
             <a href="/">Home</a>
@@ -20,26 +39,27 @@
                 <a href="/register" class="nav-button">Register</a>
             </div>
             <div sec:authorize="isAuthenticated()">
+                <a href="/owner/dashboard">Dashboard</a>
                 <a href="/logout" class="nav-button">Logout</a>
             </div>
         </div>
-    </nav>
-
-    <div class="property-header">
-        <h1 th:text="${property.title}">Property Title</h1>
-        <p class="property-location" th:text="${property.location}">Location</p>
     </div>
+</nav>
 
-    <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
-         alt="Property image" class="property-image">
-
-    <div class="property-details">
-        <h2>About this property</h2>
-        <p th:text="${property.description}">Description of the property.</p>
-
-        <div class="property-price" th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">LKR 0</div>
-
-        <a href="#" class="btn-primary">Contact Owner</a>
+<div class="container">
+    <div class="property-details-container">
+        <div>
+            <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
+                 alt="Property image" class="property-main-image">
+        </div>
+        <div class="property-info">
+            <h1 th:text="${property.title}" style="font-size: 2rem; margin-top: 0;">Property Title</h1>
+            <p class="property-location" th:text="${property.location}" style="font-size: 1.1rem; color: var(--text-muted);">Location</p>
+            <p th:text="${property.description}">Description of the property.</p>
+            <div style="font-size: 1.8rem; font-weight: 700; color: var(--primary); margin: 2rem 0;"
+                 th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">LKR 0</div>
+            <a href="#" class="btn btn-primary" style="width: 100%;">Contact Owner</a>
+        </div>
     </div>
 </div>
 </body>
