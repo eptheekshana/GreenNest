@@ -7,84 +7,85 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
 </head>
 <body>
 
-<div style="display: flex; min-height: 100vh;">
-    <aside class="sidebar" style="width: 280px; display: flex; flex-direction: column; border-right: 1px solid var(--border); background: var(--surface-solid);">
-        <div class="logo" style="padding: 24px; font-size: 1.5rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px;">
-            <i class="ph-fill ph-shield-check"></i> AdminPanel
+<aside class="admin-sidebar">
+    <div class="admin-logo">
+        <i class="ph-fill ph-shield-check"></i>
+        <span>AdminPanel</span>
+    </div>
+    <nav class="admin-nav">
+        <a href="#" class="admin-nav-item active">
+            <i class="ph-bold ph-squares-four"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="#" class="admin-nav-item">
+            <i class="ph-bold ph-users"></i>
+            <span>All Users</span>
+        </a>
+        <a href="#" class="admin-nav-item">
+            <i class="ph-bold ph-house"></i>
+            <span>All Listings</span>
+        </a>
+    </nav>
+    <div class="admin-profile">
+        <div class="admin-avatar">A</div>
+        <div class="admin-user-info">
+            <div class="name">Administrator</div>
+            <div class="role">Super User</div>
         </div>
-        <nav style="padding: 0 24px; flex-grow: 1;">
-            <a href="#" class="nav-item active" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-sm); margin-bottom: 5px; font-weight: 600;">
-                <i class="ph-bold ph-squares-four"></i> Dashboard
-            </a>
-            <a href="#" class="nav-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-sm); margin-bottom: 5px;">
-                <i class="ph-bold ph-users"></i> All Users
-            </a>
-            <a href="#" class="nav-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-sm); margin-bottom: 5px;">
-                <i class="ph-bold ph-house"></i> All Listings
-            </a>
-        </nav>
-        <div class="admin-profile" style="border-top: 1px solid var(--border); padding: 24px; display: flex; align-items: center; gap: 10px;">
-            <div style="width: 40px; height: 40px; background: var(--text); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">A</div>
-            <div>
-                <div style="font-weight: 600;">Administrator</div>
-                <div style="font-size: 0.85rem; color: var(--muted);">Super User</div>
-            </div>
-            <form th:action="@{/logout}" method="post" style="margin-left: auto;">
-                <button type="submit" style="background:none; border:none; cursor:pointer; color: var(--muted);">
-                    <i class="ph-bold ph-sign-out" style="font-size: 1.3rem;"></i>
-                </button>
-            </form>
-        </div>
-    </aside>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">
+                <i class="ph-bold ph-sign-out"></i>
+            </button>
+        </form>
+    </div>
+</aside>
 
-    <main class="main-content" style="flex-grow: 1; padding: 32px;">
-        <div class="header-section" style="text-align: left; margin-bottom: 32px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h1 style="font-size: 2.2rem; margin: 0;">Overview</h1>
-                    <p class="subtitle" style="margin: 0; font-size: 1.1rem;">Manage approvals for users and listings.</p>
-                </div>
-                <div class="stat-card" style="text-align: right; padding: 16px 24px; border-radius: var(--radius-lg);">
-                    <div style="font-size: 1.8rem; font-weight: 700;" th:text="${pendingOwners.size() + pendingProperties.size()}">0</div>
-                    <div style="font-size: 0.9rem; color: var(--muted);">Total Pending Items</div>
-                </div>
-            </div>
+<main class="admin-main-content">
+    <header class="admin-header">
+        <div>
+            <h1>Overview</h1>
+            <p class="subtitle">Manage approvals for users and listings.</p>
         </div>
+        <div class="total-pending-card">
+            <div class="count" th:text="${pendingOwners.size() + pendingProperties.size()}">0</div>
+            <div class="label">Total Pending Items</div>
+        </div>
+    </header>
 
-        <div th:if="${param.ownerSuccess}" class="alert-success" style="margin-bottom: 24px; display: flex; align-items: center; gap: 10px; padding: 16px; border-radius: var(--radius-md);">
-            <i class="ph-fill ph-check-circle" style="font-size: 1.4rem;"></i> Owner verified successfully!
-        </div>
-        <div th:if="${param.propSuccess}" class="alert-success" style="margin-bottom: 24px; display: flex; align-items: center; gap: 10px; padding: 16px; border-radius: var(--radius-md);">
-            <i class="ph-fill ph-check-circle" style="font-size: 1.4rem;"></i> Property listing approved and is now live!
-        </div>
+    <div th:if="${param.ownerSuccess}" class="alert-success">
+        <i class="ph-fill ph-check-circle"></i> Owner verified successfully!
+    </div>
+    <div th:if="${param.propSuccess}" class="alert-success">
+        <i class="ph-fill ph-check-circle"></i> Property listing approved and is now live!
+    </div>
 
-        <div class="grid-header" style="margin-bottom: 16px;">
-            <h2 class="section-title" style="font-size: 1.4rem; display: flex; align-items: center; gap: 10px;">
-                <i class="ph-fill ph-user-circle"></i> Pending Owner Verifications
-                <span class="badge-count" th:if="${!pendingOwners.isEmpty()}" th:text="${pendingOwners.size()}">0</span>
-            </h2>
+    <section>
+        <div class="admin-section-header">
+            <h2><i class="ph-fill ph-user-circle"></i> Pending Owner Verifications</h2>
+            <span class="badge-count" th:if="${!pendingOwners.isEmpty()}" th:text="${pendingOwners.size()}">0</span>
         </div>
-        <div class="table-container card" style="margin-bottom: 32px;">
-            <table>
+        <div class="table-container card">
+            <table class="admin-table">
                 <thead>
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th style="text-align: right;">Action</th>
+                    <th class="action-cell">Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="user : ${pendingOwners}">
                     <td th:text="'#' + ${user.id}">#1</td>
-                    <td style="font-weight: 600;" th:text="${user.fullName}">Name</td>
+                    <td class="user-name" th:text="${user.fullName}">Name</td>
                     <td th:text="${user.email}">email@example.com</td>
-                    <td><span style="background: var(--accent-soft); color: var(--accent); padding: 6px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700;">OWNER</span></td>
-                    <td style="text-align: right;">
+                    <td><span class="status-badge">OWNER</span></td>
+                    <td class="action-cell">
                         <form th:action="@{/admin/approve/{id}(id=${user.id})}" method="post">
                             <button type="submit" class="btn-approve">
                                 <i class="ph-bold ph-check"></i> Verify User
@@ -98,15 +99,15 @@
                 </tbody>
             </table>
         </div>
+    </section>
 
-        <div class="grid-header" style="margin-bottom: 16px;">
-            <h2 class="section-title" style="font-size: 1.4rem; display: flex; align-items: center; gap: 10px;">
-                <i class="ph-fill ph-house-line"></i> Pending Property Listings
-                <span class="badge-count" th:if="${!pendingProperties.isEmpty()}" th:text="${pendingProperties.size()}">0</span>
-            </h2>
+    <section style="margin-top: 40px;">
+        <div class="admin-section-header">
+            <h2><i class="ph-fill ph-house-line"></i> Pending Property Listings</h2>
+            <span class="badge-count" th:if="${!pendingProperties.isEmpty()}" th:text="${pendingProperties.size()}">0</span>
         </div>
         <div class="table-container card">
-            <table>
+            <table class="admin-table">
                 <thead>
                 <tr>
                     <th>Image</th>
@@ -114,7 +115,7 @@
                     <th>Owner</th>
                     <th>Price</th>
                     <th>Location</th>
-                    <th style="text-align: right;">Action</th>
+                    <th class="action-cell">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -123,17 +124,17 @@
                         <img th:src="${prop.primaryPhotoUrl != null ? prop.primaryPhotoUrl : '/images/boarding-room.JPEG'}" class="prop-thumb"
                              onerror="this.src='https://placehold.co/60x40?text=No+Img'" alt="Property Image">
                     </td>
-                    <td>
-                        <div style="font-weight: 600;" th:text="${prop.title}">Title</div>
-                        <div style="font-size: 0.9rem; color: var(--muted);">Submitted today</div>
+                    <td class="property-title-cell">
+                        <div th:text="${prop.title}">Title</div>
+                        <div class="submitted-date">Submitted today</div>
                     </td>
-                    <td>
-                        <div th:text="${prop.owner.fullName}">Owner Name</div>
-                        <div style="font-size: 0.9rem; color: var(--muted);" th:text="${prop.owner.email}">email</div>
+                    <td class="owner-cell">
+                        <div class="name" th:text="${prop.owner.fullName}">Owner Name</div>
+                        <div class="email" th:text="${prop.owner.email}">email</div>
                     </td>
-                    <td style="font-weight: 600; color: var(--primary);" th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 0, 'DEFAULT')}">15000</td>
+                    <td class="price-cell" th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 0, 'DEFAULT')}">15000</td>
                     <td th:text="${prop.location}">Location</td>
-                    <td style="text-align: right;">
+                    <td class="action-cell">
                         <form th:action="@{/admin/approve-property/{id}(id=${prop.id})}" method="post">
                             <button type="submit" class="btn-approve">
                                 <i class="ph-bold ph-check"></i> Approve
@@ -147,8 +148,8 @@
                 </tbody>
             </table>
         </div>
-    </main>
-</div>
+    </section>
+</main>
 
 </body>
 </html>
