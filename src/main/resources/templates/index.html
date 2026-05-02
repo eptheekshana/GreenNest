@@ -15,11 +15,11 @@
         <div class="nav-links">
             <a href="/" class="active">Home</a>
             <a href="/properties">Listings</a>
-            <div sec:authorize="!isAuthenticated()">
+            <div sec:authorize="!isAuthenticated()" class="nav-auth-buttons">
                 <a href="/login">Login</a>
                 <a href="/register" class="nav-button">Register</a>
             </div>
-            <div sec:authorize="isAuthenticated()">
+            <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
                 <a href="/owner/dashboard">Dashboard</a>
                 <a href="/logout" class="nav-button">Logout</a>
             </div>

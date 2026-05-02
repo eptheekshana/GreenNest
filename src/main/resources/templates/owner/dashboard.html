@@ -23,7 +23,7 @@
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
             margin-bottom: 1.5rem;
-            transition: var(--transition-ease);
+            transition: var(--transition-slow);
         }
         .property-item:hover {
             box-shadow: var(--shadow-lg);
@@ -35,14 +35,16 @@
     </style>
 </head>
 <body>
-<nav class="top-nav" data-reveal>
+<nav class="top-nav">
     <div class="container">
         <a href="/" class="brand">Nboard</a>
         <div class="nav-links">
             <a href="/">Home</a>
             <a href="/properties">Listings</a>
             <a href="/owner/dashboard" class="active">Dashboard</a>
-            <a href="/logout" class="nav-button">Logout</a>
+            <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
+                <a href="/logout" class="nav-button">Logout</a>
+            </div>
         </div>
     </div>
 </nav>
@@ -54,7 +56,7 @@
     </div>
 
     <div th:if="${not #lists.isEmpty(properties)}">
-        <div class="property-item" th:each="property : ${properties}" data-reveal>
+        <div class="property-item" th:each="property, iterStat : ${properties}" data-reveal th:style="'transition-delay: ' + ${iterStat.index * 100} + 'ms'">
             <div>
                 <h3 th:text="${property.title}" style="margin: 0; font-size: 1.2rem; font-weight: 600;">Property Title</h3>
                 <p th:text="${property.location}" style="color: var(--text-muted); margin: 0.25rem 0 0;">Location</p>

@@ -9,14 +9,16 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
-<nav class="top-nav" data-reveal>
+<nav class="top-nav">
     <div class="container">
         <a href="/" class="brand">Nboard</a>
         <div class="nav-links">
             <a href="/">Home</a>
             <a href="/properties">Listings</a>
             <a href="/owner/dashboard">Dashboard</a>
-            <a href="/logout" class="nav-button">Logout</a>
+            <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
+                <a href="/logout" class="nav-button">Logout</a>
+            </div>
         </div>
     </div>
 </nav>
