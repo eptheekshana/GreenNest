@@ -4,6 +4,7 @@ body {
     background-color: #f8f9fa;
     color: #343a40;
     margin: 0;
+    line-height: 1.6;
 }
 
 .container {
@@ -26,6 +27,10 @@ body {
     text-decoration: none;
 }
 
+.nav-links {
+    display: none;
+}
+
 .nav-links a {
     margin-left: 1.5rem;
     color: #495057;
@@ -42,28 +47,31 @@ body {
 
 .hero {
     text-align: center;
-    padding: 4rem 0;
+    padding: 3rem 0;
 }
 
 .hero h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 700;
     margin: 0 0 1rem;
 }
 
 .hero p {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #6c757d;
     max-width: 600px;
     margin: 0 auto 2rem;
 }
 
 .btn {
-    padding: 0.75rem 1.5rem;
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
     border-radius: 0.25rem;
     text-decoration: none;
     font-weight: 600;
-    margin: 0 0.5rem;
+    margin: 0.5rem 0;
+    box-sizing: border-box;
 }
 
 .btn-primary {
@@ -77,24 +85,24 @@ body {
 }
 
 .featured {
-    padding: 4rem 0;
+    padding: 3rem 0;
 }
 
 .section-head {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .section-head h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    margin: 0 0 0.5rem;
+    margin: 0;
 }
 
 .property-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
 }
 
 .property-card {
@@ -111,12 +119,12 @@ body {
 }
 
 .property-body {
-    padding: 1.5rem;
+    padding: 1.25rem;
 }
 
 .property-body h3 {
     margin: 0 0 0.5rem;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 .property-location {
@@ -131,7 +139,7 @@ body {
 }
 
 .property-footer strong {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #27ae60;
 }
 
@@ -139,4 +147,42 @@ body {
     color: #27ae60;
     text-decoration: none;
     font-weight: 600;
+}
+
+/* Desktop Styles */
+@media (min-width: 768px) {
+    .nav-links {
+        display: block;
+    }
+
+    .hero {
+        padding: 5rem 0;
+    }
+
+    .hero h1 {
+        font-size: 3.5rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+
+    .btn {
+        display: inline-block;
+        width: auto;
+        margin: 0 0.5rem;
+    }
+
+    .featured {
+        padding: 5rem 0;
+    }
+
+    .section-head h2 {
+        font-size: 2.5rem;
+    }
+
+    .property-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
 }
