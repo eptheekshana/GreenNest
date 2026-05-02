@@ -4,23 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Nboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
 <div class="auth-card">
     <h1>Welcome Back</h1>
     <div th:if="${param.error}" class="alert alert-danger">
-        Invalid username or password.
+        <i class="ph-fill ph-warning-circle"></i>
+        <span>Invalid username or password. Please try again.</span>
     </div>
     <form th:action="@{/login}" method="post">
         <div class="form-group">
             <label for="username">Email Address</label>
-            <input type="email" id="username" name="username" class="form-control" required>
+            <input type="email" id="username" name="username" class="form-control" required placeholder="you@example.com">
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" class="form-control" required>
+            <input type="password" id="password" name="password" class="form-control" required placeholder="••••••••">
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
     </form>

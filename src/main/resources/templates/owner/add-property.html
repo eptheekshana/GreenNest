@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Property - Nboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Add New Property - Nboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
-<nav class="top-nav">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+<nav class="top-nav" data-reveal>
+    <div class="container">
         <a href="/" class="brand">Nboard</a>
         <div class="nav-links">
             <a href="/">Home</a>
@@ -20,31 +21,35 @@
     </div>
 </nav>
 
-<div class="auth-card">
-    <h1>Add a New Property</h1>
-    <form th:action="@{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="title">Property Title</label>
-            <input type="text" id="title" th:field="*{title}" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" th:field="*{description}" class="form-control" required rows="5"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="price">Monthly Rent (LKR)</label>
-            <input type="number" id="price" th:field="*{price}" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="location">Location / Address</label>
-            <input type="text" id="location" th:field="*{location}" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="primaryPhoto">Primary Photo</label>
-            <input type="file" id="primaryPhoto" name="primaryPhoto" class="form-control" required accept="image/*">
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit for Approval</button>
-    </form>
-</div>
+<main data-reveal>
+    <div class="auth-card">
+        <h1>Add a New Property</h1>
+        <form th:action="@{/owner/add-property}" th:object="${property}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Property Title</label>
+                <input type="text" id="title" th:field="*{title}" class="form-control" required placeholder="e.g., Cozy Room near NSBM">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" th:field="*{description}" class="form-control" required rows="5" placeholder="Tell us about your place..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Monthly Rent (LKR)</label>
+                <input type="number" id="price" th:field="*{price}" class="form-control" required placeholder="e.g., 15000">
+            </div>
+            <div class="form-group">
+                <label for="location">Location / Address</label>
+                <input type="text" id="location" th:field="*{location}" class="form-control" required placeholder="e.g., Homagama">
+            </div>
+            <div class="form-group">
+                <label for="primaryPhoto">Primary Photo</label>
+                <input type="file" id="primaryPhoto" name="primaryPhoto" class="form-control" required accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="ph-bold ph-paper-plane-tilt"></i> Submit for Approval</button>
+        </form>
+    </div>
+</main>
+
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>

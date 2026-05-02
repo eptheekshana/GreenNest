@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nboard - NSBM Boarding Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Nboard - Find Your Perfect Boarding Near NSBM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
-<nav class="top-nav">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+<nav class="top-nav" data-reveal>
+    <div class="container">
         <a href="/" class="brand">Nboard</a>
         <div class="nav-links">
             <a href="/" class="active">Home</a>
@@ -26,20 +27,25 @@
     </div>
 </nav>
 
-<div class="container">
-    <section class="hero">
-        <h1>Find Your Perfect Boarding Near NSBM</h1>
-        <p>The simplest, most trusted way to discover and book boarding places near NSBM Green University.</p>
-        <div>
-            <a href="/properties" class="btn btn-primary">Browse Listings</a>
-            <a href="/register" class="btn btn-secondary" sec:authorize="!isAuthenticated()">Become a Host</a>
+<main>
+    <section class="hero" data-reveal>
+        <div class="container">
+            <h1>Find Your Perfect Boarding Near NSBM</h1>
+            <p>The simplest, most trusted way to discover and book boarding places near NSBM Green University.</p>
+            <div>
+                <a href="/properties" class="btn btn-primary"><i class="ph-bold ph-magnifying-glass"></i> Browse Listings</a>
+                <a href="/register" class="btn btn-secondary" sec:authorize="!isAuthenticated()"><i class="ph-bold ph-user-plus"></i> Become a Host</a>
+            </div>
         </div>
     </section>
 
-    <section class="featured">
-        <h2 style="text-align: center; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 3.5rem;">Featured Properties</h2>
+    <section class="container" data-reveal>
+        <div style="text-align: center; margin: 4rem 0;">
+            <h2 style="font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 1rem;">Featured Properties</h2>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Hand-picked listings that are clean, safe, and close to campus.</p>
+        </div>
         <div class="property-grid" th:if="${not #lists.isEmpty(properties)}">
-            <div class="property-card" th:each="property : ${properties}">
+            <div class="property-card" th:each="property : ${properties}" data-reveal>
                 <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
                      alt="Property image" class="property-image">
                 <div class="property-body">
@@ -47,15 +53,17 @@
                     <p class="property-location" th:text="${property.location}">Location</p>
                     <div class="property-footer">
                         <strong th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')} + ' / month'">LKR 0 / month</strong>
-                        <a th:href="@{/property-details/{id}(id=${property.id})}">View</a>
+                        <a th:href="@{/property-details/{id}(id=${property.id})}">View Details <i class="ph-bold ph-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
         </div>
-        <div th:if="${#lists.isEmpty(properties)}" style="text-align: center; color: var(--text-muted); padding: 4rem 0;">
-            <p>No properties available at the moment. Please check back soon!</p>
+        <div th:if="${#lists.isEmpty(properties)}" class="card" style="text-align: center; padding: 4rem; color: var(--text-muted);" data-reveal>
+            <p style="font-size: 1.1rem;">No properties available at the moment. Please check back soon!</p>
         </div>
     </section>
-</div>
+</main>
+
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>
