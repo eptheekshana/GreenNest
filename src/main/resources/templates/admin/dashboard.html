@@ -6,7 +6,6 @@
     <title>Admin Dashboard - Nboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
     <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
 </head>
 <body>
@@ -46,68 +45,48 @@
 
 <main class="admin-main-content">
     <header class="admin-header">
-        <div>
-            <h1>Overview</h1>
-            <p class="subtitle">Manage property listing approvals.</p>
-        </div>
-        <div class="total-pending-card">
-            <div class="count" th:text="${pendingProperties.size()}">0</div>
-            <div class="label">Total Pending Items</div>
-        </div>
+        <h1>Dashboard</h1>
+        <p class="subtitle">Pending Property Listings</p>
     </header>
 
     <div th:if="${param.propSuccess}" class="alert-success">
-        <i class="ph-fill ph-check-circle"></i> Property listing approved and is now live!
+        Property listing approved and is now live!
     </div>
 
-    <section style="margin-top: 40px;">
-        <div class="admin-section-header">
-            <h2><i class="ph-fill ph-house-line"></i> Pending Property Listings</h2>
-            <span class="badge-count" th:if="${!pendingProperties.isEmpty()}" th:text="${pendingProperties.size()}">0</span>
-        </div>
-        <div class="table-container card">
-            <table class="admin-table">
-                <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Property Title</th>
-                    <th>Owner</th>
-                    <th>Price</th>
-                    <th>Location</th>
-                    <th class="action-cell">Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="prop : ${pendingProperties}">
-                    <td>
-                        <img th:src="${prop.primaryPhotoUrl != null ? prop.primaryPhotoUrl : '/images/boarding-room.JPEG'}" class="prop-thumb"
-                             onerror="this.src='https://placehold.co/60x40?text=No+Img'" alt="Property Image">
-                    </td>
-                    <td class="property-title-cell">
-                        <div th:text="${prop.title}">Title</div>
-                        <div class="submitted-date">Submitted today</div>
-                    </td>
-                    <td class="owner-cell">
-                        <div class="name" th:text="${prop.owner.fullName}">Owner Name</div>
-                        <div class="email" th:text="${prop.owner.email}">email</div>
-                    </td>
-                    <td class="price-cell" th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 0, 'DEFAULT')}">15000</td>
-                    <td th:text="${prop.location}">Location</td>
-                    <td class="action-cell">
-                        <form th:action="@{/admin/approve-property/{id}(id=${prop.id})}" method="post">
-                            <button type="submit" class="btn-approve">
-                                <i class="ph-bold ph-check"></i> Approve
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                <tr th:if="${pendingProperties.isEmpty()}">
-                    <td colspan="6" class="empty-state">No pending property listings.</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+            <tr>
+                <th>Image</th>
+                <th>Property Title</th>
+                <th>Owner</th>
+                <th>Price</th>
+                <th>Location</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="prop : ${pendingProperties}">
+                <td>
+                    <img th:src="${prop.primaryPhotoUrl != null ? prop.primaryPhotoUrl : '/images/boarding-room.JPEG'}" class="prop-thumb"
+                         onerror="this.src='https.placehold.co/60x40?text=No+Img'" alt="Property Image">
+                </td>
+                <td th:text="${prop.title}">Title</td>
+                <td th:text="${prop.owner.fullName}">Owner Name</td>
+                <td th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 0, 'DEFAULT')}">15000</td>
+                <td th:text="${prop.location}">Location</td>
+                <td>
+                    <form th:action="@{/admin/approve-property/{id}(id=${prop.id})}" method="post">
+                        <button type="submit" class="btn-approve">Approve</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${pendingProperties.isEmpty()}">
+                <td colspan="6" style="text-align: center; color: #6c757d; padding: 2rem;">No pending property listings.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </main>
 
 </body>
