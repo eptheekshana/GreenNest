@@ -1,59 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Created! - Nboard</title>
-    <style>
-        :root { --primary-green: #27ae60; --bg-color: #f4f7f6; --text-dark: #2c3e50; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        .success-card {
-            background: white;
-            padding: 50px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 450px;
-            width: 90%;
-        }
-        .icon-box {
-            font-size: 4rem;
-            color: var(--primary-green);
-            margin-bottom: 20px;
-        }
-        h1 { margin-bottom: 10px; color: var(--primary-green); }
-        p { color: #7f8c8d; margin-bottom: 30px; line-height: 1.5; }
-        .btn {
-            background-color: var(--primary-green);
-            color: white;
-            text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: 600;
-            display: inline-block;
-            transition: 0.2s;
-        }
-        .btn:hover { background-color: #219150; }
-    </style>
+    <title>Registration Successful - Nboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
 </head>
 <body>
-
-<div class="success-card">
-    <div class="icon-box">🎉</div>
-    <h1>Account Created!</h1>
-    <p>Welcome to Nboard. Your account has been successfully registered. You can now log in to start exploring.</p>
-
-    <a th:href="@{/login}" class="btn">Go to Login</a>
+<div class="auth-card">
+    <h1>Registration Successful</h1>
+    <p>Your account has been created. You can now log in.</p>
+    <a href="/login" class="btn-primary" style="text-align: center; text-decoration: none;">Login</a>
 </div>
-
 </body>
 </html>

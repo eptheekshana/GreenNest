@@ -3,172 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Property Details - Nboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
-    <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
+    <title th:text="${property.title} + ' - Nboard'">Property Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/home-simplified.css}">
+    <link rel="stylesheet" th:href="@{/css/property-details.css}">
 </head>
 <body>
-
-<main class="site-shell">
-    <nav class="site-nav">
-        <a href="/" class="site-brand">N<span>board</span></a>
-        <div class="site-links">
+<div class="container">
+    <nav class="top-nav">
+        <a href="/" class="brand">Nboard</a>
+        <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/properties" class="active">Explore</a>
-            <a href="/login">Login</a>
+            <a href="/properties">Listings</a>
+            <div sec:authorize="!isAuthenticated()">
+                <a href="/login">Login</a>
+                <a href="/register" class="nav-button">Register</a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <a href="/logout" class="nav-button">Logout</a>
+            </div>
         </div>
     </nav>
 
-<section class="page-header">
-    <a href="/properties" class="back-link">
-        <span>←</span>
-        <span>Back to Listings</span>
-    </a>
-</section>
-
-<section class="details-shell">
-<div class="details-layout">
-    <!-- Left Column: Property Details -->
-    <div class="details-main">
-        <div class="image-container">
-            <img id="mainPropertyImage"
-                 th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
-                 alt="Property Image" class="main-image" onerror="this.src='https://via.placeholder.com/800x400'">
-
-            <div th:if="${not #lists.isEmpty(property.resolvedPhotoUrls)}" class="thumbnail-strip">
-                <button type="button"
-                        class="thumbnail-btn"
-                        th:each="photo, stat : ${property.resolvedPhotoUrls}"
-                        th:classappend="${stat.first} ? ' active' : ''"
-                        th:attr="data-src=${photo}"
-                        onclick="setMainImage(this)">
-                    <img th:src="${photo}" alt="Property thumbnail" onerror="this.src='https://via.placeholder.com/160x120'">
-                </button>
-            </div>
-
-            <div th:if="${#lists.isEmpty(property.resolvedPhotoUrls)}" class="gallery-empty">
-                No gallery photos available.
-            </div>
-        </div>
-
-        <div class="property-header">
-            <h1 class="property-title" th:text="${property.title}">Property Title</h1>
-            <div class="property-location">
-                <span>📍</span>
-                <span th:text="${property.location}">Location</span>
-            </div>
-            <div class="property-price">
-                Rs. <span th:text="${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">0</span>
-                <span class="price-period">/month</span>
-            </div>
-            <div class="property-meta">
-                <div class="meta-chip" th:text="${property.status}">Approved</div>
-                <div class="meta-chip" th:text="${property.createdAt != null ? #temporals.format(property.createdAt, 'MMM dd, yyyy') : 'Recently added'}">Recently added</div>
-            </div>
-        </div>
-
-        <hr>
-
-        <!-- Description Section -->
-        <div class="description-section">
-            <h3>About this Property</h3>
-            <p class="description-text" th:text="${property.description}">
-                Property description goes here...
-            </p>
-        </div>
-
-        <!-- Details Grid -->
-        <div class="details-grid">
-            <div class="detail-item">
-                <span class="detail-label">Property Type</span>
-                <span class="detail-value">Boarding House</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Posted</span>
-                <span class="detail-value" th:text="${property.createdAt != null ? #temporals.format(property.createdAt, 'MMM dd, yyyy') : 'Recently'}">Recently</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Status</span>
-                <span class="detail-value" th:text="${property.status}">Approved</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">ID</span>
-                <span class="detail-value" th:text="${property.id}">#123</span>
-            </div>
-        </div>
-
-        <a href="/properties" class="btn-back-to-listings">← Browse Other Properties</a>
+    <div class="property-header">
+        <h1 th:text="${property.title}">Property Title</h1>
+        <p class="property-location" th:text="${property.location}">Location</p>
     </div>
 
-    <!-- Right Column: Owner Contact -->
-    <div class="owner-card details-side">
-        <h3>Owner Details</h3>
+    <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
+         alt="Property image" class="property-image">
 
-        <div class="owner-info">
-            <div class="owner-label">Full Name</div>
-            <div class="owner-value" th:text="${property.owner.fullName}">Owner Name</div>
-        </div>
+    <div class="property-details">
+        <h2>About this property</h2>
+        <p th:text="${property.description}">Description of the property.</p>
 
-        <div class="owner-info">
-            <div class="owner-label">Email Address</div>
-            <div class="owner-value" th:text="${property.owner.email}">owner@example.com</div>
-        </div>
+        <div class="property-price" th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">LKR 0</div>
 
-        <div class="owner-info" th:if="${property.owner.contactNumber}">
-            <div class="owner-label">Contact Number</div>
-            <div class="owner-value" th:text="${property.owner.contactNumber}">+94 XX XXX XXXX</div>
-        </div>
-
-        <a th:href="'mailto:' + ${property.owner.email}" class="btn-contact">
-            📧 Contact Owner via Email
-        </a>
-
-        <a th:href="'tel:' + ${property.owner.contactNumber}" class="btn-contact" th:if="${property.owner.contactNumber}" style="margin-top: 10px;">
-            📞 Call Owner
-        </a>
+        <a href="#" class="btn-primary">Contact Owner</a>
     </div>
 </div>
-</section>
-
-<section class="featured-wrapper" th:if="${not #lists.isEmpty(featuredProperties)}">
-    <h2 class="featured-title">Featured Boardings</h2>
-    <div class="featured-grid">
-        <a th:each="featured : ${featuredProperties}"
-           th:href="@{/property-details/{id}(id=${featured.id})}"
-           class="featured-card">
-            <img class="featured-image"
-                 th:src="${featured.primaryPhotoUrl != null ? featured.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
-                 alt="Featured Property"
-                 onerror="this.src='https://placehold.co/600x400/f1f5f9/94a3b8?text=No+Image'">
-            <div class="featured-body">
-                <div class="featured-card-title" th:text="${featured.title}">Property Title</div>
-                <div class="featured-card-location" th:text="${featured.location}">Location</div>
-                <div class="featured-card-price" th:text="'Rs. ' + ${#numbers.formatDecimal(featured.price, 1, 0, 'DEFAULT')}">Rs. 0</div>
-            </div>
-        </a>
-    </div>
-</section>
-</main>
-
-<script>
-    function setMainImage(button) {
-        const mainImage = document.getElementById('mainPropertyImage');
-        if (!mainImage || !button) {
-            return;
-        }
-
-        const src = button.dataset.src;
-        if (src) {
-            mainImage.src = src;
-        }
-
-        document.querySelectorAll('.thumbnail-btn').forEach((thumb) => {
-            thumb.classList.remove('active');
-        });
-        button.classList.add('active');
-    }
-</script>
-
 </body>
 </html>

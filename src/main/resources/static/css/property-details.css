@@ -1,0 +1,70 @@
+/* Property Details Page Styles */
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+    margin: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.property-header {
+    margin-bottom: 2rem;
+}
+
+.property-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.property-location {
+    font-size: 1.1rem;
+    color: #6c757d;
+}
+
+.property-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.property-details {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.property-details h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.property-details p {
+    line-height: 1.8;
+}
+
+.property-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #27ae60;
+    margin-bottom: 2rem;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: #27ae60;
+    color: #ffffff;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    font-weight: 600;
+}
