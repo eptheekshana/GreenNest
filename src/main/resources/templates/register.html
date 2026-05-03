@@ -9,74 +9,58 @@
 </head>
 <body>
 
-<!-- Left decorative panel -->
-<div class="panel-left">
-    <a href="/" class="panel-brand">Nboard</a>
-    <div class="panel-copy">
-        <h2>Join the Community.</h2>
-        <p>Create an account to find your perfect boarding place or list your own property.</p>
-    </div>
-    <div class="panel-dots">
-        <span class="active"></span>
-        <span></span>
-        <span></span>
-    </div>
-</div>
+<!-- Form panel -->
+<div class="auth-card">
 
-<!-- Right form panel -->
-<div class="panel-right">
-    <div class="auth-card">
+    <div class="auth-header">
+        <h1>Create your account</h1>
+        <p>Get started with Nboard today.</p>
+    </div>
 
-        <div class="auth-header">
-            <h1>Create your account</h1>
-            <p>Get started with Nboard today.</p>
+    <!-- Error Messages Display -->
+    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+        <ul th:if="${#fields.hasErrors('*')}">
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <form th:action="@{/register}" th:object="${user}" method="post" onsubmit="return validatePassword()">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" th:field="*{fullName}" class="form-control" required placeholder="John Doe">
         </div>
-
-        <!-- Error Messages Display -->
-        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
-            <ul th:if="${#fields.hasErrors('*')}">
-                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-            </ul>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" th:field="*{email}" class="form-control" required placeholder="you@example.com">
         </div>
+        <div class="form-group">
+            <label for="contactNumber">Phone Number</label>
+            <input type="tel" id="contactNumber" th:field="*{contactNumber}" class="form-control" required placeholder="e.g., 0771234567">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}" class="form-control" required placeholder="••••••••">
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" required placeholder="••••••••">
+        </div>
+        <div class="form-group">
+            <label for="role">I am a...</label>
+            <select id="role" th:field="*{role}" class="form-control" required>
+                <option value="" disabled selected>Select your role</option>
+                <option value="STUDENT">Student</option>
+                <option value="OWNER">Property Owner</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-submit">Create Account</button>
+    </form>
 
-        <form th:action="@{/register}" th:object="${user}" method="post" onsubmit="return validatePassword()">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <div class="form-group">
-                <label for="fullName">Full Name</label>
-                <input type="text" id="fullName" th:field="*{fullName}" class="form-control" required placeholder="John Doe">
-            </div>
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" th:field="*{email}" class="form-control" required placeholder="you@example.com">
-            </div>
-            <div class="form-group">
-                <label for="contactNumber">Phone Number</label>
-                <input type="tel" id="contactNumber" th:field="*{contactNumber}" class="form-control" required placeholder="e.g., 0771234567">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" th:field="*{password}" class="form-control" required placeholder="••••••••">
-            </div>
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" required placeholder="••••••••">
-            </div>
-            <div class="form-group">
-                <label for="role">I am a...</label>
-                <select id="role" th:field="*{role}" class="form-control" required>
-                    <option value="" disabled selected>Select your role</option>
-                    <option value="STUDENT">Student</option>
-                    <option value="OWNER">Property Owner</option>
-                </select>
-            </div>
-            <button type="submit" class="btn-submit">Create Account</button>
-        </form>
+    <p class="auth-footer">
+        Already have an account? <a href="/login">Sign in</a>
+    </p>
 
-        <p class="auth-footer">
-            Already have an account? <a href="/login">Sign in</a>
-        </p>
-
-    </div>
 </div>
 
 <script>
