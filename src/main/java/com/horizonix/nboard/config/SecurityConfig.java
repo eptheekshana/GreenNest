@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -25,14 +24,12 @@ public class SecurityConfig {
                                                    DaoAuthenticationProvider daoAuthenticationProvider,
                                                    JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 
                 // --- 1. PERMISSIONS ---
                 .authorizeHttpRequests(auth -> auth
-                        // Explicitly permit all methods for authentication pages
-                        .requestMatchers(HttpMethod.GET, "/login", "/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/login", "/register").permitAll()
-                        .requestMatchers("/", "/signup", "/registration-success", "/verify-email", "/register/test", "/properties", "/property/**", "/property-details/**", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+                        .requestMatchers("/", "/login", "/register", "/verify-email", "/properties", "/property/**", "/property-details/**", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/user/**").hasRole("STUDENT")
                         .requestMatchers("/api/owner/**").hasRole("OWNER")
@@ -42,11 +39,6 @@ public class SecurityConfig {
                         .requestMatchers("/owner/**").hasRole("OWNER") // Lock owner pages
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Lock admin pages
                         .anyRequest().authenticated()
-                )
-
-                // --- 1.5. CSRF CONFIGURATION ---
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**") // Disable CSRF for API endpoints (they use JWT)
                 )
 
                 // --- 2. LOGIN LOGIC (UPDATED) ---
@@ -78,18 +70,6 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
-                )
-
-                // --- 3.5. EXCEPTION HANDLING ---
-                .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            // Redirect to login page for HTML requests
-                            if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
-                                response.sendError(401, "Unauthorized");
-                            } else {
-                                response.sendRedirect("/login");
-                            }
-                        })
                 )
 
                 // --- 4. AUTHENTICATION PROVIDER ---

@@ -39,18 +39,14 @@ public class AuthController {
     // --- Registration Logic ---
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
-        User user = new User();
-        user.setRole(com.horizonix.nboard.entity.Role.STUDENT);
-        model.addAttribute("user", user);
+        model.addAttribute("user", new User());
         return "register";
     }
 
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") User user,
                                BindingResult result) {
-        logger.info("========== REGISTRATION POST REQUEST RECEIVED ==========");
-        logger.info("Email: {}, Full Name: {}, Role: {}", user.getEmail(), user.getFullName(), user.getRole());
-        logger.info("Has binding errors: {}", result.hasErrors());
+        logger.info("Registration attempt for email: {}", user.getEmail());
 
         // Check for validation errors
         if (result.hasErrors()) {
@@ -69,12 +65,10 @@ public class AuthController {
         }
 
         try {
-            logger.info("Proceeding with user registration for email: {}", user.getEmail());
             String verificationUrl = userService.saveUser(user, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
             logger.info("User registered successfully: {} with role: {}", user.getEmail(), user.getRole());
-            logger.info("Redirecting to /registration-success");
-            // Redirect to registration success page with instructions
-            return "redirect:/registration-success";
+            // If verificationUrl is returned (SendGrid not configured) we still redirect to login
+            return "redirect:/login?verificationSent";
         } catch (IllegalStateException e) {
             logger.error("Email verification configuration failed for {}", user.getEmail(), e);
             result.reject("registration.email", e.getMessage());
@@ -94,17 +88,5 @@ public class AuthController {
         }
 
         return "redirect:/login?verified";
-    }
-
-    @GetMapping("/registration-success")
-    public String showRegistrationSuccess() {
-        return "registration-success";
-    }
-
-    @GetMapping("/register/test")
-    public String testRegisterEndpoint() {
-        logger.info("========== REGISTER ENDPOINT TEST ==========");
-        logger.info("GET /register endpoint is accessible");
-        return "Test: Registration system is accessible. POST /register endpoint should also work.";
     }
 }

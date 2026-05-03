@@ -2,82 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Booking UI</title>
-
+    <title>Booking UI - Nboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/modern-ui.css">
+    <link rel="stylesheet" href="/css/modern-redesign.css">
     <style>
-        body {
-          font-family: Arial, sans-serif;
-          background: #f5f5f5;
-          display: flex;
-          justify-content: center;
-          margin-top: 40px;
-        }
-
-        .property-card {
-          width: 320px;
-          background: #fff;
-          border-radius: 10px;
-          padding: 15px;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .property-img {
-          width: 100%;
-          border-radius: 8px;
-        }
-
-        h2 {
-          margin: 10px 0 5px;
-        }
-
-        .price {
-          color: green;
-          font-weight: bold;
-          margin-bottom: 5px;
-        }
-
-        .desc {
-          font-size: 14px;
-          color: #555;
-          margin-bottom: 15px;
-        }
-
-        .book-btn {
-          width: 100%;
-          padding: 10px;
-          background: #2563eb;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 15px;
-        }
-
-        .book-btn:hover {
-          background: #1e40af;
+        .booking-card {
+            max-width: 380px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
 
-<div class="property-card">
-    <img src=  alt="Room Image" class="property-img">
+<main class="auth-shell">
+    <div class="card booking-card property-card">
+        <img src="/images/boarding-room.JPEG" alt="Room Image" class="property-image" onerror="this.src='https://placehold.co/600x400/f1f5f9/94a3b8?text=No+Image'">
 
-    <h2>Single Room for Rent</h2>
-    <p class="price">LKR 15,000 / month</p>
-    <p class="desc">
-        Fully furnished room near university. Water & WiFi included.
-    </p>
+        <div class="property-content">
+            <h2 class="property-title">Single Room for Rent</h2>
+            <p class="property-price">LKR 15,000 <span style="font-size: 0.8em; color: var(--muted); font-weight: 500;">/ month</span></p>
+            <p class="description-text" style="margin-top: 4px;">
+                Fully furnished room near university. Water & WiFi included.
+            </p>
 
-    <button id="bookBtn" class="book-btn">Book Now</button>
-</div>
+            <button id="bookBtn" class="btn-primary" style="margin-top: 14px; width: 100%;">Book Now</button>
+        </div>
+    </div>
+</main>
 
 <script>
-
     const userRole = "student";
-
     const bookBtn = document.getElementById("bookBtn");
-
     if (userRole !== "student") {
       bookBtn.style.display = "none";
     }

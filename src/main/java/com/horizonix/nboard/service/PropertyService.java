@@ -84,19 +84,10 @@ public class PropertyService {
     }
 
     public void updateProperty(Property existing, Property updated, List<MultipartFile> images) throws IOException {
-        // Only update non-null fields to prevent accidental overwrites
-        if (updated.getTitle() != null && !updated.getTitle().isBlank()) {
-            existing.setTitle(updated.getTitle());
-        }
-        if (updated.getLocation() != null && !updated.getLocation().isBlank()) {
-            existing.setLocation(updated.getLocation());
-        }
-        if (updated.getPrice() != null && updated.getPrice() > 0) {
-            existing.setPrice(updated.getPrice());
-        }
-        if (updated.getDescription() != null && !updated.getDescription().isBlank()) {
-            existing.setDescription(updated.getDescription());
-        }
+        existing.setTitle(updated.getTitle());
+        existing.setLocation(updated.getLocation());
+        existing.setPrice(updated.getPrice());
+        existing.setDescription(updated.getDescription());
 
         List<String> uploadedImageUrls = uploadImages(images);
         if (!uploadedImageUrls.isEmpty()) {

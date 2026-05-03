@@ -51,9 +51,6 @@ public class DataInitializer implements CommandLineRunner {
             admin.setRole(Role.ADMIN); // Ensure Role.ADMIN exists in your enum/string
             admin.setVerified(true);
             admin.setEnabled(true);
-            admin.setEmailVerified(true);
-            admin.setVerificationToken(null);
-            admin.setVerificationTokenExpiresAt(null);
 
             userRepository.save(admin);
             logger.info("Admin account created: admin@nboard.com / admin123");
@@ -76,9 +73,6 @@ public class DataInitializer implements CommandLineRunner {
                 owner.setRole(Role.OWNER);
                 owner.setVerified(true);
                 owner.setEnabled(true);
-                owner.setEmailVerified(true);
-                owner.setVerificationToken(null);
-                owner.setVerificationTokenExpiresAt(null);
                 userRepository.save(owner);
             }
 

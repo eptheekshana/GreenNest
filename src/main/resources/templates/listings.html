@@ -1,662 +1,72 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Listings - Nboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <title>Available Boarding Places - Nboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --cream: #EFF6F0;
-            --warm-white: #F6FBF7;
-            --ink: #0E1F12;
-            --ink-soft: #243D28;
-            --ink-muted: #5E7A63;
-            --green: #1E7A3C;
-            --green-light: #2DA04F;
-            --green-pale: #D4EDD9;
-            --green-dark: #155C2C;
-            --teal: #1A6E5A;
-            --border: rgba(14,31,18,0.1);
-            --shadow-sm: 0 2px 8px rgba(14,31,18,0.06);
-            --shadow-md: 0 8px 32px rgba(14,31,18,0.10);
-            --shadow-lg: 0 24px 64px rgba(14,31,18,0.15);
-            --radius: 16px;
-            --radius-sm: 8px;
-        }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--warm-white);
-            color: var(--ink);
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* ── NAV ── */
-        .top-nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(246,251,247,0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-        }
-        .top-nav .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 2rem;
-            height: 64px;
-            max-width: 1180px;
-            margin: 0 auto;
-        }
-        .brand {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--green);
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-        .nav-links a {
-            color: var(--ink-soft);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color .2s;
-        }
-        .nav-links a:hover,
-        .nav-links a.active { color: var(--green); }
-        .nav-links a.active { font-weight: 700; }
-        .nav-auth-buttons { display: flex; align-items: center; gap: 0.75rem; }
-        .nav-button {
-            background: var(--green) !important;
-            color: #fff !important;
-            padding: 0.45rem 1.1rem;
-            border-radius: 100px;
-            font-size: 0.85rem !important;
-            font-weight: 600 !important;
-            transition: background .2s, transform .15s !important;
-        }
-        .nav-button:hover { background: var(--green-dark) !important; transform: translateY(-1px); }
-
-        /* ── CONTAINER ── */
-        .container {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* ── HERO ── */
-        .listings-hero {
-            position: relative;
-            padding: 5rem 0 3.5rem;
-            text-align: center;
-            overflow: hidden;
-        }
-        .listings-hero::before {
-            content: '';
-            position: absolute;
-            top: -80px; left: 50%;
-            transform: translateX(-50%);
-            width: 600px; height: 320px;
-            background: radial-gradient(ellipse, rgba(30,122,60,0.10) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--green);
-            background: var(--green-pale);
-            padding: 0.3rem 0.85rem;
-            border-radius: 100px;
-            margin-bottom: 1.25rem;
-        }
-        .listings-hero h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(2.2rem, 5vw, 3.6rem);
-            font-weight: 800;
-            letter-spacing: -2px;
-            color: var(--ink);
-            line-height: 1.05;
-            margin-bottom: 0.8rem;
-        }
-        .listings-hero h1 span {
-            color: var(--green);
-        }
-        .listings-hero p {
-            color: var(--ink-muted);
-            font-size: 1rem;
-            max-width: 420px;
-            margin: 0 auto 2.5rem;
-        }
-
-        /* ── FILTER BAR ── */
-        .filter-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-            margin-bottom: 3.5rem;
-        }
-        .filter-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.45rem 1rem;
-            border-radius: 100px;
-            border: 1.5px solid var(--border);
-            background: #fff;
-            color: var(--ink-soft);
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all .2s;
-            text-decoration: none;
-        }
-        .filter-chip:hover,
-        .filter-chip.active {
-            background: var(--green);
-            color: #fff;
-            border-color: var(--green);
-        }
-        .filter-chip i { font-size: 0.9rem; }
-
-        /* ── STATS STRIP ── */
-        .stats-strip {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.85rem 1.25rem;
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-sm);
-        }
-        .stats-count {
-            font-size: 0.88rem;
-            color: var(--ink-muted);
-            font-weight: 500;
-        }
-        .stats-count strong { color: var(--ink); }
-        .sort-select {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--ink-soft);
-            background: var(--cream);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 0.35rem 0.85rem;
-            cursor: pointer;
-            outline: none;
-            appearance: none;
-            -webkit-appearance: none;
-        }
-
-        /* ── PROPERTY GRID ── */
-        .property-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 4rem;
-        }
-
-        /* ── PROPERTY CARD ── */
-        .property-card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            transition: transform .28s cubic-bezier(.22,.68,0,1.2), box-shadow .28s ease;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-        .property-card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-        }
-        .property-card:hover .property-image {
-            transform: scale(1.05);
-        }
-
-        .property-image-wrapper {
-            position: relative;
-            overflow: hidden;
-            height: 210px;
-            flex-shrink: 0;
-        }
-        .property-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform .5s cubic-bezier(.22,.68,0,1.1);
-        }
-
-        /* Availability badge */
-        .avail-badge {
-            position: absolute;
-            top: 0.85rem;
-            left: 0.85rem;
-            background: rgba(255,255,255,0.95);
-            color: var(--green);
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            padding: 0.25rem 0.65rem;
-            border-radius: 100px;
-            backdrop-filter: blur(6px);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        .avail-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: var(--green);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.3); }
-        }
-
-        /* Wishlist button */
-        .wishlist-btn {
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            width: 34px; height: 34px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.92);
-            border: none;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--ink-muted);
-            font-size: 1rem;
-            transition: color .2s, transform .2s;
-            backdrop-filter: blur(6px);
-        }
-        .wishlist-btn:hover { color: #e04040; transform: scale(1.15); }
-
-        .property-body {
-            padding: 1.25rem 1.35rem 1.35rem;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            gap: 0.5rem;
-        }
-
-        .property-body h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--ink);
-            letter-spacing: -0.3px;
-            line-height: 1.3;
-        }
-
-        .property-location {
-            font-size: 0.82rem;
-            color: var(--ink-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        .property-location i { font-size: 0.9rem; color: var(--green); }
-
-        /* Mini amenity chips */
-        .mini-chips {
-            display: flex;
-            gap: 0.4rem;
-            flex-wrap: wrap;
-            margin-top: 0.2rem;
-        }
-        .mini-chip {
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--ink-muted);
-            background: var(--cream);
-            padding: 0.18rem 0.55rem;
-            border-radius: 100px;
-            border: 1px solid var(--border);
-        }
-
-        .property-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 0.85rem;
-            margin-top: auto;
-            border-top: 1px solid var(--border);
-        }
-        .property-footer strong {
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--ink);
-            letter-spacing: -0.3px;
-        }
-        .property-footer strong span {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: var(--ink-muted);
-        }
-        .view-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            font-size: 0.82rem;
-            font-weight: 700;
-            color: var(--green);
-            text-decoration: none;
-            padding: 0.38rem 0.85rem;
-            border-radius: 100px;
-            background: var(--green-pale);
-            transition: background .2s, transform .18s, color .2s;
-        }
-        .view-link:hover {
-            background: var(--green);
-            color: #fff;
-            transform: translateX(2px);
-        }
-        .view-link i { font-size: 0.85rem; transition: transform .18s; }
-        .view-link:hover i { transform: translateX(3px); }
-
-        /* ── EMPTY STATE ── */
-        .empty-state {
-            text-align: center;
-            padding: 6rem 2rem;
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 4rem;
-        }
-        .empty-icon {
-            width: 72px; height: 72px;
-            background: var(--green-pale);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2rem;
-            color: var(--green);
-            margin: 0 auto 1.5rem;
-        }
-        .empty-state h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--ink);
-            margin-bottom: 0.5rem;
-        }
-        .empty-state p {
-            color: var(--ink-muted);
-            font-size: 0.95rem;
-        }
-
-        /* ── CTA FOOTER SECTION ── */
-        .listings-cta {
-            padding: 3rem 0 4rem;
-            border-top: 1px solid var(--border);
-        }
-        .cta-box {
-            background: linear-gradient(135deg, #0e3d1c 0%, #1a6e3a 100%);
-            border-radius: 24px;
-            padding: 3.5rem 3rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .cta-box::before {
-            content: '';
-            position: absolute;
-            top: -60px; right: -60px;
-            width: 220px; height: 220px;
-            background: radial-gradient(circle, rgba(30,122,60,0.35) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-        .cta-text h2 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(1.4rem, 2.5vw, 2rem);
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: -0.5px;
-            margin-bottom: 0.5rem;
-        }
-        .cta-text p { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
-        .cta-actions { display: flex; gap: 0.75rem; flex-shrink: 0; position: relative; z-index: 1; }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.75rem 1.35rem;
-            border-radius: var(--radius-sm);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.88rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: transform .18s, box-shadow .18s, background .2s;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-light {
-            background: #fff;
-            color: var(--ink);
-        }
-        .btn-light:hover { background: var(--green-pale); transform: translateY(-2px); }
-        .btn-outline-light {
-            background: transparent;
-            color: #fff;
-            border: 1.5px solid rgba(255,255,255,0.3);
-        }
-        .btn-outline-light:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
-
-        /* ── SCROLL REVEAL ── */
-        [data-reveal] {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity .55s ease, transform .55s ease;
-        }
-        [data-reveal].visible {
-            opacity: 1;
-            transform: none;
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 960px) {
-            .property-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .container { padding: 0 1rem; }
-            .property-grid { grid-template-columns: 1fr; }
-            .top-nav .container { padding: 0 1rem; }
-            .cta-box { flex-direction: column; text-align: center; }
-            .cta-actions { justify-content: center; }
-            .listings-hero h1 { letter-spacing: -1px; }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="top-nav">
-    <div class="container">
-        <a href="/" class="brand">Nboard</a>
-        <div class="nav-links">
+<main class="site-shell">
+    <nav class="site-nav">
+        <a href="/" class="site-brand">N<span>board</span></a>
+        <div class="site-links">
             <a href="/">Home</a>
-            <a href="/listings" class="active">Listings</a>
-            <div sec:authorize="!isAuthenticated()" class="nav-auth-buttons">
-                <a href="/login">Login</a>
-                <a href="/register" class="nav-button">Register</a>
-            </div>
-            <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
-                <a href="/owner/dashboard">Dashboard</a>
-                <a href="/logout" class="nav-button">Logout</a>
-            </div>
+            <a href="/properties" class="active">Explore</a>
+            <a href="/login">Login</a>
+            <a href="/register">Sign Up</a>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<!-- HERO -->
-<div class="container">
-    <div class="listings-hero" data-reveal>
-        <div class="hero-eyebrow">
-            <i class="ph-bold ph-buildings"></i>
-            Verified Properties
+    <section class="listings-banner">
+        <div class="listings-banner-content">
+            <span class="banner-chip">Student Friendly</span>
+            <h2>Verified boardings near NSBM</h2>
+            <p>Find safe, budget-friendly places with trusted owner details and fresh listings updated regularly.</p>
         </div>
-        <h1>Find Your <span>Perfect</span><br>Boarding Room</h1>
-        <p>Browse through all verified listings across Sri Lanka</p>
+    </section>
 
-        <!-- Filter chips -->
-        <div class="filter-bar">
-            <a href="#" class="filter-chip active"><i class="ph-bold ph-squares-four"></i> All</a>
-            <a href="#" class="filter-chip"><i class="ph-bold ph-gender-female"></i> Female Only</a>
-            <a href="#" class="filter-chip"><i class="ph-bold ph-gender-male"></i> Male Only</a>
-            <a href="#" class="filter-chip"><i class="ph-bold ph-wifi-high"></i> Wi-Fi</a>
-            <a href="#" class="filter-chip"><i class="ph-bold ph-cooking-pot"></i> Meals Included</a>
-            <a href="#" class="filter-chip"><i class="ph-bold ph-currency-circle-dollar"></i> Under LKR 15k</a>
-        </div>
-    </div>
+    <section class="page-header">
+        <h1>Find Your Perfect Stay</h1>
+        <p>Browse verified boarding places near NSBM Green University</p>
+    </section>
 
-    <!-- Stats strip -->
-    <div class="stats-strip" data-reveal>
-        <span class="stats-count"><strong th:text="${properties != null ? #lists.size(properties) : 0}">12</strong> properties found</span>
-        <select class="sort-select">
-            <option>Sort: Latest first</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-        </select>
-    </div>
+    <section class="search-panel">
+        <form action="/search" method="get" class="search-form-modern">
+            <input type="text" name="location" placeholder="Location (e.g. Homagama)" th:value="${location}">
+            <input type="number" step="1" min="0" name="price" placeholder="Max Price (LKR)" th:value="${price}">
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+    </section>
 
-    <!-- PROPERTY GRID (populated) -->
-    <div class="property-grid" th:if="${not #lists.isEmpty(properties)}">
-        <div class="property-card"
-             th:each="property, iterStat : ${properties}"
-             data-reveal
-             th:style="'transition-delay: ' + ${iterStat.index * 80} + 'ms'">
-
-            <div class="property-image-wrapper">
-                <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
-                     alt="Property image" class="property-image">
-                <div class="avail-badge">
-                    <span class="avail-dot"></span> Available
+    <section class="card-grid-shell">
+    <div class="grid properties-grid" th:if="${!properties.isEmpty()}">
+        <a th:each="prop : ${properties}" th:href="@{/property/{id}(id=${prop.id})}" class="card property-card">
+            <img th:src="${prop.primaryPhotoUrl != null ? prop.primaryPhotoUrl : '/images/boarding-room.JPEG'}" class="card-img"
+                 onerror="this.src='https://placehold.co/600x400?text=No+Image'">
+            <div class="card-body">
+                <div class="price property-price" th:text="'LKR ' + ${#numbers.formatDecimal(prop.price, 1, 0, 'DEFAULT')}">LKR 15000</div>
+                <div class="title property-title" th:text="${prop.title}">Property Title</div>
+                <div class="location property-location">
+                    <i class="ph-fill ph-map-pin"></i>
+                    <span th:text="${prop.location}">Location</span>
                 </div>
-                <button class="wishlist-btn" aria-label="Save to wishlist">
-                    <i class="ph-bold ph-heart"></i>
-                </button>
+                <span class="property-link">View Details</span>
             </div>
-
-            <div class="property-body">
-                <h3 th:text="${property.title}">Property Title</h3>
-                <p class="property-location">
-                    <i class="ph-bold ph-map-pin"></i>
-                    <span th:text="${property.location}">Location</span>
-                </p>
-                <div class="mini-chips">
-                    <span class="mini-chip">Wi-Fi</span>
-                    <span class="mini-chip">Hot Water</span>
-                    <span class="mini-chip">Furnished</span>
-                </div>
-                <div class="property-footer">
-                    <strong>
-                        <span th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">LKR 0</span>
-                        <span>/ month</span>
-                    </strong>
-                    <a th:href="@{/property-details/{id}(id=${property.id})}" class="view-link">
-                        View <i class="ph-bold ph-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+        </a>
     </div>
 
-    <!-- EMPTY STATE -->
-    <div th:if="${#lists.isEmpty(properties)}" class="empty-state" data-reveal>
-        <div class="empty-icon"><i class="ph-bold ph-house-line"></i></div>
-        <h3>No Listings Yet</h3>
-        <p>No properties available at the moment. Please check back soon!</p>
+    <div class="empty-state" th:if="${properties.isEmpty()}">
+        <i class="ph-duotone ph-house" style="font-size: 3rem; margin-bottom: 15px; color: #ccc;"></i>
+        <h3>No properties found</h3>
+        <p>Try adjusting your search filters.</p>
     </div>
-</div>
+    </section>
+</main>
 
-<!-- CTA -->
-<div class="container">
-    <div class="listings-cta">
-        <div class="cta-box" data-reveal>
-            <div class="cta-text">
-                <h2>Own a Property? List it Free.</h2>
-                <p>Reach thousands of tenants searching right now across Sri Lanka.</p>
-            </div>
-            <div class="cta-actions">
-                <a href="/register" class="btn btn-light">
-                    <i class="ph-bold ph-plus-circle"></i> List Your Room
-                </a>
-                <a href="/" class="btn btn-outline-light">
-                    <i class="ph-bold ph-info"></i> Learn More
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script th:src="@{/js/app.js}"></script>
-<script>
-    // Scroll reveal
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-            if (e.isIntersecting) {
-                e.target.classList.add('visible');
-                observer.unobserve(e.target);
-            }
-        });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
-
-    // Filter chip toggle (UI only — wire to backend as needed)
-    document.querySelectorAll('.filter-chip').forEach(chip => {
-        chip.addEventListener('click', e => {
-            e.preventDefault();
-            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-        });
-    });
-
-    // Wishlist toggle
-    document.querySelectorAll('.wishlist-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const icon = btn.querySelector('i');
-            icon.classList.toggle('ph-bold');
-            icon.classList.toggle('ph-fill');
-            btn.style.color = icon.classList.contains('ph-fill') ? '#e04040' : '';
-        });
-    });
-</script>
 </body>
 </html>
