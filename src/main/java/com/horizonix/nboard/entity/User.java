@@ -1,5 +1,6 @@
 package com.horizonix.nboard.entity;
 
+import com.horizonix.nboard.validation.PasswordMatches;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "users")
+@PasswordMatches
 public class User implements UserDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,15 +65,6 @@ public class User implements UserDetails {
     private List<Property> properties = new ArrayList<>();
 
     public User() {}
-
-    // Validation: Ensure passwords match
-    @AssertTrue(message = "Passwords do not match")
-    public boolean isPasswordMatching() {
-        if (this.password == null || this.confirmPassword == null) {
-            return true; // Skip validation if either is not set
-        }
-        return this.password.equals(this.confirmPassword);
-    }
 
     // --- UserDetails Logic ---
     @Override public Collection<? extends GrantedAuthority> getAuthorities() {

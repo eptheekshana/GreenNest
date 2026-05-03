@@ -59,14 +59,6 @@ public class AuthController {
             return "register";
         }
 
-        // Check if passwords match
-        if (user.getPassword() == null || user.getConfirmPassword() == null ||
-            !user.getPassword().equals(user.getConfirmPassword())) {
-            logger.warn("Passwords do not match for email: {}", user.getEmail());
-            result.rejectValue("confirmPassword", "error.password", "Passwords do not match.");
-            return "register";
-        }
-
         // Check if email is already taken
         if (userService.isEmailTaken(user.getEmail())) {
             logger.warn("Email already registered: {}", user.getEmail());

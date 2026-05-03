@@ -4,6 +4,7 @@ import com.horizonix.nboard.entity.Property;
 import com.horizonix.nboard.entity.User;
 import com.horizonix.nboard.service.PropertyService;
 import com.horizonix.nboard.service.UserService;
+import com.horizonix.nboard.service.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,7 @@ public class PropertyController {
 
     @Autowired private PropertyService propertyService;
     @Autowired private UserService userService;
+    @Autowired private OwnerService ownerService;
 
     // --- 1. PUBLIC: LIST ALL PROPERTIES ---
     @GetMapping("/properties")
@@ -80,7 +82,7 @@ public class PropertyController {
         User user = userService.findByEmail(principal.getName());
         model.addAttribute("myProperties", propertyService.getPropertiesByOwner(user));
         model.addAttribute("ownerName", user.getFullName());
-        model.addAttribute("isVerified", user.isVerified());
+        model.addAttribute("isVerified", ownerService.isOwnerVerified(user));
         return "owner/dashboard";
     }
 
@@ -90,7 +92,7 @@ public class PropertyController {
         User user = userService.findByEmail(principal.getName());
 
         // Check if Owner is Verified
-        if (!user.isVerified()) {
+        if (!ownerService.isOwnerVerified(user)) {
             return "redirect:/owner/dashboard?error=not-verified";
         }
 
@@ -109,7 +111,7 @@ public class PropertyController {
             User user = userService.findByEmail(principal.getName());
 
             // Double-check verification status before saving
-            if (!user.isVerified()) {
+            if (!ownerService.isOwnerVerified(user)) {
                 redirectAttributes.addFlashAttribute("error", "You must be verified by admin before adding properties.");
                 return "redirect:/owner/dashboard?error=not-verified";
             }
