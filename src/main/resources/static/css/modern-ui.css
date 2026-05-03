@@ -61,7 +61,7 @@ body {
 .nav-auth-buttons { display: flex; align-items: center; gap: 1rem; }
 .nav-button {
     background: var(--primary);
-    color: #ffffff;
+    color: var(--text-on-primary);
     padding: 0.6rem 1.2rem;
     border-radius: var(--radius-md);
     text-decoration: none;
