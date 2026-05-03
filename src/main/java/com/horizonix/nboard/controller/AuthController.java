@@ -48,7 +48,9 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") User user,
                                BindingResult result) {
-        logger.info("Registration attempt for email: {}", user.getEmail());
+        logger.info("========== REGISTRATION POST REQUEST RECEIVED ==========");
+        logger.info("Email: {}, Full Name: {}, Role: {}", user.getEmail(), user.getFullName(), user.getRole());
+        logger.info("Has binding errors: {}", result.hasErrors());
 
         // Check for validation errors
         if (result.hasErrors()) {
@@ -67,8 +69,10 @@ public class AuthController {
         }
 
         try {
+            logger.info("Proceeding with user registration for email: {}", user.getEmail());
             String verificationUrl = userService.saveUser(user, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
             logger.info("User registered successfully: {} with role: {}", user.getEmail(), user.getRole());
+            logger.info("Redirecting to /registration-success");
             // Redirect to registration success page with instructions
             return "redirect:/registration-success";
         } catch (IllegalStateException e) {
@@ -95,5 +99,12 @@ public class AuthController {
     @GetMapping("/registration-success")
     public String showRegistrationSuccess() {
         return "registration-success";
+    }
+
+    @GetMapping("/register/test")
+    public String testRegisterEndpoint() {
+        logger.info("========== REGISTER ENDPOINT TEST ==========");
+        logger.info("GET /register endpoint is accessible");
+        return "Test: Registration system is accessible. POST /register endpoint should also work.";
     }
 }

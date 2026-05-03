@@ -1,9 +1,14 @@
-// register.js
+// register.js - Enhanced with diagnostics
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirmPassword');
     const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+    console.log('Register page initializing...');
+    console.log('Form element:', form);
+    console.log('Form action:', form?.action);
+    console.log('Form method:', form?.method);
 
     // Real-time password matching validation
     function validatePasswordMatch() {
@@ -37,10 +42,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Validate on form submission
     if (form) {
         form.addEventListener('submit', function(e) {
+            console.log('Form submission triggered');
+            console.log('Validating password match...');
+
             if (!validatePasswordMatch()) {
+                console.log('Password validation failed - preventing submission');
                 e.preventDefault();
                 confirmPassword.focus();
+                return false;
             }
+
+            console.log('Form validation passed - allowing submission');
+            console.log('Submitting to:', form.action);
         });
     }
 
