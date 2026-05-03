@@ -4,46 +4,345 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Your Account - Nboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:         #F0F5F1;
+            --bg-dark:    #DFF0E3;
+            --ink:        #0D1F14;
+            --ink-muted:  #2D4A36;
+            --ink-faint:  #5A7A63;
+            --green:      #2E7D4F;
+            --green-light:#4CAF72;
+            --green-pale: #E8F5EC;
+            --white:      #F7FDF9;
+            --border:     rgba(13,31,20,0.12);
+            --border-mid: rgba(13,31,20,0.2);
+            --error:      #C0392B;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* ── LEFT PANEL ── */
+        .panel-left {
+            background: var(--ink);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-left::before {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -80px;
+            width: 420px;
+            height: 420px;
+            border-radius: 50% 40% 60% 30% / 40% 60% 40% 60%;
+            background: rgba(46,125,79,0.18);
+        }
+
+        .panel-left::after {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 280px;
+            height: 280px;
+            border-radius: 40% 60% 30% 70%;
+            background: rgba(46,125,79,0.1);
+        }
+
+        .panel-brand {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 0.01em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-copy {
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-copy h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            font-weight: 600;
+            color: var(--white);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .panel-copy p {
+            font-size: 0.9rem;
+            color: rgba(247,253,249,0.55);
+            line-height: 1.7;
+            font-weight: 300;
+            max-width: 320px;
+        }
+
+        .panel-dots {
+            display: flex;
+            gap: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(247,253,249,0.2);
+        }
+
+        .panel-dots span.active {
+            background: var(--green-light);
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        /* ── RIGHT PANEL ── */
+        .panel-right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            overflow-y: auto;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .auth-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .auth-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: var(--ink);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.4rem;
+        }
+
+        .auth-header p {
+            font-size: 0.85rem;
+            color: var(--ink-faint);
+            font-weight: 300;
+        }
+
+        /* ── FORM ── */
+        .form-group {
+            margin-bottom: 1.1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--ink);
+            background: var(--white);
+            border: 1px solid var(--border-mid);
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            appearance: none;
+        }
+
+        .form-control::placeholder {
+            color: var(--ink-faint);
+            font-weight: 300;
+        }
+
+        .form-control:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(46,125,79,0.1);
+        }
+
+        select.form-control {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235A7A63' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.9rem center;
+            padding-right: 2.2rem;
+            cursor: pointer;
+        }
+
+        /* ── SUBMIT ── */
+        .btn-submit {
+            width: 100%;
+            padding: 0.85rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+            background: var(--green);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1.4rem;
+            transition: background 0.2s, transform 0.15s;
+        }
+
+        .btn-submit:hover { background: var(--ink); }
+        .btn-submit:active { transform: scale(0.99); }
+
+        /* ── FOOTER LINK ── */
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.8rem;
+            font-size: 0.82rem;
+            color: var(--ink-faint);
+        }
+
+        .auth-footer a {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover { text-decoration: underline; }
+
+        /* ── DIVIDER ── */
+        .form-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 1.4rem 0;
+        }
+
+        /* ── ANIMATIONS ── */
+        .auth-card {
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            body { grid-template-columns: 1fr; }
+            .panel-left { display: none; }
+            .panel-right { padding: 2rem 1.5rem; align-items: flex-start; padding-top: 3rem; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-<div class="auth-card">
-    <h1>Create Your Account</h1>
-    <form th:action="@{/register}" th:object="${user}" method="post">
-        <div class="form-group">
-            <label for="fullName">Full Name</label>
-            <input type="text" id="fullName" th:field="*{fullName}" class="form-control" required placeholder="E P Theekshana">
-        </div>
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" th:field="*{email}" class="form-control" required placeholder="you@example.com">
-        </div>
-        <div class="form-group">
-            <label for="contactNumber">Phone Number</label>
-            <input type="tel" id="contactNumber" th:field="*{contactNumber}" class="form-control" required placeholder="e.g., 0771234567">
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" th:field="*{password}" class="form-control" required placeholder="••••••••">
-        </div>
-        <div class="form-group">
-            <label for="confirmPassword">Confirm Password</label>
-            <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" required placeholder="••••••••">
-        </div>
-        <div class="form-group">
-            <label for="role">I am a...</label>
-            <select id="role" th:field="*{role}" class="form-control" required>
-                <option value="" disabled selected>Select your role</option>
-                <option value="STUDENT">Student looking for a room</option>
-                <option value="OWNER">Property Owner</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
-    </form>
-    <p style="text-align: center; margin-top: 2rem; color: var(--text-muted);">
-        Already have an account? <a href="/login" style="color: var(--primary); text-decoration: none; font-weight: 600;">Log In</a>
-    </p>
+
+<!-- Left decorative panel -->
+<div class="panel-left">
+    <a href="/" class="panel-brand">Nboard</a>
+    <div class="panel-copy">
+        <h2>Your home away from home starts here.</h2>
+        <p>Join thousands of students who found safe, comfortable boarding near NSBM Green University.</p>
+    </div>
+    <div class="panel-dots">
+        <span class="active"></span>
+        <span></span>
+        <span></span>
+    </div>
 </div>
+
+<!-- Right form panel -->
+<div class="panel-right">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Create account</h1>
+            <p>Fill in your details to get started.</p>
+        </div>
+
+        <form th:action="@{/register}" th:object="${user}" method="post">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" th:field="*{fullName}" class="form-control" required placeholder="E P Theekshana">
+                </div>
+                <div class="form-group">
+                    <label for="contactNumber">Phone</label>
+                    <input type="tel" id="contactNumber" th:field="*{contactNumber}" class="form-control" required placeholder="0771234567">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" th:field="*{email}" class="form-control" required placeholder="you@example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="role">I am a...</label>
+                <select id="role" th:field="*{role}" class="form-control" required>
+                    <option value="" disabled selected>Select your role</option>
+                    <option value="STUDENT">Student looking for a room</option>
+                    <option value="OWNER">Property Owner</option>
+                </select>
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" th:field="*{password}" class="form-control" required placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm</label>
+                    <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" required placeholder="••••••••">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Create Account</button>
+        </form>
+
+        <p class="auth-footer">
+            Already have an account? <a href="/login">Log in</a>
+        </p>
+    </div>
+</div>
+
 </body>
 </html>

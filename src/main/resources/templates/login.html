@@ -4,31 +4,315 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Nboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:          #F0F5F1;
+            --bg-dark:     #DFF0E3;
+            --ink:         #0D1F14;
+            --ink-muted:   #2D4A36;
+            --ink-faint:   #5A7A63;
+            --green:       #2E7D4F;
+            --green-light: #4CAF72;
+            --green-pale:  #E8F5EC;
+            --white:       #F7FDF9;
+            --border:      rgba(13,31,20,0.12);
+            --border-mid:  rgba(13,31,20,0.2);
+            --error-bg:    #FDF0EF;
+            --error-text:  #922B21;
+            --error-border:rgba(192,57,43,0.25);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* ── LEFT PANEL ── */
+        .panel-left {
+            background: var(--ink);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-left::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -80px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50% 40% 60% 30% / 40% 60% 40% 60%;
+            background: rgba(46,125,79,0.15);
+        }
+
+        .panel-left::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: -60px;
+            width: 300px;
+            height: 300px;
+            border-radius: 40% 60% 30% 70%;
+            background: rgba(46,125,79,0.1);
+        }
+
+        .panel-brand {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 0.01em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-copy {
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-copy h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            font-weight: 600;
+            color: var(--white);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .panel-copy p {
+            font-size: 0.9rem;
+            color: rgba(247,253,249,0.5);
+            line-height: 1.7;
+            font-weight: 300;
+            max-width: 300px;
+        }
+
+        .panel-dots {
+            display: flex;
+            gap: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(247,253,249,0.2);
+        }
+
+        .panel-dots span.active {
+            background: var(--green-light);
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        /* ── RIGHT PANEL ── */
+        .panel-right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 380px;
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── HEADER ── */
+        .auth-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .auth-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: var(--ink);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.4rem;
+        }
+
+        .auth-header p {
+            font-size: 0.85rem;
+            color: var(--ink-faint);
+            font-weight: 300;
+        }
+
+        /* ── ALERT ── */
+        .alert-error {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            border-left: 3px solid var(--error-text);
+            color: var(--error-text);
+            padding: 0.8rem 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.6rem;
+            font-size: 0.83rem;
+            font-weight: 500;
+        }
+
+        .alert-error i { font-size: 1rem; flex-shrink: 0; }
+
+        /* ── FORM ── */
+        .form-group { margin-bottom: 1.1rem; }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.72rem 0.9rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--ink);
+            background: var(--white);
+            border: 1px solid var(--border-mid);
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-control::placeholder {
+            color: var(--ink-faint);
+            font-weight: 300;
+        }
+
+        .form-control:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(46,125,79,0.1);
+        }
+
+        /* ── SUBMIT ── */
+        .btn-submit {
+            width: 100%;
+            padding: 0.85rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--white);
+            background: var(--green);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1.4rem;
+            transition: background 0.2s, transform 0.15s;
+        }
+
+        .btn-submit:hover { background: var(--ink); }
+        .btn-submit:active { transform: scale(0.99); }
+
+        /* ── FOOTER LINK ── */
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.8rem;
+            font-size: 0.82rem;
+            color: var(--ink-faint);
+        }
+
+        .auth-footer a {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover { text-decoration: underline; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            body { grid-template-columns: 1fr; }
+            .panel-left { display: none; }
+            .panel-right { padding: 3rem 1.5rem; align-items: flex-start; }
+        }
+    </style>
 </head>
 <body>
-<div class="auth-card">
-    <h1>Welcome Back</h1>
-    <div th:if="${param.error}" class="alert alert-danger">
-        <i class="ph-fill ph-warning-circle"></i>
-        <span>Invalid username or password. Please try again.</span>
+
+<!-- Left decorative panel -->
+<div class="panel-left">
+    <a href="/" class="panel-brand">Nboard</a>
+    <div class="panel-copy">
+        <h2>Good to have you back.</h2>
+        <p>Log in to manage your listings or find your next boarding place near NSBM.</p>
     </div>
-    <form th:action="@{/login}" method="post">
-        <div class="form-group">
-            <label for="username">Email Address</label>
-            <input type="email" id="username" name="username" class="form-control" required placeholder="you@example.com">
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" class="form-control" required placeholder="••••••••">
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
-    </form>
-    <p style="text-align: center; margin-top: 2rem; color: var(--text-muted);">
-        Don't have an account? <a href="/register" style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign Up</a>
-    </p>
+    <div class="panel-dots">
+        <span></span>
+        <span class="active"></span>
+        <span></span>
+    </div>
 </div>
+
+<!-- Right form panel -->
+<div class="panel-right">
+    <div class="auth-card">
+
+        <div class="auth-header">
+            <h1>Welcome back</h1>
+            <p>Sign in to your Nboard account.</p>
+        </div>
+
+        <div th:if="${param.error}" class="alert-error">
+            <i class="ph-fill ph-warning-circle"></i>
+            <span>Invalid email or password. Please try again.</span>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="username">Email Address</label>
+                <input type="email" id="username" name="username" class="form-control"
+                       required placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control"
+                       required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+
+        <p class="auth-footer">
+            Don't have an account? <a href="/register">Sign up</a>
+        </p>
+
+    </div>
+</div>
+
 </body>
 </html>
