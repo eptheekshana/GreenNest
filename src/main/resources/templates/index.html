@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nboard - Find Your Perfect Boarding Near NSBM</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap"
+            rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
@@ -464,84 +464,84 @@
 
 <body>
 
-    <nav class="top-nav">
+<nav class="top-nav">
+    <div class="container">
+        <a href="/" class="brand">Nboard</a>
+        <div class="nav-links">
+            <a href="/" class="active">Home</a>
+            <a href="/properties">Listings</a>
+            <div sec:authorize="!isAuthenticated()" class="nav-auth-buttons">
+                <a href="/login">Login</a>
+                <a href="/register" class="nav-button">Register</a>
+            </div>
+            <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
+                <a href="/owner/dashboard">Dashboard</a>
+                <a href="/logout" class="nav-button">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main>
+
+    <section class="hero" data-reveal>
         <div class="container">
-            <a href="/" class="brand">Nboard</a>
-            <div class="nav-links">
-                <a href="/" class="active">Home</a>
-                <a href="/properties">Listings</a>
-                <div sec:authorize="!isAuthenticated()" class="nav-auth-buttons">
-                    <a href="/login">Login</a>
-                    <a href="/register" class="nav-button">Register</a>
+            <div class="hero-eyebrow">
+                <i class="ph-bold ph-map-pin"></i> Near NSBM Green University
+            </div>
+            <h1>Find Your <em>Perfect</em><br>Boarding Place</h1>
+            <p>The simplest, most trusted way to discover and book boarding places near NSBM Green University.</p>
+            <div class="hero-actions">
+                <a href="/properties" class="btn btn-primary">
+                    <i class="ph-bold ph-magnifying-glass"></i> Browse Listings
+                </a>
+                <a href="/register" class="btn btn-secondary" sec:authorize="!isAuthenticated()">
+                    <i class="ph-bold ph-user-plus"></i> Become a Host
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" data-reveal>
+        <div class="section-header">
+            <div class="section-header-left">
+                <p class="section-label">Hand-picked stays</p>
+                <h2>Featured Properties</h2>
+            </div>
+            <p>Clean, safe, and close to campus — curated for students.</p>
+        </div>
+
+        <div class="property-grid" th:if="${not #lists.isEmpty(properties)}">
+            <div class="property-card" th:each="property, iterStat : ${properties}"
+                 th:style="'animation-delay: ' + ${iterStat.index * 80} + 'ms'">
+                <div class="property-image-wrapper">
+                    <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
+                         alt="Property image" class="property-image">
                 </div>
-                <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
-                    <a href="/owner/dashboard">Dashboard</a>
-                    <a href="/logout" class="nav-button">Logout</a>
+                <div class="property-body">
+                    <h3 th:text="${property.title}">Property Title</h3>
+                    <p class="property-location" th:text="${property.location}">Location</p>
+                    <div class="property-footer">
+                        <strong
+                                th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')} + ' / mo'">LKR
+                            0 / mo</strong>
+                        <a th:href="@{/property-details/{id}(id=${property.id})}">
+                            View Details <i class="ph-bold ph-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </nav>
 
-    <main>
+        <div th:if="${#lists.isEmpty(properties)}" class="empty-state" data-reveal>
+            <i class="ph-bold ph-house-simple"></i>
+            <p>No properties available at the moment. Please check back soon!</p>
+        </div>
+    </section>
 
-        <section class="hero" data-reveal>
-            <div class="container">
-                <div class="hero-eyebrow">
-                    <i class="ph-bold ph-map-pin"></i> Near NSBM Green University
-                </div>
-                <h1>Find Your <em>Perfect</em><br>Boarding Place</h1>
-                <p>The simplest, most trusted way to discover and book boarding places near NSBM Green University.</p>
-                <div class="hero-actions">
-                    <a href="/properties" class="btn btn-primary">
-                        <i class="ph-bold ph-magnifying-glass"></i> Browse Listings
-                    </a>
-                    <a href="/register" class="btn btn-secondary" sec:authorize="!isAuthenticated()">
-                        <i class="ph-bold ph-user-plus"></i> Become a Host
-                    </a>
-                </div>
-            </div>
-        </section>
+</main>
 
-        <section class="container" data-reveal>
-            <div class="section-header">
-                <div class="section-header-left">
-                    <p class="section-label">Hand-picked stays</p>
-                    <h2>Featured Properties</h2>
-                </div>
-                <p>Clean, safe, and close to campus — curated for students.</p>
-            </div>
-
-            <div class="property-grid" th:if="${not #lists.isEmpty(properties)}">
-                <div class="property-card" th:each="property, iterStat : ${properties}"
-                    th:style="'animation-delay: ' + ${iterStat.index * 80} + 'ms'">
-                    <div class="property-image-wrapper">
-                        <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
-                            alt="Property image" class="property-image">
-                    </div>
-                    <div class="property-body">
-                        <h3 th:text="${property.title}">Property Title</h3>
-                        <p class="property-location" th:text="${property.location}">Location</p>
-                        <div class="property-footer">
-                            <strong
-                                th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')} + ' / mo'">LKR
-                                0 / mo</strong>
-                            <a th:href="@{/property-details/{id}(id=${property.id})}">
-                                View Details <i class="ph-bold ph-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div th:if="${#lists.isEmpty(properties)}" class="empty-state" data-reveal>
-                <i class="ph-bold ph-house-simple"></i>
-                <p>No properties available at the moment. Please check back soon!</p>
-            </div>
-        </section>
-
-    </main>
-
-    <script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/app.js}"></script>
 </body>
 
 </html>
