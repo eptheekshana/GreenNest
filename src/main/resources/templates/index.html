@@ -428,7 +428,7 @@
             <a href="/listings">Listings</a>
             <div sec:authorize="!isAuthenticated()" class="nav-auth-buttons">
                 <a href="/login">Login</a>
-                <a href="/register" class="nav-button">Register</a>
+                <a href="/signup" class="nav-button">Register</a>
             </div>
             <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
                 <a href="/owner/dashboard">Dashboard</a>
@@ -448,7 +448,7 @@
             <h1>Find Your <em>Perfect</em><br>Boarding Place</h1>
             <p>The simplest, most trusted way to discover and book boarding places near NSBM Green University.</p>
             <div class="hero-actions">
-                <a href="/properties" class="btn btn-primary">
+                <a href="/listings" class="btn btn-primary">
                     <i class="ph-bold ph-magnifying-glass"></i> Browse Listings
                 </a>
                 <a href="/register" class="btn btn-secondary" sec:authorize="!isAuthenticated()">
