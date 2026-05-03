@@ -1,12 +1,13 @@
-/* Premium Modern UI Design System for Nboard */
+/* Premium Modern UI Design System for Nboard - Green Theme */
 :root {
-    --primary: #10b981;
-    --primary-dark: #059669;
-    --primary-light: #d1fae5;
-    --accent: #6366f1;
+    --primary: #16a34a;
+    --primary-dark: #15803d;
+    --primary-light: #dcfce7;
+    --accent: #4b5563;
     --text-heading: #1f2937;
     --text-body: #374151;
     --text-muted: #6b7280;
+    --text-on-primary: #ffffff;
     --bg-light: #f9fafb;
     --surface: #ffffff;
     --border: #e5e7eb;
@@ -71,9 +72,35 @@ body {
 .nav-button:hover { background: var(--primary-dark); box-shadow: var(--shadow-md); transform: translateY(-1px); }
 
 /* --- Hero Section --- */
-.hero { text-align: center; padding: 6rem 1.5rem; }
-.hero h1 { font-size: 3.8rem; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 1.2rem; }
-.hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2.5rem; }
+.hero {
+    text-align: center;
+    padding: 6rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    color: var(--text-on-primary);
+}
+.hero h1 {
+    font-size: 3.8rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    margin-bottom: 1.2rem;
+    color: var(--text-on-primary);
+}
+.hero p {
+    font-size: 1.25rem;
+    color: var(--primary-light);
+    opacity: 0.9;
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+}
+.hero .btn-primary {
+    background: var(--surface);
+    color: var(--primary-dark);
+}
+.hero .btn-secondary {
+    background: transparent;
+    color: var(--text-on-primary);
+    border-color: rgba(255, 255, 255, 0.5);
+}
 
 /* --- Buttons --- */
 .btn {
@@ -128,7 +155,7 @@ body {
     border: 1px solid var(--border);
     transition: var(--transition-slow);
     overflow: hidden;
-    will-change: transform; /* Performance hint */
+    will-change: transform;
 }
 .property-image-wrapper { overflow: hidden; }
 .property-image {
