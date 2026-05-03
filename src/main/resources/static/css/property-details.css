@@ -1,70 +1,99 @@
-/* Property Details Page Styles */
-body {
-    font-family: 'Outfit', sans-serif;
-    background-color: #f8f9fa;
-    color: #343a40;
-    margin: 0;
+/* Property Details Page - Enhanced Styles */
+.details-header {
+    margin: 4rem 0 2rem;
+}
+.details-header h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 0.5rem;
+}
+.details-header .location {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem;
+.photo-gallery {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
 }
-
-.property-header {
-    margin-bottom: 2rem;
-}
-
-.property-header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.property-location {
-    font-size: 1.1rem;
-    color: #6c757d;
-}
-
-.property-image {
-    width: 100%;
-    height: 400px;
+.main-photo {
+    height: 100%;
+    min-height: 400px;
     object-fit: cover;
-    border-radius: 0.5rem;
-    margin-bottom: 2rem;
+}
+.thumbnail-grid {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+}
+.thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.property-details {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+.details-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    margin-top: 3rem;
+    align-items: flex-start;
+}
+@media (min-width: 992px) {
+    .details-body {
+        grid-template-columns: 2fr 1fr;
+    }
 }
 
-.property-details h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-.property-details p {
-    line-height: 1.8;
-}
-
-.property-price {
+.property-description h2 {
     font-size: 1.8rem;
     font-weight: 700;
-    color: #27ae60;
-    margin-bottom: 2rem;
+    letter-spacing: -0.02em;
+    margin-top: 0;
+}
+.property-description p {
+    line-height: 1.8;
+    color: var(--text-body);
+    font-size: 1.1rem;
 }
 
-.btn-primary {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background: #27ae60;
-    color: #ffffff;
-    border-radius: 0.25rem;
-    text-decoration: none;
+.booking-card {
+    background: var(--surface);
+    padding: 2.5rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    position: sticky;
+    top: 120px;
+    border: 1px solid var(--border);
+}
+.booking-card .price {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+.booking-card .price-period {
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+}
+.booking-card .btn {
+    width: 100%;
+    text-align: center;
+}
+.owner-info {
+    margin-top: 2.5rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+.owner-info .owner-name {
+    color: var(--text-heading);
     font-weight: 600;
 }

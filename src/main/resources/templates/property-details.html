@@ -6,38 +6,8 @@
     <title th:text="${property.title} + ' - Nboard'">Property Details</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+    <link rel="stylesheet" th:href="@{/css/property-details.css}">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <style>
-        .property-details-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 3rem;
-            margin-top: 4rem;
-            align-items: flex-start;
-        }
-        @media (min-width: 992px) {
-            .property-details-grid {
-                grid-template-columns: 2fr 1fr;
-            }
-        }
-        .property-main-image {
-            width: 100%;
-            height: auto;
-            max-height: 600px;
-            object-fit: cover;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-        }
-        .property-info-card {
-            background: var(--surface);
-            padding: 2.5rem;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            position: sticky;
-            top: 120px;
-            border: 1px solid var(--border);
-        }
-    </style>
 </head>
 <body>
 <nav class="top-nav">
@@ -59,26 +29,32 @@
 </nav>
 
 <main class="container" data-reveal>
-    <div class="property-details-grid">
-        <div data-reveal>
-            <h1 th:text="${property.title}" style="font-size: 2.8rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.5rem;">Property Title</h1>
-            <p class="property-location" th:text="${property.location}" style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 2.5rem;">Location</p>
-            <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
-                 alt="Property image" class="property-main-image" data-reveal>
-            <div style="margin-top: 3rem;" data-reveal>
-                <h2 style="font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em;">About this property</h2>
-                <p th:text="${property.description}" style="line-height: 1.8; color: var(--text-body); font-size: 1.1rem;">Description of the property.</p>
-            </div>
+    <header class="details-header">
+        <h1 th:text="${property.title}">Property Title</h1>
+        <p class="location"><i class="ph-bold ph-map-pin"></i> <span th:text="${property.location}">Location</span></p>
+    </header>
+
+    <div class="photo-gallery" data-reveal>
+        <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}" alt="Main property view" class="main-photo">
+        <div class="thumbnail-grid">
+            <img src="https://placehold.co/600x400/e2e8f0/334155?text=Room" alt="Thumbnail 1" class="thumbnail">
+            <img src="https://placehold.co/600x400/e2e8f0/334155?text=Bathroom" alt="Thumbnail 2" class="thumbnail">
         </div>
-        <div class="property-info-card" data-reveal>
-            <div style="font-size: 2.2rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;"
-                 th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">LKR 0</div>
-            <div style="color: var(--text-muted); margin-bottom: 2.5rem;">per month</div>
-            <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;"><i class="ph-bold ph-phone"></i> Contact Owner</a>
-            <div style="margin-top: 2.5rem; text-align: center; color: var(--text-muted);">
-                <p style="font-weight: 500;">Hosted by <span th:text="${property.owner.fullName}" style="color: var(--text-heading); font-weight: 600;">Owner Name</span></p>
-            </div>
+    </div>
+
+    <div class="details-body">
+        <div class="property-description" data-reveal>
+            <h2>About this property</h2>
+            <p th:text="${property.description}">Description of the property.</p>
         </div>
+        <aside class="booking-card" data-reveal>
+            <div class="price" th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">LKR 0</div>
+            <div class="price-period">per month</div>
+            <a href="#" class="btn btn-primary"><i class="ph-bold ph-phone"></i> Contact Owner</a>
+            <div class="owner-info">
+                <p>Hosted by <span class="owner-name" th:text="${property.owner.fullName}">Owner Name</span></p>
+            </div>
+        </aside>
     </div>
 </main>
 
