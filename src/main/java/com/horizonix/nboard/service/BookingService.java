@@ -20,6 +20,11 @@ public class BookingService {
     //Logic for "Request Visit": Saves a new booking with PENDING status.
 
     public void createVisitRequest(Property property, User student) {
+        // Prevent duplicate bookings for the same property by the same student
+        if (bookingRepository.existsByStudentAndProperty(student, property)) {
+            throw new IllegalStateException("You have already requested a visit for this property.");
+        }
+
         Booking booking = new Booking();
         booking.setProperty(property);
         booking.setStudent(student);

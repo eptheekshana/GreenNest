@@ -141,9 +141,24 @@ public class PropertyController {
 
     // --- 7. OWNER: DELETE PROPERTY ---
     @GetMapping("/owner/delete/{id}")
-    public String deleteProperty(@PathVariable Long id) {
-        propertyService.deleteProperty(id);
-        return "redirect:/owner/dashboard?deleted";
+    public String deleteProperty(@PathVariable Long id, Principal principal, RedirectAttributes redirectAttributes) {
+        try {
+            User user = userService.findByEmail(principal.getName());
+            Property property = propertyService.getPropertyById(id);
+            
+            // Security check: Verify the owner owns this property
+            if (!property.getOwner().getId().equals(user.getId())) {
+                redirectAttributes.addFlashAttribute("error", "You cannot delete this property.");
+                return "redirect:/owner/dashboard?error=not-owner";
+            }
+            
+            propertyService.deleteProperty(id);
+            redirectAttributes.addFlashAttribute("success", "Property deleted successfully.");
+        } catch (Exception e) {
+            logger.error("Error deleting property", e);
+            redirectAttributes.addFlashAttribute("error", "Failed to delete property: " + e.getMessage());
+        }
+        return "redirect:/owner/dashboard";
     }
 
     // --- OWNER: PROPERTY SUBMITTED CONFIRMATION ---

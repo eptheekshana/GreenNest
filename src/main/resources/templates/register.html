@@ -32,6 +32,13 @@
             <p>Get started with Nboard today.</p>
         </div>
 
+        <!-- Error Messages Display -->
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+            <ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
+
         <form th:action="@{/register}" th:object="${user}" method="post" onsubmit="return validatePassword()">
             <div class="form-group">
                 <label for="fullName">Full Name</label>
