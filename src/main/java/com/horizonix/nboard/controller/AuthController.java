@@ -77,8 +77,8 @@ public class AuthController {
         try {
             String verificationUrl = userService.saveUser(user, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
             logger.info("User registered successfully: {} with role: {}", user.getEmail(), user.getRole());
-            // If verificationUrl is returned (SendGrid not configured) we still redirect to login
-            return "redirect:/login?verificationSent";
+            // Redirect to registration success page with instructions
+            return "redirect:/registration-success";
         } catch (IllegalStateException e) {
             logger.error("Email verification configuration failed for {}", user.getEmail(), e);
             result.reject("registration.email", e.getMessage());
@@ -98,5 +98,10 @@ public class AuthController {
         }
 
         return "redirect:/login?verified";
+    }
+
+    @GetMapping("/registration-success")
+    public String showRegistrationSuccess() {
+        return "registration-success";
     }
 }
