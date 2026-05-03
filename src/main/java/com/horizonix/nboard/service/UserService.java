@@ -38,11 +38,6 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("Please verify your email before logging in.");
         }
 
-        // Check if user is verified (especially for OWNER role)
-        if (!user.isVerified() && user.getRole() == Role.OWNER) {
-            logger.warn("OWNER user not verified: {}", email);
-            throw new UsernameNotFoundException("Your account is pending admin verification. Please wait for approval.");
-        }
 
         // Check if user is enabled
         if (!user.isEnabled()) {
@@ -76,11 +71,8 @@ public class UserService implements UserDetailsService {
         user.setEnabled(true);
         user.setEmailVerified(false);
 
-        if (user.getRole() == Role.OWNER) {
-            user.setVerified(false); // Owners need admin approval
-        } else {
-            user.setVerified(true); // Students are immediately verified
-        }
+        // Both STUDENT and OWNER are immediately verified - only email verification required
+        user.setVerified(true);
 
         User savedUser = userRepository.save(user);
         try {
@@ -110,6 +102,7 @@ public class UserService implements UserDetailsService {
 
         user.setEmailVerified(true);
         user.setEnabled(true);
+        user.setVerified(true); // Account is fully activated after email verification
         user.setVerificationToken(null);
         user.setVerificationTokenExpiresAt(null);
         userRepository.save(user);
