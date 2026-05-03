@@ -647,10 +647,10 @@
         <a href="/" class="brand">Nboard</a>
         <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/signup">Listings</a>
+            <a href="/listings">Listings</a>
             <div sec:authorize="!isAuthenticated()" class="nav-auth-buttons">
                 <a href="/login">Login</a>
-                <a href="/register" class="nav-button">Register</a>
+                <a href="/signup" class="nav-button">Register</a>
             </div>
             <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
                 <a href="/owner/dashboard">Dashboard</a>
@@ -877,10 +877,10 @@
                 <p>Join thousands of boarders and owners on Sri Lanka's most trusted boarding platform.</p>
             </div>
             <div class="cta-actions">
-                <a href="/properties" class="btn btn-light">
+                <a href="/listings" class="btn btn-light">
                     <i class="ph-bold ph-house"></i> Browse Listings
                 </a>
-                <a href="/register" class="btn btn-outline-light">
+                <a href="/signup" class="btn btn-outline-light">
                     <i class="ph-bold ph-user-plus"></i> Create Account
                 </a>
             </div>
