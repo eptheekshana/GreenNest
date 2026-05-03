@@ -24,7 +24,6 @@ public class SecurityConfig {
                                                    DaoAuthenticationProvider daoAuthenticationProvider,
                                                    JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 
                 // --- 1. PERMISSIONS ---
