@@ -1,101 +1,107 @@
 package com.horizonix.nboard.service;
 
 import com.horizonix.nboard.entity.User;
-import com.sendgrid.Method;
-import com.sendgrid.Request;
-import com.sendgrid.Response;
-import com.sendgrid.SendGrid;
-import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
-import com.sendgrid.helpers.mail.objects.Email;
-import com.sendgrid.helpers.mail.objects.Personalization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EmailVerificationService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmailVerificationService.class);
 
-	@Value("${sendgrid.api-key:}")
-	private String sendGridApiKey;
+	@Value("${resend.api-key:}")
+	private String resendApiKey;
 
-	@Value("${sendgrid.from-email:}")
+	@Value("${resend.from-email:noreply@nboard.com}")
 	private String fromEmail;
 
-	@Value("${sendgrid.from-name:Nboard}")
+	@Value("${resend.from-name:Nboard}")
 	private String fromName;
-
-	@Value("${sendgrid.data-residency:eu}")
-	private String dataResidency;
 
 	@Value("${app.base-url:http://localhost:8080}")
 	private String appBaseUrl;
 
+	@Autowired
+	private RestTemplate restTemplate;
+
 	/**
-	 * Send verification email via SendGrid. Returns the verification URL so callers
-	 * can use it for testing/fallback. If SendGrid is not configured the method
+	 * Send verification email via Resend. Returns the verification URL so callers
+	 * can use it for testing/fallback. If Resend is not configured the method
 	 * will log the verification URL and return it (no exception) so registration
-	 * can continue in environments where SendGrid is unavailable.
+	 * can continue in environments where Resend is unavailable.
 	 */
 	public String sendVerificationEmail(User user, String token, String baseUrl) {
 		String verificationUrl = buildVerificationUrl(token, baseUrl);
 
-		if (sendGridApiKey == null || sendGridApiKey.isBlank()) {
+		if (resendApiKey == null || resendApiKey.isBlank()) {
 			// Fallback: log and return the verification URL instead of failing
-			logger.warn("SendGrid API key is not configured. Verification URL for {}: {}", user.getEmail(), verificationUrl);
+			logger.warn("Resend API key is not configured. Verification URL for {}: {}", user.getEmail(), verificationUrl);
 			return verificationUrl;
 		}
 
 		if (fromEmail == null || fromEmail.isBlank()) {
 			// Fallback: log and return the verification URL instead of failing
-			logger.warn("SendGrid sender email is not configured. Verification URL for {}: {}", user.getEmail(), verificationUrl);
+			logger.warn("Resend sender email is not configured. Verification URL for {}: {}", user.getEmail(), verificationUrl);
 			return verificationUrl;
 		}
 
 		try {
-			SendGrid sendGrid = new SendGrid(sendGridApiKey);
-			sendGrid.setDataResidency(dataResidency == null || dataResidency.isBlank() ? "eu" : dataResidency.trim());
-
-			Mail mail = new Mail();
-			mail.setFrom(new Email(fromEmail, fromName));
-			mail.setSubject("Verify your Nboard account");
-
-			Personalization personalization = new Personalization();
-			personalization.addTo(new Email(user.getEmail(), user.getFullName()));
-			mail.addPersonalization(personalization);
+			// Prepare email content
+			String htmlBody = "<p>Hello " + user.getFullName() + ",</p>"
+					+ "<p>Please verify your email address by clicking the link below:</p>"
+					+ "<p><a href=\"" + verificationUrl + "\" style=\"background-color: #2E7D4F; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;\">Verify my email</a></p>"
+					+ "<p>This link will expire in 24 hours.</p>";
 
 			String textBody = "Hello " + user.getFullName() + ",\n\n"
 					+ "Please verify your email address by clicking the link below:\n\n"
 					+ verificationUrl + "\n\n"
 					+ "This link will expire in 24 hours.";
-			mail.addContent(new Content("text/plain", textBody));
-			mail.addContent(new Content("text/html", "<p>Hello " + user.getFullName() + ",</p>"
-					+ "<p>Please verify your email address by clicking the link below:</p>"
-					+ "<p><a href=\"" + verificationUrl + "\">Verify my email</a></p>"
-					+ "<p>This link will expire in 24 hours.</p>"));
 
-			Request request = new Request();
-			request.setMethod(Method.POST);
-			request.setEndpoint("mail/send");
-			request.setBody(mail.build());
+			// Build request body
+			Map<String, Object> emailRequest = new HashMap<>();
+			emailRequest.put("from", fromName + " <" + fromEmail + ">");
+			emailRequest.put("to", user.getEmail());
+			emailRequest.put("subject", "Verify your Nboard account");
+			emailRequest.put("html", htmlBody);
+			emailRequest.put("text", textBody);
 
-			Response response = sendGrid.api(request);
-			if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+			// Set up headers
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Authorization", "Bearer " + resendApiKey);
+			headers.set("Content-Type", "application/json");
+
+			// Make the request to Resend API
+			HttpEntity<Map<String, Object>> request = new HttpEntity<>(emailRequest, headers);
+			ResponseEntity<Map> response = restTemplate.postForEntity(
+					"https://api.resend.com/emails",
+					request,
+					Map.class
+			);
+
+			if (response.getStatusCode() == HttpStatus.OK) {
 				logger.info("Verification email sent to {}", user.getEmail());
 				return verificationUrl;
 			} else {
-				String body = response.getBody();
-				logger.warn("SendGrid returned status {} for {}. Response body: {}", response.getStatusCode(), user.getEmail(), body);
-				throw new IllegalStateException("SendGrid rejected the verification email (status " + response.getStatusCode() + "). Check the verified sender, API key, and SendGrid response body in the logs.");
+				logger.warn("Resend returned status {} for {}. Response: {}", response.getStatusCode(), user.getEmail(), response.getBody());
+				throw new IllegalStateException("Resend rejected the verification email (status " + response.getStatusCode() + "). Check the API key and sender email configuration.");
 			}
-		} catch (IOException ex) {
-			throw new IllegalStateException("Failed to send verification email via SendGrid. Check network access and API key configuration.", ex);
+		} catch (IllegalStateException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			logger.error("Error sending verification email via Resend: {}", ex.getMessage(), ex);
+			throw new IllegalStateException("Failed to send verification email via Resend. Error: " + ex.getMessage(), ex);
 		}
 	}
 
