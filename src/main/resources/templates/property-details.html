@@ -1,174 +1,419 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Property Details - Nboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
-    <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/theme-simple.css}">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .details-container {
+            padding: 3rem 0 6rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--ink-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--green);
+        }
+
+        .details-grid-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .main-image-container {
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            aspect-ratio: 16/9;
+            background: var(--bg);
+        }
+
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .thumbnail-strip {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .thumbnail-btn {
+            border: 2px solid transparent;
+            padding: 0;
+            background: none;
+            cursor: pointer;
+            border-radius: 2px;
+            overflow: hidden;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .thumbnail-btn img {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .thumbnail-btn.active {
+            border-color: var(--green);
+        }
+
+        .property-header-info {
+            margin: 2rem 0;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .property-header-info h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.2rem;
+            color: var(--ink);
+            margin-bottom: 1rem;
+        }
+
+        .property-price {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--green);
+            margin-bottom: 1rem;
+            font-family: 'Syne', sans-serif;
+        }
+
+        .property-price span.period {
+            font-size: 1rem;
+            color: var(--ink-faint);
+            font-weight: 400;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .property-location {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--ink-muted);
+            font-size: 0.95rem;
+        }
+
+        .property-chips {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .chip {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            background: var(--bg-dark);
+            color: var(--ink-muted);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .property-description {
+            margin-bottom: 3rem;
+        }
+
+        .property-description h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--ink);
+        }
+
+        .property-description p {
+            line-height: 1.8;
+            color: var(--ink-muted);
+            font-size: 1rem;
+        }
+
+        .property-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .feature-label {
+            font-size: 0.85rem;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .feature-value {
+            font-weight: 500;
+            color: var(--ink);
+        }
+
+        .owner-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2rem;
+            position: sticky;
+            top: 80px;
+            box-shadow: 0 4px 20px rgba(13,31,20,0.02);
+        }
+
+        .owner-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            color: var(--ink);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .owner-detail {
+            margin-bottom: 1.5rem;
+        }
+
+        .owner-detail-label {
+            font-size: 0.85rem;
+            color: var(--ink-faint);
+            margin-bottom: 0.3rem;
+        }
+
+        .owner-detail-value {
+            font-weight: 500;
+            color: var(--ink);
+        }
+
+        .contact-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.8rem;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            background: transparent;
+            color: var(--ink);
+            border: 1px solid var(--border-mid);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .featured-section {
+            padding: 4rem 0;
+            background: var(--bg-dark);
+            margin-top: 4rem;
+        }
+
+        .featured-section h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .details-grid-layout {
+                grid-template-columns: 1fr;
+            }
+            .owner-card {
+                position: static;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<main class="site-shell">
-    <nav class="site-nav">
-        <a href="/" class="site-brand">N<span>board</span></a>
-        <div class="site-links">
+<nav class="top-nav">
+    <div class="container">
+        <a href="/" class="brand">Nboard</a>
+        <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/properties" class="active">Explore</a>
-            <a href="/login">Login</a>
-        </div>
-    </nav>
-
-<section class="page-header">
-    <a href="/properties" class="back-link">
-        <span>←</span>
-        <span>Back to Listings</span>
-    </a>
-</section>
-
-<section class="details-shell">
-<div class="details-layout">
-    <!-- Left Column: Property Details -->
-    <div class="details-main">
-        <div class="image-container">
-            <img id="mainPropertyImage"
-                 th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
-                 alt="Property Image" class="main-image" onerror="this.src='https://via.placeholder.com/800x400'">
-
-            <div th:if="${not #lists.isEmpty(property.resolvedPhotoUrls)}" class="thumbnail-strip">
-                <button type="button"
-                        class="thumbnail-btn"
-                        th:each="photo, stat : ${property.resolvedPhotoUrls}"
-                        th:classappend="${stat.first} ? ' active' : ''"
-                        th:attr="data-src=${photo}"
-                        onclick="setMainImage(this)">
-                    <img th:src="${photo}" alt="Property thumbnail" onerror="this.src='https://via.placeholder.com/160x120'">
-                </button>
+            <a href="/properties" class="active">Listings</a>
+            <div sec:authorize="!isAuthenticated()" class="nav-auth-buttons">
+                <a href="/login">Login</a>
+                <a href="/register" class="nav-button">Register</a>
             </div>
-
-            <div th:if="${#lists.isEmpty(property.resolvedPhotoUrls)}" class="gallery-empty">
-                No gallery photos available.
+            <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
+                <a href="/owner/dashboard">Dashboard</a>
+                <a href="/logout" class="nav-button">Logout</a>
             </div>
         </div>
-
-        <div class="property-header">
-            <h1 class="property-title" th:text="${property.title}">Property Title</h1>
-            <div class="property-location">
-                <span>📍</span>
-                <span th:text="${property.location}">Location</span>
-            </div>
-            <div class="property-price">
-                Rs. <span th:text="${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">0</span>
-                <span class="price-period">/month</span>
-            </div>
-            <div class="property-meta">
-                <div class="meta-chip" th:text="${property.status}">Approved</div>
-                <div class="meta-chip" th:text="${property.createdAt != null ? #temporals.format(property.createdAt, 'MMM dd, yyyy') : 'Recently added'}">Recently added</div>
-            </div>
-        </div>
-
-        <hr>
-
-        <!-- Description Section -->
-        <div class="description-section">
-            <h3>About this Property</h3>
-            <p class="description-text" th:text="${property.description}">
-                Property description goes here...
-            </p>
-        </div>
-
-        <!-- Details Grid -->
-        <div class="details-grid">
-            <div class="detail-item">
-                <span class="detail-label">Property Type</span>
-                <span class="detail-value">Boarding House</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Posted</span>
-                <span class="detail-value" th:text="${property.createdAt != null ? #temporals.format(property.createdAt, 'MMM dd, yyyy') : 'Recently'}">Recently</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Status</span>
-                <span class="detail-value" th:text="${property.status}">Approved</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">ID</span>
-                <span class="detail-value" th:text="${property.id}">#123</span>
-            </div>
-        </div>
-
-        <a href="/properties" class="btn-back-to-listings">← Browse Other Properties</a>
     </div>
+</nav>
 
-    <!-- Right Column: Owner Contact -->
-    <div class="owner-card details-side">
-        <h3>Owner Details</h3>
+<main class="details-container">
+    <div class="container">
+        <a href="/properties" class="back-link"><i class="ph-bold ph-arrow-left"></i> Back to Listings</a>
 
-        <div class="owner-info">
-            <div class="owner-label">Full Name</div>
-            <div class="owner-value" th:text="${property.owner.fullName}">Owner Name</div>
-        </div>
+        <div class="details-grid-layout">
+            <div class="details-main-content">
+                <div class="main-image-container" data-reveal>
+                    <img id="mainPropertyImage"
+                         th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
+                         alt="Property Image" class="main-image" onerror="this.src='https://placehold.co/800x450?text=No+Image'">
+                </div>
 
-        <div class="owner-info">
-            <div class="owner-label">Email Address</div>
-            <div class="owner-value" th:text="${property.owner.email}">owner@example.com</div>
-        </div>
+                <div th:if="${not #lists.isEmpty(property.resolvedPhotoUrls)}" class="thumbnail-strip" data-reveal>
+                    <button type="button"
+                            class="thumbnail-btn"
+                            th:each="photo, stat : ${property.resolvedPhotoUrls}"
+                            th:classappend="${stat.first} ? ' active' : ''"
+                            th:attr="data-src=${photo}"
+                            onclick="setMainImage(this)">
+                        <img th:src="${photo}" alt="Thumbnail" onerror="this.src='https://placehold.co/100x70?text=img'">
+                    </button>
+                </div>
 
-        <div class="owner-info" th:if="${property.owner.contactNumber}">
-            <div class="owner-label">Contact Number</div>
-            <div class="owner-value" th:text="${property.owner.contactNumber}">+94 XX XXX XXXX</div>
-        </div>
+                <div class="property-header-info" data-reveal>
+                    <div class="property-price">
+                        LKR <span th:text="${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')}">0</span> <span class="period">/ month</span>
+                    </div>
+                    <h1 th:text="${property.title}">Property Title</h1>
+                    <div class="property-location">
+                        <i class="ph-bold ph-map-pin"></i> <span th:text="${property.location}">Location</span>
+                    </div>
+                    <div class="property-chips">
+                        <span class="chip" th:text="${property.status}">Status</span>
+                        <span class="chip" th:text="${property.createdAt != null ? #temporals.format(property.createdAt, 'MMM dd, yyyy') : 'Recently added'}">Date</span>
+                    </div>
+                </div>
 
-        <a th:href="'mailto:' + ${property.owner.email}" class="btn-contact">
-            📧 Contact Owner via Email
-        </a>
+                <div class="property-description" data-reveal>
+                    <h3>About this property</h3>
+                    <p th:text="${property.description}">Description goes here.</p>
+                </div>
 
-        <a th:href="'tel:' + ${property.owner.contactNumber}" class="btn-contact" th:if="${property.owner.contactNumber}" style="margin-top: 10px;">
-            📞 Call Owner
-        </a>
-    </div>
-</div>
-</section>
-
-<section class="featured-wrapper" th:if="${not #lists.isEmpty(featuredProperties)}">
-    <h2 class="featured-title">Featured Boardings</h2>
-    <div class="featured-grid">
-        <a th:each="featured : ${featuredProperties}"
-           th:href="@{/property-details/{id}(id=${featured.id})}"
-           class="featured-card">
-            <img class="featured-image"
-                 th:src="${featured.primaryPhotoUrl != null ? featured.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
-                 alt="Featured Property"
-                 onerror="this.src='https://placehold.co/600x400/f1f5f9/94a3b8?text=No+Image'">
-            <div class="featured-body">
-                <div class="featured-card-title" th:text="${featured.title}">Property Title</div>
-                <div class="featured-card-location" th:text="${featured.location}">Location</div>
-                <div class="featured-card-price" th:text="'Rs. ' + ${#numbers.formatDecimal(featured.price, 1, 0, 'DEFAULT')}">Rs. 0</div>
+                <div class="property-features" data-reveal>
+                    <div class="feature-item">
+                        <span class="feature-label">Property ID</span>
+                        <span class="feature-value" th:text="'#' + ${property.id}">#123</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-label">Property Type</span>
+                        <span class="feature-value">Boarding Place</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-label">Status</span>
+                        <span class="feature-value" th:text="${property.status}">Active</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-label">Listed On</span>
+                        <span class="feature-value" th:text="${property.createdAt != null ? #temporals.format(property.createdAt, 'MMM dd, yyyy') : 'Recently'}">Date</span>
+                    </div>
+                </div>
             </div>
-        </a>
+
+            <div class="details-sidebar" data-reveal>
+                <div class="owner-card">
+                    <h3>Owner Details</h3>
+                    
+                    <div class="owner-detail">
+                        <div class="owner-detail-label">Name</div>
+                        <div class="owner-detail-value" th:text="${property.owner.fullName}">Owner Name</div>
+                    </div>
+
+                    <div class="owner-detail">
+                        <div class="owner-detail-label">Email</div>
+                        <div class="owner-detail-value" th:text="${property.owner.email}">owner@example.com</div>
+                    </div>
+
+                    <div class="owner-detail" th:if="${property.owner.contactNumber}">
+                        <div class="owner-detail-label">Phone</div>
+                        <div class="owner-detail-value" th:text="${property.owner.contactNumber}">07X XXX XXXX</div>
+                    </div>
+
+                    <div class="contact-actions">
+                        <a th:href="'mailto:' + ${property.owner.email}" class="btn btn-primary">
+                            <i class="ph-bold ph-envelope-simple"></i> Email Owner
+                        </a>
+                        <a th:href="'tel:' + ${property.owner.contactNumber}" class="btn btn-outline" th:if="${property.owner.contactNumber}">
+                            <i class="ph-bold ph-phone"></i> Call Owner
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</section>
 </main>
+
+<section class="featured-section" th:if="${not #lists.isEmpty(featuredProperties)}" data-reveal>
+    <div class="container">
+        <h2>Other properties you might like</h2>
+        <div class="property-grid">
+            <div class="property-card" th:each="featured : ${featuredProperties}">
+                <div class="property-image-wrapper">
+                    <img th:src="${featured.primaryPhotoUrl != null ? featured.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
+                         alt="Property image" class="property-image">
+                </div>
+                <div class="property-body">
+                    <h3 th:text="${featured.title}">Property Title</h3>
+                    <p class="property-location" th:text="${featured.location}">Location</p>
+                    <div class="property-footer">
+                        <strong th:text="'LKR ' + ${#numbers.formatDecimal(featured.price, 1, 0, 'DEFAULT')} + ' / mo'">LKR 0 / mo</strong>
+                        <a th:href="@{/property-details/{id}(id=${featured.id})}">
+                            View Details <i class="ph-bold ph-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <script>
     function setMainImage(button) {
         const mainImage = document.getElementById('mainPropertyImage');
-        if (!mainImage || !button) {
-            return;
-        }
+        if (!mainImage || !button) return;
 
         const src = button.dataset.src;
-        if (src) {
-            mainImage.src = src;
-        }
+        if (src) mainImage.src = src;
 
-        document.querySelectorAll('.thumbnail-btn').forEach((thumb) => {
-            thumb.classList.remove('active');
-        });
+        document.querySelectorAll('.thumbnail-btn').forEach(thumb => thumb.classList.remove('active'));
         button.classList.add('active');
     }
 </script>
-
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>

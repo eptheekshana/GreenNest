@@ -4,105 +4,207 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join Nboard - Create Account</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/register.css}">
-    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
-    <link rel="stylesheet" th:href="@{/css/modern-redesign.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/theme-simple.css}">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .auth-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 61px);
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 10px 30px rgba(13,31,20,0.03);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .auth-header h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: var(--ink-faint);
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-mid);
+            border-radius: 2px;
+            background: var(--bg);
+            color: var(--ink);
+            transition: all 0.2s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--green);
+            background: var(--white);
+            box-shadow: 0 0 0 3px var(--green-pale);
+        }
+
+        .input-group .is-invalid {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .error-msg {
+            display: block;
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
+        }
+
+        .auth-actions {
+            margin-top: 2rem;
+        }
+
+        .auth-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--ink-muted);
+        }
+
+        .auth-footer a {
+            color: var(--green);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            border-left: 4px solid;
+        }
+
+        .alert-danger {
+            background: #fef2f2;
+            color: #991b1b;
+            border-color: #ef4444;
+        }
+    </style>
 </head>
 <body>
 
-<main class="auth-shell">
-    <section class="auth-layout">
-        <div class="auth-side">
-            <h2>Create your Nboard account</h2>
-            <p>Join as a student or property owner and access a cleaner, faster housing experience.</p>
-            <ul>
-                <li>Students can explore trusted boardings</li>
-                <li>Owners can upload and manage listings</li>
-                <li>Admin approval improves platform safety</li>
-            </ul>
+<nav class="top-nav">
+    <div class="container">
+        <a href="/" class="brand">Nboard</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/properties">Listings</a>
         </div>
-
-        <div class="auth-panel">
-<div class="onboarding-card">
-    <div class="card-header">
-        <h2>Nboard</h2>
-        <p class="sub-text">Create your account to get started</p>
     </div>
+</nav>
 
-    <form th:action="@{/register}" th:object="${user}" method="post">
-
-        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
-            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+<div class="auth-container">
+    <div class="auth-card" data-reveal>
+        <div class="auth-header">
+            <h2>Create Account</h2>
+            <p>Join as a student or property owner.</p>
         </div>
 
-        <div class="input-wrapper">
-            <label for="role">I am a:</label>
-            <select id="role" th:field="*{role}"
-                    th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'"
-                    required>
-                <option value="">-- Select your role --</option>
-                <option value="STUDENT">Student (Looking for a place)</option>
-                <option value="OWNER">Property Owner (Listing a place)</option>
-            </select>
-            <span class="error-msg" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
-        </div>
+        <form th:action="@{/register}" th:object="${user}" method="post">
 
-        <div class="input-wrapper">
-            <label for="fullName">Full Name</label>
-            <input type="text" id="fullName" th:field="*{fullName}"
-                   th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'"
-                   placeholder="e.g. Sadewma Marasinghe"
-                   maxlength="255" required>
-            <span class="error-msg" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
-        </div>
+            <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+            </div>
 
-        <div class="input-wrapper">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" th:field="*{email}"
-                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
-                   placeholder="sadew@gmail.com"
-                   maxlength="255" required>
-            <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-        </div>
+            <div class="input-group">
+                <label for="role">I am a:</label>
+                <select id="role" th:field="*{role}" th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'" required>
+                    <option value="">-- Select your role --</option>
+                    <option value="STUDENT">Student (Looking for a place)</option>
+                    <option value="OWNER">Property Owner (Listing a place)</option>
+                </select>
+                <span class="error-msg" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
+            </div>
 
-        <div class="input-wrapper">
-            <label for="contactNumber">Contact Number</label>
-            <input type="tel" id="contactNumber" th:field="*{contactNumber}"
-                   th:classappend="${#fields.hasErrors('contactNumber')} ? 'is-invalid'"
-                   placeholder="07x xxxxxxx"
-                   pattern="[0-9]{10}"
-                   title="Please enter a valid 10-digit mobile number" required>
-            <span class="error-msg" th:if="${#fields.hasErrors('contactNumber')}" th:errors="*{contactNumber}"></span>
-        </div>
+            <div class="input-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" th:field="*{fullName}" th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'" placeholder="e.g. Sadewma Marasinghe" maxlength="255" required>
+                <span class="error-msg" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+            </div>
 
-        <div class="input-wrapper">
-            <label for="password">Password</label>
-            <input type="password" id="password" th:field="*{password}"
-                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
-                   placeholder="Min 6 characters" minlength="6" required>
-            <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-        </div>
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" placeholder="sadew@gmail.com" maxlength="255" required>
+                <span class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            </div>
 
-        <div class="input-wrapper">
-            <label for="confirmPassword">Confirm Password</label>
-            <input type="password" id="confirmPassword" th:field="*{confirmPassword}"
-                   th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
-                   placeholder="Re-enter your password" minlength="6" required>
-            <span class="error-msg" id="confirmPasswordError" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
-        </div>
+            <div class="input-group">
+                <label for="contactNumber">Contact Number</label>
+                <input type="tel" id="contactNumber" th:field="*{contactNumber}" th:classappend="${#fields.hasErrors('contactNumber')} ? 'is-invalid'" placeholder="07x xxxxxxx" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number" required>
+                <span class="error-msg" th:if="${#fields.hasErrors('contactNumber')}" th:errors="*{contactNumber}"></span>
+            </div>
 
-        <button type="submit" class="btn-primary">Create Account</button>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" th:field="*{password}" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" placeholder="Min 6 characters" minlength="6" required>
+                <span class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+            </div>
 
-        <div class="form-footer">
-            <p>Already have an account? <a th:href="@{/login}" class="link-highlight">Log in</a></p>
-        </div>
-    </form>
+            <div class="input-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" th:field="*{confirmPassword}" th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'" placeholder="Re-enter your password" minlength="6" required>
+                <span class="error-msg" id="confirmPasswordError" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+            </div>
+
+            <div class="auth-actions">
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </div>
+
+            <div class="auth-footer">
+                Already have an account? <a th:href="@{/login}">Log in</a>
+            </div>
+        </form>
+    </div>
 </div>
-        </div>
-    </section>
-</main>
 
-<script th:src="@{/js/register.js}"></script>
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>

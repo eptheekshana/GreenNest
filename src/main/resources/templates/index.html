@@ -6,542 +6,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nboard - Find Your Perfect Boarding Near NSBM</title>
     <link
-            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap"
-            rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/modern-ui.css}">
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/theme-simple.css}">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --bg: #F0F5F1;
-            --bg-dark: #DFF0E3;
-            --ink: #0D1F14;
-            --ink-muted: #2D4A36;
-            --ink-faint: #5A7A63;
-            --green: #2E7D4F;
-            --green-light: #4CAF72;
-            --green-pale: #E8F5EC;
-            --white: #F7FDF9;
-            --border: rgba(13, 31, 20, 0.11);
-            --border-mid: rgba(13, 31, 20, 0.18);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            color: var(--ink);
-            min-height: 100vh;
-        }
-
-        /* ── NAV ── */
-        .top-nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(240, 245, 241, 0.88);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .top-nav .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .brand {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.35rem;
-            font-weight: 700;
-            letter-spacing: 0.01em;
-            color: var(--ink);
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            font-size: 0.82rem;
-            font-weight: 400;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--ink-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--green);
-        }
-
-        .nav-auth-buttons {
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-        }
-
-        .nav-button {
-            padding: 0.42rem 1.2rem;
-            border: 1px solid var(--border-mid);
-            border-radius: 2px;
-            color: var(--ink) !important;
-            transition: background 0.2s, color 0.2s !important;
-        }
-
-        .nav-button:hover {
-            background: var(--green) !important;
-            color: var(--white) !important;
-            border-color: var(--green) !important;
-        }
-
-        /* ── CONTAINER ── */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* ── HERO ── */
-        .hero {
-            position: relative;
-            padding: 7rem 0 6rem;
-            overflow: hidden;
-        }
-
-        /* decorative background leaf shapes */
-        .hero::before {
-            content: '';
-            position: absolute;
-            right: -120px;
-            top: -60px;
-            width: 560px;
-            height: 560px;
-            border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
-            background: var(--bg-dark);
-            opacity: 0.7;
-            z-index: 0;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            left: -80px;
-            bottom: -80px;
-            width: 340px;
-            height: 340px;
-            border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%;
-            background: var(--green-pale);
-            opacity: 0.6;
-            z-index: 0;
-        }
-
-        .hero .container {
-            position: relative;
-            z-index: 1;
-            max-width: 760px;
-        }
-
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.72rem;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--green);
-            border: 1px solid rgba(46, 125, 79, 0.3);
-            padding: 0.3rem 0.9rem;
-            border-radius: 2px;
-            margin-bottom: 1.8rem;
-        }
-
-        .hero-eyebrow i {
-            font-size: 0.85rem;
-        }
-
-        .hero h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-            font-weight: 600;
-            line-height: 1.1;
-            letter-spacing: -0.02em;
-            color: var(--ink);
-            margin-bottom: 1.4rem;
-        }
-
-        .hero h1 em {
-            font-style: normal;
-            font-weight: 400;
-            color: var(--green);
-        }
-
-        .hero p {
-            font-size: 1rem;
-            line-height: 1.7;
-            color: var(--ink-muted);
-            font-weight: 300;
-            max-width: 480px;
-            margin-bottom: 2.5rem;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        /* ── BUTTONS ── */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.55rem;
-            padding: 0.85rem 1.8rem;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.82rem;
-            font-weight: 500;
-            letter-spacing: 0.09em;
-            text-transform: uppercase;
-            text-decoration: none;
-            border-radius: 2px;
-            cursor: pointer;
-            transition: all 0.22s;
-        }
-
-        .btn-primary {
-            background: var(--ink);
-            color: var(--bg);
-            border: 1px solid var(--ink);
-        }
-
-        .btn-primary:hover {
-            background: var(--green);
-            border-color: var(--green);
-            color: var(--white);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--ink);
-            border: 1px solid var(--border-mid);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-dark);
-            border-color: var(--green);
-            color: var(--green);
-        }
-
-        /* ── SECTION HEADER ── */
-        .section-header {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            padding: 5rem 0 3rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 3rem;
-        }
-
-        .section-header-left {}
-
-        .section-label {
-            font-size: 0.72rem;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--green);
-            margin-bottom: 0.6rem;
-        }
-
-        .section-header h2 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(1.6rem, 3vw, 2.2rem);
-            font-weight: 600;
-            line-height: 1.15;
-            letter-spacing: -0.02em;
-            color: var(--ink);
-        }
-
-        .section-header p {
-            font-size: 0.9rem;
-            color: var(--ink-faint);
-            font-weight: 300;
-            line-height: 1.6;
-            max-width: 320px;
-            text-align: right;
-        }
-
-        /* ── PROPERTY GRID ── */
-        .property-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5px;
-            background: var(--border);
-            margin-bottom: 6rem;
-            border: 1px solid var(--border);
-        }
-
-        .property-card {
-            background: var(--white);
-            overflow: hidden;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .property-card:hover {
-            transform: translateY(-4px);
-            z-index: 1;
-        }
-
-        .property-image-wrapper {
-            overflow: hidden;
-            height: 220px;
-        }
-
-        .property-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .property-card:hover .property-image {
-            transform: scale(1.05);
-        }
-
-        .property-body {
-            padding: 1.4rem 1.5rem 1.6rem;
-        }
-
-        .property-body h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--ink);
-            margin-bottom: 0.35rem;
-            line-height: 1.3;
-            letter-spacing: -0.01em;
-        }
-
-        .property-location {
-            font-size: 0.78rem;
-            color: var(--ink-faint);
-            letter-spacing: 0.06em;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .property-location::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: var(--green);
-            flex-shrink: 0;
-        }
-
-        .property-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .property-footer strong {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--ink);
-        }
-
-        .property-footer a {
-            font-size: 0.78rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--green);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            transition: gap 0.2s;
-        }
-
-        .property-footer a:hover {
-            gap: 0.6rem;
-        }
-
-        /* ── EMPTY STATE ── */
-        .empty-state {
-            text-align: center;
-            padding: 5rem 2rem;
-            border: 1px solid var(--border);
-            background: var(--white);
-            margin-bottom: 6rem;
-        }
-
-        .empty-state i {
-            font-size: 2.5rem;
-            color: var(--ink-faint);
-            display: block;
-            margin-bottom: 1rem;
-        }
-
-        .empty-state p {
-            font-size: 1rem;
-            color: var(--ink-faint);
-            font-weight: 300;
-        }
-
-        /* ── REVEAL ANIMATIONS ── */
-        [data-reveal] {
-            opacity: 0;
-            transform: translateY(24px);
-            animation: reveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes reveal {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* stagger card reveals */
-        .property-card {
-            animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 1024px) {
-            .property-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 640px) {
-            .property-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-
-            .section-header p {
-                text-align: left;
-            }
-
-            .hero {
-                padding: 5rem 0 4rem;
-            }
-        }
-    </style>
 </head>
 
 <body>
 
-<nav class="top-nav">
-    <div class="container">
-        <a href="/" class="brand">Nboard</a>
-        <div class="nav-links">
-            <a href="/" class="active">Home</a>
-            <a href="/properties">Listings</a>
-            <div sec:authorize="!isAuthenticated()" class="nav-auth-buttons">
-                <a href="/login">Login</a>
-                <a href="/register" class="nav-button">Register</a>
-            </div>
-            <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
-                <a href="/owner/dashboard">Dashboard</a>
-                <a href="/logout" class="nav-button">Logout</a>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<main>
-
-    <section class="hero" data-reveal>
+    <nav class="top-nav">
         <div class="container">
-            <div class="hero-eyebrow">
-                <i class="ph-bold ph-map-pin"></i> Near NSBM Green University
-            </div>
-            <h1>Find Your <em>Perfect</em><br>Boarding Place</h1>
-            <p>The simplest, most trusted way to discover and book boarding places near NSBM Green University.</p>
-            <div class="hero-actions">
-                <a href="/properties" class="btn btn-primary">
-                    <i class="ph-bold ph-magnifying-glass"></i> Browse Listings
-                </a>
-                <a href="/register" class="btn btn-secondary" sec:authorize="!isAuthenticated()">
-                    <i class="ph-bold ph-user-plus"></i> Become a Host
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="container" data-reveal>
-        <div class="section-header">
-            <div class="section-header-left">
-                <p class="section-label">Hand-picked stays</p>
-                <h2>Featured Properties</h2>
-            </div>
-            <p>Clean, safe, and close to campus — curated for students.</p>
-        </div>
-
-        <div class="property-grid" th:if="${not #lists.isEmpty(properties)}">
-            <div class="property-card" th:each="property, iterStat : ${properties}"
-                 th:style="'animation-delay: ' + ${iterStat.index * 80} + 'ms'">
-                <div class="property-image-wrapper">
-                    <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
-                         alt="Property image" class="property-image">
+            <a href="/" class="brand">Nboard</a>
+            <div class="nav-links">
+                <a href="/" class="active">Home</a>
+                <a href="/properties">Listings</a>
+                <div sec:authorize="!isAuthenticated()" class="nav-auth-buttons">
+                    <a href="/login">Login</a>
+                    <a href="/register" class="nav-button">Register</a>
                 </div>
-                <div class="property-body">
-                    <h3 th:text="${property.title}">Property Title</h3>
-                    <p class="property-location" th:text="${property.location}">Location</p>
-                    <div class="property-footer">
-                        <strong
+                <div sec:authorize="isAuthenticated()" class="nav-auth-buttons">
+                    <a href="/owner/dashboard">Dashboard</a>
+                    <a href="/logout" class="nav-button">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+
+        <section class="hero" data-reveal>
+            <div class="container">
+                <div class="hero-eyebrow">
+                    <i class="ph-bold ph-map-pin"></i> Near NSBM Green University
+                </div>
+                <h1>Find Your <em>Perfect</em><br>Boarding Place</h1>
+                <p>The simplest, most trusted way to discover and book boarding places near NSBM Green University.</p>
+                <div class="hero-actions">
+                    <a href="/properties" class="btn btn-primary">
+                        <i class="ph-bold ph-magnifying-glass"></i> Browse Listings
+                    </a>
+                    <a href="/register" class="btn btn-secondary" sec:authorize="!isAuthenticated()">
+                        <i class="ph-bold ph-user-plus"></i> Become a Host
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" data-reveal>
+            <div class="section-header">
+                <div class="section-header-left">
+                    <p class="section-label">Hand-picked stays</p>
+                    <h2>Featured Properties</h2>
+                </div>
+                <p>Clean, safe, and close to campus — curated for students.</p>
+            </div>
+
+            <div class="property-grid" th:if="${not #lists.isEmpty(properties)}">
+                <div class="property-card" th:each="property, iterStat : ${properties}"
+                    th:style="'animation-delay: ' + ${iterStat.index * 80} + 'ms'">
+                    <div class="property-image-wrapper">
+                        <img th:src="${property.primaryPhotoUrl != null ? property.primaryPhotoUrl : '/images/boarding-room.JPEG'}"
+                            alt="Property image" class="property-image">
+                    </div>
+                    <div class="property-body">
+                        <h3 th:text="${property.title}">Property Title</h3>
+                        <p class="property-location" th:text="${property.location}">Location</p>
+                        <div class="property-footer">
+                            <strong
                                 th:text="'LKR ' + ${#numbers.formatDecimal(property.price, 1, 0, 'DEFAULT')} + ' / mo'">LKR
-                            0 / mo</strong>
-                        <a th:href="@{/property-details/{id}(id=${property.id})}">
-                            View Details <i class="ph-bold ph-arrow-right"></i>
-                        </a>
+                                0 / mo</strong>
+                            <a th:href="@{/property-details/{id}(id=${property.id})}">
+                                View Details <i class="ph-bold ph-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div th:if="${#lists.isEmpty(properties)}" class="empty-state" data-reveal>
-            <i class="ph-bold ph-house-simple"></i>
-            <p>No properties available at the moment. Please check back soon!</p>
-        </div>
-    </section>
+            <div th:if="${#lists.isEmpty(properties)}" class="empty-state" data-reveal>
+                <i class="ph-bold ph-house-simple"></i>
+                <p>No properties available at the moment. Please check back soon!</p>
+            </div>
+        </section>
 
-</main>
+    </main>
 
-<script th:src="@{/js/app.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
 </body>
 
 </html>
