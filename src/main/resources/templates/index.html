@@ -277,16 +277,16 @@
         .property-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5px;
-            background: var(--border);
+            gap: 2rem; /* Increased gap */
             margin-bottom: 6rem;
-            border: 1px solid var(--border);
         }
 
         .property-card {
             background: var(--white);
             overflow: hidden;
             transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+            border: 1px solid var(--border);
+            border-radius: 4px;
         }
 
         .property-card:hover { transform: translateY(-4px); z-index: 1; }
