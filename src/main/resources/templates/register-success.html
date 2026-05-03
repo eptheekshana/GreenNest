@@ -10,7 +10,7 @@
     <style>
         .success-box {
             text-align: center;
-            max-width: 450px;
+            max-width: 550px;
             padding: 48px;
             display: flex;
             flex-direction: column;
@@ -28,8 +28,98 @@
         }
         .success-box p {
             color: var(--muted);
-            margin: 0 0 24px 0;
+            margin: 0;
             line-height: 1.6;
+        }
+
+        /* Email Verification Alert */
+        .verification-alert {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f6 100%);
+            border: 2px solid #4caf50;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .verification-alert h3 {
+            color: #2e7d32;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+
+        .verification-alert ul {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--muted);
+        }
+
+        .verification-alert li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .verification-alert strong {
+            color: #2e7d32;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #4caf50;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 8px;
+        }
+
+        .next-steps {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+            width: 100%;
+            text-align: left;
+        }
+
+        .next-steps h4 {
+            color: var(--primary);
+            margin: 0 0 12px 0;
+            font-size: 1rem;
+        }
+
+        .next-steps ol {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--muted);
+        }
+
+        .next-steps ol li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .spam-warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin: 16px 0;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: #856404;
+            text-align: left;
+        }
+
+        .success-box .btn-primary {
+            margin-top: 24px;
         }
     </style>
 </head>
@@ -37,11 +127,38 @@
 
 <main class="auth-shell">
     <div class="success-card success-box">
-        <div class="icon-box">🎉</div>
-        <h1>Account Created!</h1>
-        <p>Welcome to Nboard. Your account has been successfully registered. You can now log in to start exploring verified boarding places.</p>
+        <div class="icon-box">📧</div>
+        <h1>Welcome to Nboard!</h1>
+        <p>Your account has been successfully created. Now you need to verify your email address to complete registration.</p>
 
-        <a th:href="@{/login}" class="btn-primary">Go to Login</a>
+        <!-- Email Verification Alert -->
+        <div class="verification-alert">
+            <h3>✅ Email Verification Required</h3>
+            <ul>
+                <li><strong>Check your inbox:</strong> We've sent a verification email to your registered address</li>
+                <li><strong>Click the link:</strong> Open the email and click "Verify my email" button</li>
+                <li><strong>Confirm verification:</strong> You'll be redirected to login after verification</li>
+                <li><strong>Time limit:</strong> Verification link expires in 24 hours</li>
+            </ul>
+        </div>
+
+        <!-- Spam Warning -->
+        <div class="spam-warning">
+            💡 <strong>Tip:</strong> If you don't see the email, please check your spam or junk folder.
+        </div>
+
+        <!-- Next Steps -->
+        <div class="next-steps">
+            <h4>What happens next:</h4>
+            <ol>
+                <li>Click the verification link in the email</li>
+                <li>Your email will be confirmed</li>
+                <li>You'll be taken to the login page</li>
+                <li>Log in with your credentials to access your dashboard</li>
+            </ol>
+        </div>
+
+        <a th:href="@{/login}" class="btn-primary">Already Verified? Go to Login →</a>
     </div>
 </main>
 
