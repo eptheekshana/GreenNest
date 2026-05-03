@@ -39,7 +39,9 @@ public class AuthController {
     // --- Registration Logic ---
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
-        model.addAttribute("user", new User());
+        User user = new User();
+        user.setRole(com.horizonix.nboard.entity.Role.STUDENT);
+        model.addAttribute("user", user);
         return "register";
     }
 
