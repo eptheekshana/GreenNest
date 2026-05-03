@@ -1,0 +1,23 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.horizonix:nboard >------------------------
+[INFO] Building nboard 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ nboard ---
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ nboard ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 48 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ nboard ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 33 source files with javac [forked debug release 17] to target/classes
+[WARNING] Unable to autodetect 'javac' path, using 'javac' from the environment.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  10.745 s
+[INFO] Finished at: 2026-05-03T15:22:19+05:30
+[INFO] ------------------------------------------------------------------------
